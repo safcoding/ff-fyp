@@ -34,7 +34,7 @@ const InfoSection = () => {
             className="relative h-64 flex flex-col justify-end overflow-hidden bg-cover bg-center"
             style={{ backgroundImage: `url(${tour.image})` }}
             >
-              <CardHeader className="relative z-10">
+              <CardHeader className="relative z-10"> 
                 <CardTitle className="text-3xl text-white">
                 {tour.title}
                 </CardTitle>
