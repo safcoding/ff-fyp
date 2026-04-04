@@ -51,7 +51,12 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  addons: 'addons',
+  bookings: 'bookings',
+  foods: 'foods',
+  packages: 'packages',
+  slots: 'slots'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -71,13 +76,91 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  name: 'name',
-  createdAt: 'createdAt'
+  user_id: 'user_id',
+  user_email: 'user_email',
+  user_name: 'user_name',
+  createdAt: 'createdAt',
+  user_pass: 'user_pass'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const AddonsScalarFieldEnum = {
+  addon_id: 'addon_id',
+  addon_name: 'addon_name',
+  addon_desc: 'addon_desc',
+  addon_price: 'addon_price',
+  addon_avail: 'addon_avail'
+} as const
+
+export type AddonsScalarFieldEnum = (typeof AddonsScalarFieldEnum)[keyof typeof AddonsScalarFieldEnum]
+
+
+export const BookingsScalarFieldEnum = {
+  booking_id: 'booking_id',
+  booking_price: 'booking_price',
+  created_at: 'created_at',
+  pax_total: 'pax_total',
+  pax_my_adult: 'pax_my_adult',
+  pax_my_kid: 'pax_my_kid',
+  pax_my_senior: 'pax_my_senior',
+  pax_my_oku: 'pax_my_oku',
+  pax_non_my_adult: 'pax_non_my_adult',
+  pax_non_my_kid: 'pax_non_my_kid',
+  pax_non_my_senior: 'pax_non_my_senior',
+  pax_non_my_oku: 'pax_non_my_oku',
+  pic_name: 'pic_name',
+  pic_email: 'pic_email',
+  pic_hp: 'pic_hp',
+  org_address: 'org_address',
+  org_name: 'org_name',
+  org_state: 'org_state',
+  org_type: 'org_type',
+  quotation_id: 'quotation_id',
+  slot_id: 'slot_id',
+  package_id: 'package_id'
+} as const
+
+export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]
+
+
+export const FoodsScalarFieldEnum = {
+  food_id: 'food_id',
+  food_name: 'food_name',
+  food_price: 'food_price'
+} as const
+
+export type FoodsScalarFieldEnum = (typeof FoodsScalarFieldEnum)[keyof typeof FoodsScalarFieldEnum]
+
+
+export const PackagesScalarFieldEnum = {
+  package_id: 'package_id',
+  package_name: 'package_name',
+  package_availability: 'package_availability',
+  package_note: 'package_note',
+  price_my_adult: 'price_my_adult',
+  price_my_kid: 'price_my_kid',
+  price_my_senior: 'price_my_senior',
+  price_my_oku: 'price_my_oku',
+  price_non_my_adult: 'price_non_my_adult',
+  price_non_my_kid: 'price_non_my_kid',
+  price_non_my_senior: 'price_non_my_senior',
+  price_non_my_oku: 'price_non_my_oku'
+} as const
+
+export type PackagesScalarFieldEnum = (typeof PackagesScalarFieldEnum)[keyof typeof PackagesScalarFieldEnum]
+
+
+export const SlotsScalarFieldEnum = {
+  slot_id: 'slot_id',
+  slot_name: 'slot_name',
+  slot_start: 'slot_start',
+  slot_end: 'slot_end',
+  slot_capacity: 'slot_capacity'
+} as const
+
+export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof SlotsScalarFieldEnum]
 
 
 export const SortOrder = {

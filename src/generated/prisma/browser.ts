@@ -22,3 +22,28 @@ export * from './enums.ts';
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model addons
+ * 
+ */
+export type addons = Prisma.addonsModel
+/**
+ * Model bookings
+ * 
+ */
+export type bookings = Prisma.bookingsModel
+/**
+ * Model foods
+ * 
+ */
+export type foods = Prisma.foodsModel
+/**
+ * Model packages
+ * 
+ */
+export type packages = Prisma.packagesModel
+/**
+ * Model slots
+ * 
+ */
+export type slots = Prisma.slotsModel
