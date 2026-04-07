@@ -28,3 +28,10 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
         package_id : b.package_id, 
     }))
 })
+
+export const createBookings = createServerFn({method: 'POST'}).handler(async () => {
+    const booking = await prisma.bookings.create({
+        data: {
+        }
+    })
+})
