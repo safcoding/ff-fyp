@@ -2,28 +2,29 @@ import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 import z from "zod";
 
-const Booking = z.object({
-        booking_price: z.number(),
-        pax_my_adult: z.number(),   
-        pax_my_kid: z.number(),
-        pax_my_senior: z.number(),
-        pax_my_oku: z.number(),
-        pax_non_my_adult: z.number(),
-        pax_non_my_kid: z.number(),
-        pax_non_my_senior: z.number(),
-        pax_non_my_oku: z.number(),
-        pic_name: z.string(),
-        pic_email: z.email(),
-        pic_hp: z.e164(),
-        org_address: z.string(),
-        org_name: z.string(),
-        org_state: z.string(),
-        org_type: z.string(),
-        quotation_id: z.string(),
-        slot_id: z.string(),
-        package_id: z.string(),
+const BookingSchema = z.object({
+        booking_price: z.number().min(1).positive(),
+        pax_my_adult: z.number().min(1).positive(),
+        pax_my_kid: z.number().min(1).positive(),
+        pax_my_senior: z.number().min(1).positive(),
+        pax_my_oku: z.number().min(1).positive(),
+        pax_non_my_adult: z.number().min(1).positive(),
+        pax_non_my_kid: z.number().min(1).positive(),
+        pax_non_my_senior: z.number().min(1).positive(),
+        pax_non_my_oku: z.number().min(1).positive(),
+        pic_name: z.string().min(1),
+        pic_email: z.email().min(1),
+        pic_hp: z.e164().min(1),
+        org_address: z.string().min(1),
+        org_name: z.string().min(1),
+        org_state: z.string().min(1),
+        org_type: z.string().min(1),
+        quotation_id: z.string().min(1),
+        slot_id: z.string().min(1),
+        package_id: z.string().min(1),
 })
 
+export type BookingInput = z.infer<typeof BookingSchema>
 
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     const bookings = await prisma.bookings.findMany()
@@ -50,18 +51,31 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     }))
 })
 
-export const submitForm = createServerFn({ method: 'POST' })
-  .inputValidator((data) => {
-    if (!(data instanceof FormData)) {
-      throw new Error('Expected FormData')
-    }
-
-    return {
-      name: data.get('name')?.toString() || '',
-      email: data.get('email')?.toString() || '',
-    }
-  })
+export const createBooking = createServerFn({ method: 'POST' })
+  .inputValidator(BookingSchema)
   .handler(async ({ data }) => {
-    // Process form data
-    return { success: true }
+    const newBooking = await prisma.bookings.create({
+      data: {
+        booking_price: data.booking_price,
+        pax_my_adult: data.pax_my_adult,
+        pax_my_kid: data.pax_my_kid,
+        pax_my_senior: data.pax_my_senior,
+        pax_my_oku: data.pax_my_oku,
+        pax_non_my_adult: data.pax_non_my_adult,
+        pax_non_my_kid: data.pax_non_my_kid,
+        pax_non_my_senior: data.pax_non_my_senior,
+        pax_non_my_oku: data.pax_non_my_oku,
+        pic_name: data.pic_name,
+        pic_email: data.pic_email,
+        pic_hp: data.pic_hp,
+        org_address: data.org_address,
+        org_name: data.org_name,
+        org_state: data.org_state,
+        org_type: data.org_type,
+        quotation_id: data.quotation_id,
+        slot_id: data.slot_id,
+        package_id: data.package_id,
+      }
+    });
+    return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}`;
   })
