@@ -101,7 +101,6 @@ export const BookingsScalarFieldEnum = {
   booking_id: 'booking_id',
   booking_price: 'booking_price',
   created_at: 'created_at',
-  pax_total: 'pax_total',
   pax_my_adult: 'pax_my_adult',
   pax_my_kid: 'pax_my_kid',
   pax_my_senior: 'pax_my_senior',

@@ -28,7 +28,6 @@ export type AggregateBookings = {
 
 export type BookingsAvgAggregateOutputType = {
   booking_price: runtime.Decimal | null
-  pax_total: number | null
   pax_my_adult: number | null
   pax_my_kid: number | null
   pax_my_senior: number | null
@@ -41,7 +40,6 @@ export type BookingsAvgAggregateOutputType = {
 
 export type BookingsSumAggregateOutputType = {
   booking_price: runtime.Decimal | null
-  pax_total: number | null
   pax_my_adult: number | null
   pax_my_kid: number | null
   pax_my_senior: number | null
@@ -56,7 +54,6 @@ export type BookingsMinAggregateOutputType = {
   booking_id: string | null
   booking_price: runtime.Decimal | null
   created_at: Date | null
-  pax_total: number | null
   pax_my_adult: number | null
   pax_my_kid: number | null
   pax_my_senior: number | null
@@ -81,7 +78,6 @@ export type BookingsMaxAggregateOutputType = {
   booking_id: string | null
   booking_price: runtime.Decimal | null
   created_at: Date | null
-  pax_total: number | null
   pax_my_adult: number | null
   pax_my_kid: number | null
   pax_my_senior: number | null
@@ -106,7 +102,6 @@ export type BookingsCountAggregateOutputType = {
   booking_id: number
   booking_price: number
   created_at: number
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -131,7 +126,6 @@ export type BookingsCountAggregateOutputType = {
 
 export type BookingsAvgAggregateInputType = {
   booking_price?: true
-  pax_total?: true
   pax_my_adult?: true
   pax_my_kid?: true
   pax_my_senior?: true
@@ -144,7 +138,6 @@ export type BookingsAvgAggregateInputType = {
 
 export type BookingsSumAggregateInputType = {
   booking_price?: true
-  pax_total?: true
   pax_my_adult?: true
   pax_my_kid?: true
   pax_my_senior?: true
@@ -159,7 +152,6 @@ export type BookingsMinAggregateInputType = {
   booking_id?: true
   booking_price?: true
   created_at?: true
-  pax_total?: true
   pax_my_adult?: true
   pax_my_kid?: true
   pax_my_senior?: true
@@ -184,7 +176,6 @@ export type BookingsMaxAggregateInputType = {
   booking_id?: true
   booking_price?: true
   created_at?: true
-  pax_total?: true
   pax_my_adult?: true
   pax_my_kid?: true
   pax_my_senior?: true
@@ -209,7 +200,6 @@ export type BookingsCountAggregateInputType = {
   booking_id?: true
   booking_price?: true
   created_at?: true
-  pax_total?: true
   pax_my_adult?: true
   pax_my_kid?: true
   pax_my_senior?: true
@@ -321,7 +311,6 @@ export type BookingsGroupByOutputType = {
   booking_id: string
   booking_price: runtime.Decimal
   created_at: Date
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -369,7 +358,6 @@ export type bookingsWhereInput = {
   booking_id?: Prisma.UuidFilter<"bookings"> | string
   booking_price?: Prisma.DecimalFilter<"bookings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"bookings"> | Date | string
-  pax_total?: Prisma.IntFilter<"bookings"> | number
   pax_my_adult?: Prisma.IntFilter<"bookings"> | number
   pax_my_kid?: Prisma.IntFilter<"bookings"> | number
   pax_my_senior?: Prisma.IntFilter<"bookings"> | number
@@ -388,6 +376,7 @@ export type bookingsWhereInput = {
   quotation_id?: Prisma.UuidNullableFilter<"bookings"> | string | null
   slot_id?: Prisma.StringFilter<"bookings"> | string
   package_id?: Prisma.StringFilter<"bookings"> | string
+  packages?: Prisma.XOR<Prisma.PackagesScalarRelationFilter, Prisma.packagesWhereInput>
   slots?: Prisma.XOR<Prisma.SlotsScalarRelationFilter, Prisma.slotsWhereInput>
 }
 
@@ -395,7 +384,6 @@ export type bookingsOrderByWithRelationInput = {
   booking_id?: Prisma.SortOrder
   booking_price?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -414,19 +402,18 @@ export type bookingsOrderByWithRelationInput = {
   quotation_id?: Prisma.SortOrderInput | Prisma.SortOrder
   slot_id?: Prisma.SortOrder
   package_id?: Prisma.SortOrder
+  packages?: Prisma.packagesOrderByWithRelationInput
   slots?: Prisma.slotsOrderByWithRelationInput
 }
 
 export type bookingsWhereUniqueInput = Prisma.AtLeast<{
   booking_id?: string
   quotation_id?: string
-  package_id?: string
   AND?: Prisma.bookingsWhereInput | Prisma.bookingsWhereInput[]
   OR?: Prisma.bookingsWhereInput[]
   NOT?: Prisma.bookingsWhereInput | Prisma.bookingsWhereInput[]
   booking_price?: Prisma.DecimalFilter<"bookings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"bookings"> | Date | string
-  pax_total?: Prisma.IntFilter<"bookings"> | number
   pax_my_adult?: Prisma.IntFilter<"bookings"> | number
   pax_my_kid?: Prisma.IntFilter<"bookings"> | number
   pax_my_senior?: Prisma.IntFilter<"bookings"> | number
@@ -443,14 +430,15 @@ export type bookingsWhereUniqueInput = Prisma.AtLeast<{
   org_state?: Prisma.StringFilter<"bookings"> | string
   org_type?: Prisma.StringFilter<"bookings"> | string
   slot_id?: Prisma.StringFilter<"bookings"> | string
+  package_id?: Prisma.StringFilter<"bookings"> | string
+  packages?: Prisma.XOR<Prisma.PackagesScalarRelationFilter, Prisma.packagesWhereInput>
   slots?: Prisma.XOR<Prisma.SlotsScalarRelationFilter, Prisma.slotsWhereInput>
-}, "booking_id" | "quotation_id" | "package_id">
+}, "booking_id" | "quotation_id">
 
 export type bookingsOrderByWithAggregationInput = {
   booking_id?: Prisma.SortOrder
   booking_price?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -483,7 +471,6 @@ export type bookingsScalarWhereWithAggregatesInput = {
   booking_id?: Prisma.UuidWithAggregatesFilter<"bookings"> | string
   booking_price?: Prisma.DecimalWithAggregatesFilter<"bookings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"bookings"> | Date | string
-  pax_total?: Prisma.IntWithAggregatesFilter<"bookings"> | number
   pax_my_adult?: Prisma.IntWithAggregatesFilter<"bookings"> | number
   pax_my_kid?: Prisma.IntWithAggregatesFilter<"bookings"> | number
   pax_my_senior?: Prisma.IntWithAggregatesFilter<"bookings"> | number
@@ -508,7 +495,6 @@ export type bookingsCreateInput = {
   booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -525,7 +511,7 @@ export type bookingsCreateInput = {
   org_state: string
   org_type: string
   quotation_id?: string | null
-  package_id: string
+  packages: Prisma.packagesCreateNestedOneWithoutBookingsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
 }
 
@@ -533,7 +519,6 @@ export type bookingsUncheckedCreateInput = {
   booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -558,7 +543,6 @@ export type bookingsUpdateInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -575,7 +559,7 @@ export type bookingsUpdateInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  packages?: Prisma.packagesUpdateOneRequiredWithoutBookingsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
 }
 
@@ -583,7 +567,6 @@ export type bookingsUncheckedUpdateInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -608,7 +591,6 @@ export type bookingsCreateManyInput = {
   booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -633,7 +615,6 @@ export type bookingsUpdateManyMutationInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -650,14 +631,12 @@ export type bookingsUpdateManyMutationInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  package_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type bookingsUncheckedUpdateManyInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -682,7 +661,6 @@ export type bookingsCountOrderByAggregateInput = {
   booking_id?: Prisma.SortOrder
   booking_price?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -705,7 +683,6 @@ export type bookingsCountOrderByAggregateInput = {
 
 export type bookingsAvgOrderByAggregateInput = {
   booking_price?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -720,7 +697,6 @@ export type bookingsMaxOrderByAggregateInput = {
   booking_id?: Prisma.SortOrder
   booking_price?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -745,7 +721,6 @@ export type bookingsMinOrderByAggregateInput = {
   booking_id?: Prisma.SortOrder
   booking_price?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -768,7 +743,6 @@ export type bookingsMinOrderByAggregateInput = {
 
 export type bookingsSumOrderByAggregateInput = {
   booking_price?: Prisma.SortOrder
-  pax_total?: Prisma.SortOrder
   pax_my_adult?: Prisma.SortOrder
   pax_my_kid?: Prisma.SortOrder
   pax_my_senior?: Prisma.SortOrder
@@ -787,6 +761,48 @@ export type BookingsListRelationFilter = {
 
 export type bookingsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type bookingsCreateNestedManyWithoutPackagesInput = {
+  create?: Prisma.XOR<Prisma.bookingsCreateWithoutPackagesInput, Prisma.bookingsUncheckedCreateWithoutPackagesInput> | Prisma.bookingsCreateWithoutPackagesInput[] | Prisma.bookingsUncheckedCreateWithoutPackagesInput[]
+  connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutPackagesInput | Prisma.bookingsCreateOrConnectWithoutPackagesInput[]
+  createMany?: Prisma.bookingsCreateManyPackagesInputEnvelope
+  connect?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+}
+
+export type bookingsUncheckedCreateNestedManyWithoutPackagesInput = {
+  create?: Prisma.XOR<Prisma.bookingsCreateWithoutPackagesInput, Prisma.bookingsUncheckedCreateWithoutPackagesInput> | Prisma.bookingsCreateWithoutPackagesInput[] | Prisma.bookingsUncheckedCreateWithoutPackagesInput[]
+  connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutPackagesInput | Prisma.bookingsCreateOrConnectWithoutPackagesInput[]
+  createMany?: Prisma.bookingsCreateManyPackagesInputEnvelope
+  connect?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+}
+
+export type bookingsUpdateManyWithoutPackagesNestedInput = {
+  create?: Prisma.XOR<Prisma.bookingsCreateWithoutPackagesInput, Prisma.bookingsUncheckedCreateWithoutPackagesInput> | Prisma.bookingsCreateWithoutPackagesInput[] | Prisma.bookingsUncheckedCreateWithoutPackagesInput[]
+  connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutPackagesInput | Prisma.bookingsCreateOrConnectWithoutPackagesInput[]
+  upsert?: Prisma.bookingsUpsertWithWhereUniqueWithoutPackagesInput | Prisma.bookingsUpsertWithWhereUniqueWithoutPackagesInput[]
+  createMany?: Prisma.bookingsCreateManyPackagesInputEnvelope
+  set?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  disconnect?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  delete?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  connect?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  update?: Prisma.bookingsUpdateWithWhereUniqueWithoutPackagesInput | Prisma.bookingsUpdateWithWhereUniqueWithoutPackagesInput[]
+  updateMany?: Prisma.bookingsUpdateManyWithWhereWithoutPackagesInput | Prisma.bookingsUpdateManyWithWhereWithoutPackagesInput[]
+  deleteMany?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
+}
+
+export type bookingsUncheckedUpdateManyWithoutPackagesNestedInput = {
+  create?: Prisma.XOR<Prisma.bookingsCreateWithoutPackagesInput, Prisma.bookingsUncheckedCreateWithoutPackagesInput> | Prisma.bookingsCreateWithoutPackagesInput[] | Prisma.bookingsUncheckedCreateWithoutPackagesInput[]
+  connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutPackagesInput | Prisma.bookingsCreateOrConnectWithoutPackagesInput[]
+  upsert?: Prisma.bookingsUpsertWithWhereUniqueWithoutPackagesInput | Prisma.bookingsUpsertWithWhereUniqueWithoutPackagesInput[]
+  createMany?: Prisma.bookingsCreateManyPackagesInputEnvelope
+  set?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  disconnect?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  delete?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  connect?: Prisma.bookingsWhereUniqueInput | Prisma.bookingsWhereUniqueInput[]
+  update?: Prisma.bookingsUpdateWithWhereUniqueWithoutPackagesInput | Prisma.bookingsUpdateWithWhereUniqueWithoutPackagesInput[]
+  updateMany?: Prisma.bookingsUpdateManyWithWhereWithoutPackagesInput | Prisma.bookingsUpdateManyWithWhereWithoutPackagesInput[]
+  deleteMany?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
 }
 
 export type bookingsCreateNestedManyWithoutSlotsInput = {
@@ -831,11 +847,10 @@ export type bookingsUncheckedUpdateManyWithoutSlotsNestedInput = {
   deleteMany?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
 }
 
-export type bookingsCreateWithoutSlotsInput = {
+export type bookingsCreateWithoutPackagesInput = {
   booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -852,14 +867,112 @@ export type bookingsCreateWithoutSlotsInput = {
   org_state: string
   org_type: string
   quotation_id?: string | null
-  package_id: string
+  slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
+}
+
+export type bookingsUncheckedCreateWithoutPackagesInput = {
+  booking_id?: string
+  booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Date | string
+  pax_my_adult: number
+  pax_my_kid: number
+  pax_my_senior: number
+  pax_my_oku: number
+  pax_non_my_adult: number
+  pax_non_my_kid: number
+  pax_non_my_senior: number
+  pax_non_my_oku: number
+  pic_name: string
+  pic_email: string
+  pic_hp: string
+  org_address: string
+  org_name: string
+  org_state: string
+  org_type: string
+  quotation_id?: string | null
+  slot_id: string
+}
+
+export type bookingsCreateOrConnectWithoutPackagesInput = {
+  where: Prisma.bookingsWhereUniqueInput
+  create: Prisma.XOR<Prisma.bookingsCreateWithoutPackagesInput, Prisma.bookingsUncheckedCreateWithoutPackagesInput>
+}
+
+export type bookingsCreateManyPackagesInputEnvelope = {
+  data: Prisma.bookingsCreateManyPackagesInput | Prisma.bookingsCreateManyPackagesInput[]
+  skipDuplicates?: boolean
+}
+
+export type bookingsUpsertWithWhereUniqueWithoutPackagesInput = {
+  where: Prisma.bookingsWhereUniqueInput
+  update: Prisma.XOR<Prisma.bookingsUpdateWithoutPackagesInput, Prisma.bookingsUncheckedUpdateWithoutPackagesInput>
+  create: Prisma.XOR<Prisma.bookingsCreateWithoutPackagesInput, Prisma.bookingsUncheckedCreateWithoutPackagesInput>
+}
+
+export type bookingsUpdateWithWhereUniqueWithoutPackagesInput = {
+  where: Prisma.bookingsWhereUniqueInput
+  data: Prisma.XOR<Prisma.bookingsUpdateWithoutPackagesInput, Prisma.bookingsUncheckedUpdateWithoutPackagesInput>
+}
+
+export type bookingsUpdateManyWithWhereWithoutPackagesInput = {
+  where: Prisma.bookingsScalarWhereInput
+  data: Prisma.XOR<Prisma.bookingsUpdateManyMutationInput, Prisma.bookingsUncheckedUpdateManyWithoutPackagesInput>
+}
+
+export type bookingsScalarWhereInput = {
+  AND?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
+  OR?: Prisma.bookingsScalarWhereInput[]
+  NOT?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
+  booking_id?: Prisma.UuidFilter<"bookings"> | string
+  booking_price?: Prisma.DecimalFilter<"bookings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Prisma.DateTimeFilter<"bookings"> | Date | string
+  pax_my_adult?: Prisma.IntFilter<"bookings"> | number
+  pax_my_kid?: Prisma.IntFilter<"bookings"> | number
+  pax_my_senior?: Prisma.IntFilter<"bookings"> | number
+  pax_my_oku?: Prisma.IntFilter<"bookings"> | number
+  pax_non_my_adult?: Prisma.IntFilter<"bookings"> | number
+  pax_non_my_kid?: Prisma.IntFilter<"bookings"> | number
+  pax_non_my_senior?: Prisma.IntFilter<"bookings"> | number
+  pax_non_my_oku?: Prisma.IntFilter<"bookings"> | number
+  pic_name?: Prisma.StringFilter<"bookings"> | string
+  pic_email?: Prisma.StringFilter<"bookings"> | string
+  pic_hp?: Prisma.StringFilter<"bookings"> | string
+  org_address?: Prisma.StringFilter<"bookings"> | string
+  org_name?: Prisma.StringFilter<"bookings"> | string
+  org_state?: Prisma.StringFilter<"bookings"> | string
+  org_type?: Prisma.StringFilter<"bookings"> | string
+  quotation_id?: Prisma.UuidNullableFilter<"bookings"> | string | null
+  slot_id?: Prisma.StringFilter<"bookings"> | string
+  package_id?: Prisma.StringFilter<"bookings"> | string
+}
+
+export type bookingsCreateWithoutSlotsInput = {
+  booking_id?: string
+  booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Date | string
+  pax_my_adult: number
+  pax_my_kid: number
+  pax_my_senior: number
+  pax_my_oku: number
+  pax_non_my_adult: number
+  pax_non_my_kid: number
+  pax_non_my_senior: number
+  pax_non_my_oku: number
+  pic_name: string
+  pic_email: string
+  pic_hp: string
+  org_address: string
+  org_name: string
+  org_state: string
+  org_type: string
+  quotation_id?: string | null
+  packages: Prisma.packagesCreateNestedOneWithoutBookingsInput
 }
 
 export type bookingsUncheckedCreateWithoutSlotsInput = {
   booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -905,39 +1018,102 @@ export type bookingsUpdateManyWithWhereWithoutSlotsInput = {
   data: Prisma.XOR<Prisma.bookingsUpdateManyMutationInput, Prisma.bookingsUncheckedUpdateManyWithoutSlotsInput>
 }
 
-export type bookingsScalarWhereInput = {
-  AND?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
-  OR?: Prisma.bookingsScalarWhereInput[]
-  NOT?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
-  booking_id?: Prisma.UuidFilter<"bookings"> | string
-  booking_price?: Prisma.DecimalFilter<"bookings"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at?: Prisma.DateTimeFilter<"bookings"> | Date | string
-  pax_total?: Prisma.IntFilter<"bookings"> | number
-  pax_my_adult?: Prisma.IntFilter<"bookings"> | number
-  pax_my_kid?: Prisma.IntFilter<"bookings"> | number
-  pax_my_senior?: Prisma.IntFilter<"bookings"> | number
-  pax_my_oku?: Prisma.IntFilter<"bookings"> | number
-  pax_non_my_adult?: Prisma.IntFilter<"bookings"> | number
-  pax_non_my_kid?: Prisma.IntFilter<"bookings"> | number
-  pax_non_my_senior?: Prisma.IntFilter<"bookings"> | number
-  pax_non_my_oku?: Prisma.IntFilter<"bookings"> | number
-  pic_name?: Prisma.StringFilter<"bookings"> | string
-  pic_email?: Prisma.StringFilter<"bookings"> | string
-  pic_hp?: Prisma.StringFilter<"bookings"> | string
-  org_address?: Prisma.StringFilter<"bookings"> | string
-  org_name?: Prisma.StringFilter<"bookings"> | string
-  org_state?: Prisma.StringFilter<"bookings"> | string
-  org_type?: Prisma.StringFilter<"bookings"> | string
-  quotation_id?: Prisma.UuidNullableFilter<"bookings"> | string | null
-  slot_id?: Prisma.StringFilter<"bookings"> | string
-  package_id?: Prisma.StringFilter<"bookings"> | string
+export type bookingsCreateManyPackagesInput = {
+  booking_id?: string
+  booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Date | string
+  pax_my_adult: number
+  pax_my_kid: number
+  pax_my_senior: number
+  pax_my_oku: number
+  pax_non_my_adult: number
+  pax_non_my_kid: number
+  pax_non_my_senior: number
+  pax_non_my_oku: number
+  pic_name: string
+  pic_email: string
+  pic_hp: string
+  org_address: string
+  org_name: string
+  org_state: string
+  org_type: string
+  quotation_id?: string | null
+  slot_id: string
+}
+
+export type bookingsUpdateWithoutPackagesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_oku?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_oku?: Prisma.IntFieldUpdateOperationsInput | number
+  pic_name?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_email?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_hp?: Prisma.StringFieldUpdateOperationsInput | string
+  org_address?: Prisma.StringFieldUpdateOperationsInput | string
+  org_name?: Prisma.StringFieldUpdateOperationsInput | string
+  org_state?: Prisma.StringFieldUpdateOperationsInput | string
+  org_type?: Prisma.StringFieldUpdateOperationsInput | string
+  quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
+}
+
+export type bookingsUncheckedUpdateWithoutPackagesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_oku?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_oku?: Prisma.IntFieldUpdateOperationsInput | number
+  pic_name?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_email?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_hp?: Prisma.StringFieldUpdateOperationsInput | string
+  org_address?: Prisma.StringFieldUpdateOperationsInput | string
+  org_name?: Prisma.StringFieldUpdateOperationsInput | string
+  org_state?: Prisma.StringFieldUpdateOperationsInput | string
+  org_type?: Prisma.StringFieldUpdateOperationsInput | string
+  quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slot_id?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type bookingsUncheckedUpdateManyWithoutPackagesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_my_oku?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
+  pax_non_my_oku?: Prisma.IntFieldUpdateOperationsInput | number
+  pic_name?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_email?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_hp?: Prisma.StringFieldUpdateOperationsInput | string
+  org_address?: Prisma.StringFieldUpdateOperationsInput | string
+  org_name?: Prisma.StringFieldUpdateOperationsInput | string
+  org_state?: Prisma.StringFieldUpdateOperationsInput | string
+  org_type?: Prisma.StringFieldUpdateOperationsInput | string
+  quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slot_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type bookingsCreateManySlotsInput = {
   booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
-  pax_total: number
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -961,7 +1137,6 @@ export type bookingsUpdateWithoutSlotsInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -978,14 +1153,13 @@ export type bookingsUpdateWithoutSlotsInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  packages?: Prisma.packagesUpdateOneRequiredWithoutBookingsNestedInput
 }
 
 export type bookingsUncheckedUpdateWithoutSlotsInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1009,7 +1183,6 @@ export type bookingsUncheckedUpdateManyWithoutSlotsInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_adult?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_kid?: Prisma.IntFieldUpdateOperationsInput | number
   pax_my_senior?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1035,7 +1208,6 @@ export type bookingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   booking_id?: boolean
   booking_price?: boolean
   created_at?: boolean
-  pax_total?: boolean
   pax_my_adult?: boolean
   pax_my_kid?: boolean
   pax_my_senior?: boolean
@@ -1054,6 +1226,7 @@ export type bookingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookings"]>
 
@@ -1061,7 +1234,6 @@ export type bookingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   booking_id?: boolean
   booking_price?: boolean
   created_at?: boolean
-  pax_total?: boolean
   pax_my_adult?: boolean
   pax_my_kid?: boolean
   pax_my_senior?: boolean
@@ -1080,6 +1252,7 @@ export type bookingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookings"]>
 
@@ -1087,7 +1260,6 @@ export type bookingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   booking_id?: boolean
   booking_price?: boolean
   created_at?: boolean
-  pax_total?: boolean
   pax_my_adult?: boolean
   pax_my_kid?: boolean
   pax_my_senior?: boolean
@@ -1106,6 +1278,7 @@ export type bookingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookings"]>
 
@@ -1113,7 +1286,6 @@ export type bookingsSelectScalar = {
   booking_id?: boolean
   booking_price?: boolean
   created_at?: boolean
-  pax_total?: boolean
   pax_my_adult?: boolean
   pax_my_kid?: boolean
   pax_my_senior?: boolean
@@ -1134,27 +1306,30 @@ export type bookingsSelectScalar = {
   package_id?: boolean
 }
 
-export type bookingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "booking_price" | "created_at" | "pax_total" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "pic_name" | "pic_email" | "pic_hp" | "org_address" | "org_name" | "org_state" | "org_type" | "quotation_id" | "slot_id" | "package_id", ExtArgs["result"]["bookings"]>
+export type bookingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "booking_price" | "created_at" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "pic_name" | "pic_email" | "pic_hp" | "org_address" | "org_name" | "org_state" | "org_type" | "quotation_id" | "slot_id" | "package_id", ExtArgs["result"]["bookings"]>
 export type bookingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }
 export type bookingsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }
 export type bookingsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }
 
 export type $bookingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "bookings"
   objects: {
+    packages: Prisma.$packagesPayload<ExtArgs>
     slots: Prisma.$slotsPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     booking_id: string
     booking_price: runtime.Decimal
     created_at: Date
-    pax_total: number
     pax_my_adult: number
     pax_my_kid: number
     pax_my_senior: number
@@ -1567,6 +1742,7 @@ readonly fields: bookingsFieldRefs;
  */
 export interface Prisma__bookingsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  packages<T extends Prisma.packagesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.packagesDefaultArgs<ExtArgs>>): Prisma.Prisma__packagesClient<runtime.Types.Result.GetResult<Prisma.$packagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   slots<T extends Prisma.slotsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.slotsDefaultArgs<ExtArgs>>): Prisma.Prisma__slotsClient<runtime.Types.Result.GetResult<Prisma.$slotsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1600,7 +1776,6 @@ export interface bookingsFieldRefs {
   readonly booking_id: Prisma.FieldRef<"bookings", 'String'>
   readonly booking_price: Prisma.FieldRef<"bookings", 'Decimal'>
   readonly created_at: Prisma.FieldRef<"bookings", 'DateTime'>
-  readonly pax_total: Prisma.FieldRef<"bookings", 'Int'>
   readonly pax_my_adult: Prisma.FieldRef<"bookings", 'Int'>
   readonly pax_my_kid: Prisma.FieldRef<"bookings", 'Int'>
   readonly pax_my_senior: Prisma.FieldRef<"bookings", 'Int'>

@@ -1,13 +1,34 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
+import z from "zod";
+
+const Booking = z.object({
+        booking_price: z.number(),
+        pax_my_adult: z.number(),   
+        pax_my_kid: z.number(),
+        pax_my_senior: z.number(),
+        pax_my_oku: z.number(),
+        pax_non_my_adult: z.number(),
+        pax_non_my_kid: z.number(),
+        pax_non_my_senior: z.number(),
+        pax_non_my_oku: z.number(),
+        pic_name: z.string(),
+        pic_email: z.email(),
+        pic_hp: z.e164(),
+        org_address: z.string(),
+        org_name: z.string(),
+        org_state: z.string(),
+        org_type: z.string(),
+        quotation_id: z.string(),
+        slot_id: z.string(),
+        package_id: z.string(),
+})
 
 
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     const bookings = await prisma.bookings.findMany()
     return bookings.map(b => ({
-        booking_id: b.booking_id,
         booking_price: b.booking_price.toString(),
-        pax_total: b.pax_total,
         pax_my_adult: b.pax_my_adult,      
         pax_my_kid: b.pax_my_kid,       
         pax_my_senior: b.pax_my_senior,   
@@ -29,9 +50,18 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     }))
 })
 
-export const createBookings = createServerFn({method: 'POST'}).handler(async () => {
-    const booking = await prisma.bookings.create({
-        data: {
-        }
-    })
-})
+export const submitForm = createServerFn({ method: 'POST' })
+  .inputValidator((data) => {
+    if (!(data instanceof FormData)) {
+      throw new Error('Expected FormData')
+    }
+
+    return {
+      name: data.get('name')?.toString() || '',
+      email: data.get('email')?.toString() || '',
+    }
+  })
+  .handler(async ({ data }) => {
+    // Process form data
+    return { success: true }
+  })
