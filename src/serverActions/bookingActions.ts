@@ -20,10 +20,7 @@ const BookingSchema = z.object({
         org_name: z.string().trim().min(1),
         org_state: z.string().trim().min(1),
         org_type: z.string().trim().length(1),
-        quotation_id: z.preprocess(
-          (value) => (value === "" ? undefined : value),
-          z.string().uuid().optional()
-        ),
+        booking_date: z.coerce.date(),
         slot_id: z.string().min(1),
         package_id: z.string().min(1),
 }).refine((data) => (
@@ -88,6 +85,7 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
         org_name: b.org_name,
         org_state: b.org_state,
         org_type: b.org_type,
+        booking_date: b.booking_date,
         quotation_id: b.quotation_id,
         slot_id : b.slot_id,
         package_id : b.package_id, 
@@ -100,11 +98,32 @@ export const getAvailablePackages = createServerFn({ method: "GET" }).handler(as
     select: {
       package_id: true,
       package_name: true,
+      package_note: true,
+      price_my_adult: true,
+      price_my_kid: true,
+      price_my_senior: true,
+      price_my_oku: true,
+      price_non_my_adult: true,
+      price_non_my_kid: true,
+      price_non_my_senior: true,
+      price_non_my_oku: true,
     },
     orderBy: { package_name: "asc" },
   });
 
-  return packages;
+  return packages.map((pkg) => ({
+    package_id: pkg.package_id,
+    package_name: pkg.package_name,
+    package_note: pkg.package_note,
+    price_my_adult: Number(pkg.price_my_adult),
+    price_my_kid: Number(pkg.price_my_kid),
+    price_my_senior: Number(pkg.price_my_senior),
+    price_my_oku: Number(pkg.price_my_oku),
+    price_non_my_adult: Number(pkg.price_non_my_adult),
+    price_non_my_kid: Number(pkg.price_non_my_kid),
+    price_non_my_senior: Number(pkg.price_non_my_senior),
+    price_non_my_oku: Number(pkg.price_non_my_oku),
+  }));
 });
 
 export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
@@ -112,6 +131,7 @@ export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
     select: {
       slot_id: true,
       slot_name: true,
+      slot_capacity: true,
     },
     orderBy: { slot_name: "asc" },
   });
@@ -174,7 +194,7 @@ export const createBooking = createServerFn({ method: 'POST' })
         org_name: data.org_name,
         org_state: data.org_state,
         org_type: data.org_type,
-        ...(data.quotation_id ? { quotation_id: data.quotation_id } : {}),
+        booking_date: data.booking_date,
         slot_id: data.slot_id,
         package_id: data.package_id,
       }

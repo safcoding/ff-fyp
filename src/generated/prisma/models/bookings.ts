@@ -72,6 +72,7 @@ export type BookingsMinAggregateOutputType = {
   quotation_id: string | null
   slot_id: string | null
   package_id: string | null
+  booking_date: Date | null
 }
 
 export type BookingsMaxAggregateOutputType = {
@@ -96,6 +97,7 @@ export type BookingsMaxAggregateOutputType = {
   quotation_id: string | null
   slot_id: string | null
   package_id: string | null
+  booking_date: Date | null
 }
 
 export type BookingsCountAggregateOutputType = {
@@ -120,6 +122,7 @@ export type BookingsCountAggregateOutputType = {
   quotation_id: number
   slot_id: number
   package_id: number
+  booking_date: number
   _all: number
 }
 
@@ -170,6 +173,7 @@ export type BookingsMinAggregateInputType = {
   quotation_id?: true
   slot_id?: true
   package_id?: true
+  booking_date?: true
 }
 
 export type BookingsMaxAggregateInputType = {
@@ -194,6 +198,7 @@ export type BookingsMaxAggregateInputType = {
   quotation_id?: true
   slot_id?: true
   package_id?: true
+  booking_date?: true
 }
 
 export type BookingsCountAggregateInputType = {
@@ -218,6 +223,7 @@ export type BookingsCountAggregateInputType = {
   quotation_id?: true
   slot_id?: true
   package_id?: true
+  booking_date?: true
   _all?: true
 }
 
@@ -329,6 +335,7 @@ export type BookingsGroupByOutputType = {
   quotation_id: string | null
   slot_id: string
   package_id: string
+  booking_date: Date | null
   _count: BookingsCountAggregateOutputType | null
   _avg: BookingsAvgAggregateOutputType | null
   _sum: BookingsSumAggregateOutputType | null
@@ -376,6 +383,7 @@ export type bookingsWhereInput = {
   quotation_id?: Prisma.UuidNullableFilter<"bookings"> | string | null
   slot_id?: Prisma.StringFilter<"bookings"> | string
   package_id?: Prisma.StringFilter<"bookings"> | string
+  booking_date?: Prisma.DateTimeNullableFilter<"bookings"> | Date | string | null
   packages?: Prisma.XOR<Prisma.PackagesScalarRelationFilter, Prisma.packagesWhereInput>
   slots?: Prisma.XOR<Prisma.SlotsScalarRelationFilter, Prisma.slotsWhereInput>
 }
@@ -402,6 +410,7 @@ export type bookingsOrderByWithRelationInput = {
   quotation_id?: Prisma.SortOrderInput | Prisma.SortOrder
   slot_id?: Prisma.SortOrder
   package_id?: Prisma.SortOrder
+  booking_date?: Prisma.SortOrderInput | Prisma.SortOrder
   packages?: Prisma.packagesOrderByWithRelationInput
   slots?: Prisma.slotsOrderByWithRelationInput
 }
@@ -431,6 +440,7 @@ export type bookingsWhereUniqueInput = Prisma.AtLeast<{
   org_type?: Prisma.StringFilter<"bookings"> | string
   slot_id?: Prisma.StringFilter<"bookings"> | string
   package_id?: Prisma.StringFilter<"bookings"> | string
+  booking_date?: Prisma.DateTimeNullableFilter<"bookings"> | Date | string | null
   packages?: Prisma.XOR<Prisma.PackagesScalarRelationFilter, Prisma.packagesWhereInput>
   slots?: Prisma.XOR<Prisma.SlotsScalarRelationFilter, Prisma.slotsWhereInput>
 }, "booking_id" | "quotation_id">
@@ -457,6 +467,7 @@ export type bookingsOrderByWithAggregationInput = {
   quotation_id?: Prisma.SortOrderInput | Prisma.SortOrder
   slot_id?: Prisma.SortOrder
   package_id?: Prisma.SortOrder
+  booking_date?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.bookingsCountOrderByAggregateInput
   _avg?: Prisma.bookingsAvgOrderByAggregateInput
   _max?: Prisma.bookingsMaxOrderByAggregateInput
@@ -489,6 +500,7 @@ export type bookingsScalarWhereWithAggregatesInput = {
   quotation_id?: Prisma.UuidNullableWithAggregatesFilter<"bookings"> | string | null
   slot_id?: Prisma.StringWithAggregatesFilter<"bookings"> | string
   package_id?: Prisma.StringWithAggregatesFilter<"bookings"> | string
+  booking_date?: Prisma.DateTimeNullableWithAggregatesFilter<"bookings"> | Date | string | null
 }
 
 export type bookingsCreateInput = {
@@ -511,6 +523,7 @@ export type bookingsCreateInput = {
   org_state: string
   org_type: string
   quotation_id?: string | null
+  booking_date?: Date | string | null
   packages: Prisma.packagesCreateNestedOneWithoutBookingsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
 }
@@ -537,6 +550,7 @@ export type bookingsUncheckedCreateInput = {
   quotation_id?: string | null
   slot_id: string
   package_id: string
+  booking_date?: Date | string | null
 }
 
 export type bookingsUpdateInput = {
@@ -559,6 +573,7 @@ export type bookingsUpdateInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   packages?: Prisma.packagesUpdateOneRequiredWithoutBookingsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
 }
@@ -585,6 +600,7 @@ export type bookingsUncheckedUpdateInput = {
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slot_id?: Prisma.StringFieldUpdateOperationsInput | string
   package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type bookingsCreateManyInput = {
@@ -609,6 +625,7 @@ export type bookingsCreateManyInput = {
   quotation_id?: string | null
   slot_id: string
   package_id: string
+  booking_date?: Date | string | null
 }
 
 export type bookingsUpdateManyMutationInput = {
@@ -631,6 +648,7 @@ export type bookingsUpdateManyMutationInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type bookingsUncheckedUpdateManyInput = {
@@ -655,6 +673,7 @@ export type bookingsUncheckedUpdateManyInput = {
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slot_id?: Prisma.StringFieldUpdateOperationsInput | string
   package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type bookingsCountOrderByAggregateInput = {
@@ -679,6 +698,7 @@ export type bookingsCountOrderByAggregateInput = {
   quotation_id?: Prisma.SortOrder
   slot_id?: Prisma.SortOrder
   package_id?: Prisma.SortOrder
+  booking_date?: Prisma.SortOrder
 }
 
 export type bookingsAvgOrderByAggregateInput = {
@@ -715,6 +735,7 @@ export type bookingsMaxOrderByAggregateInput = {
   quotation_id?: Prisma.SortOrder
   slot_id?: Prisma.SortOrder
   package_id?: Prisma.SortOrder
+  booking_date?: Prisma.SortOrder
 }
 
 export type bookingsMinOrderByAggregateInput = {
@@ -739,6 +760,7 @@ export type bookingsMinOrderByAggregateInput = {
   quotation_id?: Prisma.SortOrder
   slot_id?: Prisma.SortOrder
   package_id?: Prisma.SortOrder
+  booking_date?: Prisma.SortOrder
 }
 
 export type bookingsSumOrderByAggregateInput = {
@@ -761,6 +783,10 @@ export type BookingsListRelationFilter = {
 
 export type bookingsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type bookingsCreateNestedManyWithoutPackagesInput = {
@@ -867,6 +893,7 @@ export type bookingsCreateWithoutPackagesInput = {
   org_state: string
   org_type: string
   quotation_id?: string | null
+  booking_date?: Date | string | null
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
 }
 
@@ -891,6 +918,7 @@ export type bookingsUncheckedCreateWithoutPackagesInput = {
   org_type: string
   quotation_id?: string | null
   slot_id: string
+  booking_date?: Date | string | null
 }
 
 export type bookingsCreateOrConnectWithoutPackagesInput = {
@@ -944,6 +972,7 @@ export type bookingsScalarWhereInput = {
   quotation_id?: Prisma.UuidNullableFilter<"bookings"> | string | null
   slot_id?: Prisma.StringFilter<"bookings"> | string
   package_id?: Prisma.StringFilter<"bookings"> | string
+  booking_date?: Prisma.DateTimeNullableFilter<"bookings"> | Date | string | null
 }
 
 export type bookingsCreateWithoutSlotsInput = {
@@ -966,6 +995,7 @@ export type bookingsCreateWithoutSlotsInput = {
   org_state: string
   org_type: string
   quotation_id?: string | null
+  booking_date?: Date | string | null
   packages: Prisma.packagesCreateNestedOneWithoutBookingsInput
 }
 
@@ -990,6 +1020,7 @@ export type bookingsUncheckedCreateWithoutSlotsInput = {
   org_type: string
   quotation_id?: string | null
   package_id: string
+  booking_date?: Date | string | null
 }
 
 export type bookingsCreateOrConnectWithoutSlotsInput = {
@@ -1039,6 +1070,7 @@ export type bookingsCreateManyPackagesInput = {
   org_type: string
   quotation_id?: string | null
   slot_id: string
+  booking_date?: Date | string | null
 }
 
 export type bookingsUpdateWithoutPackagesInput = {
@@ -1061,6 +1093,7 @@ export type bookingsUpdateWithoutPackagesInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
 }
 
@@ -1085,6 +1118,7 @@ export type bookingsUncheckedUpdateWithoutPackagesInput = {
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slot_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type bookingsUncheckedUpdateManyWithoutPackagesInput = {
@@ -1108,6 +1142,7 @@ export type bookingsUncheckedUpdateManyWithoutPackagesInput = {
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slot_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type bookingsCreateManySlotsInput = {
@@ -1131,6 +1166,7 @@ export type bookingsCreateManySlotsInput = {
   org_type: string
   quotation_id?: string | null
   package_id: string
+  booking_date?: Date | string | null
 }
 
 export type bookingsUpdateWithoutSlotsInput = {
@@ -1153,6 +1189,7 @@ export type bookingsUpdateWithoutSlotsInput = {
   org_state?: Prisma.StringFieldUpdateOperationsInput | string
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   packages?: Prisma.packagesUpdateOneRequiredWithoutBookingsNestedInput
 }
 
@@ -1177,6 +1214,7 @@ export type bookingsUncheckedUpdateWithoutSlotsInput = {
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type bookingsUncheckedUpdateManyWithoutSlotsInput = {
@@ -1200,6 +1238,7 @@ export type bookingsUncheckedUpdateManyWithoutSlotsInput = {
   org_type?: Prisma.StringFieldUpdateOperationsInput | string
   quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1226,6 +1265,7 @@ export type bookingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  booking_date?: boolean
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookings"]>
@@ -1252,6 +1292,7 @@ export type bookingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  booking_date?: boolean
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookings"]>
@@ -1278,6 +1319,7 @@ export type bookingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  booking_date?: boolean
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookings"]>
@@ -1304,9 +1346,10 @@ export type bookingsSelectScalar = {
   quotation_id?: boolean
   slot_id?: boolean
   package_id?: boolean
+  booking_date?: boolean
 }
 
-export type bookingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "booking_price" | "created_at" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "pic_name" | "pic_email" | "pic_hp" | "org_address" | "org_name" | "org_state" | "org_type" | "quotation_id" | "slot_id" | "package_id", ExtArgs["result"]["bookings"]>
+export type bookingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "booking_price" | "created_at" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "pic_name" | "pic_email" | "pic_hp" | "org_address" | "org_name" | "org_state" | "org_type" | "quotation_id" | "slot_id" | "package_id" | "booking_date", ExtArgs["result"]["bookings"]>
 export type bookingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
@@ -1348,6 +1391,7 @@ export type $bookingsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     quotation_id: string | null
     slot_id: string
     package_id: string
+    booking_date: Date | null
   }, ExtArgs["result"]["bookings"]>
   composites: {}
 }
@@ -1794,6 +1838,7 @@ export interface bookingsFieldRefs {
   readonly quotation_id: Prisma.FieldRef<"bookings", 'String'>
   readonly slot_id: Prisma.FieldRef<"bookings", 'String'>
   readonly package_id: Prisma.FieldRef<"bookings", 'String'>
+  readonly booking_date: Prisma.FieldRef<"bookings", 'DateTime'>
 }
     
 
