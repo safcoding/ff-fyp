@@ -2,33 +2,76 @@ import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 import z from "zod";
 
+const paxCountSchema = z.coerce.number().int().min(0);
+
 const BookingSchema = z.object({
-        booking_price: z.number().min(1).positive(),
-        pax_my_adult: z.number().min(1).positive(),
-        pax_my_kid: z.number().min(1).positive(),
-        pax_my_senior: z.number().min(1).positive(),
-        pax_my_oku: z.number().min(1).positive(),
-        pax_non_my_adult: z.number().min(1).positive(),
-        pax_non_my_kid: z.number().min(1).positive(),
-        pax_non_my_senior: z.number().min(1).positive(),
-        pax_non_my_oku: z.number().min(1).positive(),
-        pic_name: z.string().min(1),
-        pic_email: z.email().min(1),
-        pic_hp: z.e164().min(1),
-        org_address: z.string().min(1),
-        org_name: z.string().min(1),
-        org_state: z.string().min(1),
-        org_type: z.string().min(1),
-        quotation_id: z.string().min(1),
+        pax_my_adult: paxCountSchema,
+        pax_my_kid: paxCountSchema,
+        pax_my_senior: paxCountSchema,
+        pax_my_oku: paxCountSchema,
+        pax_non_my_adult: paxCountSchema,
+        pax_non_my_kid: paxCountSchema,
+        pax_non_my_senior: paxCountSchema,
+        pax_non_my_oku: paxCountSchema,
+        pic_name: z.string().trim().min(1),
+        pic_email: z.string().trim().email(),
+        pic_hp: z.string().trim().regex(/^\+?[1-9]\d{7,14}$/),
+        org_address: z.string().trim().min(1),
+        org_name: z.string().trim().min(1),
+        org_state: z.string().trim().min(1),
+        org_type: z.string().trim().length(1),
+        quotation_id: z.preprocess(
+          (value) => (value === "" ? undefined : value),
+          z.string().uuid().optional()
+        ),
         slot_id: z.string().min(1),
         package_id: z.string().min(1),
-})
+}).refine((data) => (
+    data.pax_my_adult +
+    data.pax_my_kid +
+    data.pax_my_senior +
+    data.pax_my_oku +
+    data.pax_non_my_adult +
+    data.pax_non_my_kid +
+    data.pax_non_my_senior +
+    data.pax_non_my_oku
+  ) > 0, {
+    message: "At least one visitor is required",
+    path: ["pax_my_adult"],
+  })
 
 export type BookingInput = z.infer<typeof BookingSchema>
+
+const calculateBookingPrice = (
+  data: BookingInput,
+  packagePricing: {
+    price_my_adult: unknown;
+    price_my_kid: unknown;
+    price_my_senior: unknown;
+    price_my_oku: unknown;
+    price_non_my_adult: unknown;
+    price_non_my_kid: unknown;
+    price_non_my_senior: unknown;
+    price_non_my_oku: unknown;
+  },
+) => {
+  const total =
+    data.pax_my_adult * Number(packagePricing.price_my_adult) +
+    data.pax_my_kid * Number(packagePricing.price_my_kid) +
+    data.pax_my_senior * Number(packagePricing.price_my_senior) +
+    data.pax_my_oku * Number(packagePricing.price_my_oku) +
+    data.pax_non_my_adult * Number(packagePricing.price_non_my_adult) +
+    data.pax_non_my_kid * Number(packagePricing.price_non_my_kid) +
+    data.pax_non_my_senior * Number(packagePricing.price_non_my_senior) +
+    data.pax_non_my_oku * Number(packagePricing.price_non_my_oku);
+
+  return total;
+};
 
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     const bookings = await prisma.bookings.findMany()
     return bookings.map(b => ({
+    booking_id: b.booking_id,
         booking_price: b.booking_price.toString(),
         pax_my_adult: b.pax_my_adult,      
         pax_my_kid: b.pax_my_kid,       
@@ -51,12 +94,71 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     }))
 })
 
+export const getAvailablePackages = createServerFn({ method: "GET" }).handler(async () => {
+  const packages = await prisma.packages.findMany({
+    where: { package_availability: true },
+    select: {
+      package_id: true,
+      package_name: true,
+    },
+    orderBy: { package_name: "asc" },
+  });
+
+  return packages;
+});
+
+export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
+  const slots = await prisma.slots.findMany({
+    select: {
+      slot_id: true,
+      slot_name: true,
+    },
+    orderBy: { slot_name: "asc" },
+  });
+
+  return slots;
+});
+
 export const createBooking = createServerFn({ method: 'POST' })
   .inputValidator(BookingSchema)
   .handler(async ({ data }) => {
+    const selectedPackage = await prisma.packages.findUnique({
+      where: { package_id: data.package_id },
+      select: {
+        package_availability: true,
+        price_my_adult: true,
+        price_my_kid: true,
+        price_my_senior: true,
+        price_my_oku: true,
+        price_non_my_adult: true,
+        price_non_my_kid: true,
+        price_non_my_senior: true,
+        price_non_my_oku: true,
+      },
+    });
+
+    if (!selectedPackage) {
+      throw new Error("Invalid package_id: package not found");
+    }
+
+    if (!selectedPackage.package_availability) {
+      throw new Error("Selected package is not available");
+    }
+
+    const slot = await prisma.slots.findUnique({
+      where: { slot_id: data.slot_id },
+      select: { slot_id: true },
+    });
+
+    if (!slot) {
+      throw new Error("Invalid slot_id: slot not found");
+    }
+
+    const bookingPrice = calculateBookingPrice(data, selectedPackage);
+
     const newBooking = await prisma.bookings.create({
       data: {
-        booking_price: data.booking_price,
+        booking_price: bookingPrice,
         pax_my_adult: data.pax_my_adult,
         pax_my_kid: data.pax_my_kid,
         pax_my_senior: data.pax_my_senior,
@@ -72,10 +174,10 @@ export const createBooking = createServerFn({ method: 'POST' })
         org_name: data.org_name,
         org_state: data.org_state,
         org_type: data.org_type,
-        quotation_id: data.quotation_id,
+        ...(data.quotation_id ? { quotation_id: data.quotation_id } : {}),
         slot_id: data.slot_id,
         package_id: data.package_id,
       }
     });
-    return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}`;
+    return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}. Total price: ${newBooking.booking_price.toString()}`;
   })
