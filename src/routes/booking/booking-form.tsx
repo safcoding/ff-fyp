@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-
 export const Route = createFileRoute ('/booking/booking-form') ({component: Booking})
 
 function Booking(){
