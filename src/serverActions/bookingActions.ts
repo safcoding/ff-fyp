@@ -68,6 +68,7 @@ const calculateBookingPrice = (
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     const bookings = await prisma.bookings.findMany()
     return bookings.map(b => ({
+      
     booking_id: b.booking_id,
         booking_price: b.booking_price.toString(),
         pax_my_adult: b.pax_my_adult,      

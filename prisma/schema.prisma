@@ -19,7 +19,7 @@ model addons {
   addon_id    Int     @id @default(autoincrement())
   addon_name  String
   addon_desc  String
-  addon_price Decimal @db.Decimal(2, 0)
+  addon_price Decimal @db.Decimal(6, 2)
   addon_avail Boolean
 }
 
@@ -53,7 +53,7 @@ model bookings {
 model foods {
   food_id    Int     @id @default(autoincrement())
   food_name  String
-  food_price Decimal @db.Decimal(2, 0)
+  food_price Decimal @db.Decimal(6, 2)
 }
 
 model packages {
@@ -61,14 +61,14 @@ model packages {
   package_name         String
   package_availability Boolean
   package_note         String?
-  price_my_adult       Decimal    @db.Decimal(2, 0)
-  price_my_kid         Decimal    @db.Decimal(2, 0)
-  price_my_senior      Decimal    @db.Decimal(2, 0)
-  price_my_oku         Decimal    @db.Decimal(2, 0)
-  price_non_my_adult   Decimal    @db.Decimal(2, 0)
-  price_non_my_kid     Decimal    @db.Decimal(2, 0)
-  price_non_my_senior  Decimal    @db.Decimal(2, 0)
-  price_non_my_oku     Decimal    @db.Decimal(2, 0)
+  price_my_adult       Decimal    @db.Decimal(3, 0)
+  price_my_kid         Decimal    @db.Decimal(3, 0)
+  price_my_senior      Decimal    @db.Decimal(3, 0)
+  price_my_oku         Decimal    @db.Decimal(3, 0)
+  price_non_my_adult   Decimal    @db.Decimal(3, 0)
+  price_non_my_kid     Decimal    @db.Decimal(3, 0)
+  price_non_my_senior  Decimal    @db.Decimal(3, 0)
+  price_non_my_oku     Decimal    @db.Decimal(3, 0)
   bookings             bookings[]
 }
 

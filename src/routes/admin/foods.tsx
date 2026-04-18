@@ -80,7 +80,7 @@ function FoodsPage() {
                     id={field.name}
                     type="number"
                     min={0}
-                    step={1}
+                    step={0.01}
                     value={Number(field.state.value)}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(Number(e.target.value || 0))}
