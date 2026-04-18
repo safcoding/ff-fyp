@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Modal } from "@/components/ui/modal"
 import { createSlot, deleteSlot, getSlotsAdmin, updateSlot } from "@/serverActions/slotActions"
 
 export const Route = createFileRoute("/admin/slots")({ component: SlotsPage })
@@ -69,6 +70,17 @@ function SlotsPage() {
       form.reset()
     },
   })
+
+  function openEditModal(pkg: { slot_id: string } & SlotForm) {
+    setEditingSlot(pkg)
+    setEditValues({
+      slot_id: pkg.slot_id,
+      slot_name: pkg.slot_name,
+      slot_start: pkg.slot_start,
+      slot_end: pkg.slot_end,
+      slot_capacity: pkg.slot_capacity,
+    })
+  }
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 p-6">
@@ -186,17 +198,150 @@ function SlotsPage() {
             <div className="space-y-3">
               {slotsQuery.data.map((slot) => (
                 <div key={slot.slot_id} className="rounded-md border p-3 text-sm">
-                  <p className="font-medium">{slot.slot_name}</p>
-                  <p>ID: {slot.slot_id}</p>
-                  <p>
-                    {slot.slot_start} - {slot.slot_end} | Capacity: {slot.slot_capacity}
-                  </p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-medium">{slot.slot_name}</p>
+                      <p>ID: {slot.slot_id}</p>
+                      <p>
+                        {slot.slot_start} - {slot.slot_end} | Capacity: {slot.slot_capacity}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(slot)}>
+                        Edit
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => setDeletingSlot({ slot_id: slot.slot_id, slot_name: slot.slot_name })}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           ) : null}
         </CardContent>
       </Card>
+
+      <Modal
+        open={Boolean(editingSlot)}
+        title="Edit Slot"
+        description="Update slot details."
+        onClose={() => setEditingSlot(null)}
+      >
+        <form
+          className="grid gap-4 md:grid-cols-2"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!editingSlot) {
+              return
+            }
+            void updateSlotMutation.mutateAsync({ data: editValues })
+          }}
+        >
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="edit-slot-id">Slot ID</Label>
+            <Input id="edit-slot-id" value={editValues.slot_id} disabled />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-slot-name">Slot Name</Label>
+            <Input
+              id="edit-slot-name"
+              value={editValues.slot_name}
+              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_name: e.target.value }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-slot-capacity">Capacity</Label>
+            <Input
+              id="edit-slot-capacity"
+              type="number"
+              min={1}
+              step={1}
+              value={Number(editValues.slot_capacity)}
+              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_capacity: Number(e.target.value || 0) }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-slot-start">Start Time</Label>
+            <Input
+              id="edit-slot-start"
+              type="time"
+              value={editValues.slot_start}
+              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_start: e.target.value }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-slot-end">End Time</Label>
+            <Input
+              id="edit-slot-end"
+              type="time"
+              value={editValues.slot_end}
+              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_end: e.target.value }))}
+            />
+          </div>
+
+          <div className="md:col-span-2 space-y-2">
+            <div className="flex gap-2">
+              <Button type="submit" disabled={updateSlotMutation.isPending}>
+                {updateSlotMutation.isPending ? "Saving..." : "Save changes"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setEditingSlot(null)}>
+                Cancel
+              </Button>
+            </div>
+            {updateSlotMutation.isError ? (
+              <p className="text-sm text-red-600">{updateSlotMutation.error.message}</p>
+            ) : null}
+            {updateSlotMutation.isSuccess ? (
+              <p className="text-sm text-green-700">{updateSlotMutation.data}</p>
+            ) : null}
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={Boolean(deletingSlot)}
+        title="Remove Slot"
+        description={`This will permanently remove ${deletingSlot?.slot_name ?? "this slot"}.`}
+        onClose={() => setDeletingSlot(null)}
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deleteSlotMutation.isPending}
+              onClick={() => {
+                if (!deletingSlot) {
+                  return
+                }
+                void deleteSlotMutation.mutateAsync({ data: { slot_id: deletingSlot.slot_id } })
+              }}
+            >
+              {deleteSlotMutation.isPending ? "Removing..." : "Confirm remove"}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setDeletingSlot(null)}>
+              Cancel
+            </Button>
+          </div>
+          {deleteSlotMutation.isError ? (
+            <p className="text-sm text-red-600">{deleteSlotMutation.error.message}</p>
+          ) : null}
+          {deleteSlotMutation.isSuccess ? (
+            <p className="text-sm text-green-700">{deleteSlotMutation.data}</p>
+          ) : null}
+        </div>
+      </Modal>
     </div>
   )
 }
