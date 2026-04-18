@@ -83,3 +83,48 @@ export const createPackage = createServerFn({ method: "POST" })
 
     return `Created package ${created.package_name}`
   })
+
+const updatePackageSchema = packageSchema.extend({
+  package_id: z.string().trim().min(1),
+})
+
+const deletePackageSchema = z.object({
+  package_id: z.string().trim().min(1),
+})
+
+export const updatePackage = createServerFn({ method: "POST" })
+  .inputValidator(updatePackageSchema)
+  .handler(async ({ data }) => {
+    const updated = await prisma.packages.update({
+      where: { package_id: data.package_id },
+      data: {
+        package_name: data.package_name,
+        package_note: data.package_note || null,
+        package_availability: data.package_availability,
+        price_my_adult: data.price_my_adult,
+        price_my_kid: data.price_my_kid,
+        price_my_senior: data.price_my_senior,
+        price_my_oku: data.price_my_oku,
+        price_non_my_adult: data.price_non_my_adult,
+        price_non_my_kid: data.price_non_my_kid,
+        price_non_my_senior: data.price_non_my_senior,
+        price_non_my_oku: data.price_non_my_oku,
+      },
+    })
+
+    return `Updated package ${updated.package_name}`
+  })
+
+export const deletePackage = createServerFn({ method: "POST" })
+  .inputValidator(deletePackageSchema)
+  .handler(async ({ data }) => {
+    try {
+      const deleted = await prisma.packages.delete({
+        where: { package_id: data.package_id },
+      })
+
+      return `Deleted package ${deleted.package_name}`
+    } catch {
+      throw new Error("This package cannot be deleted because it is referenced by existing bookings.")
+    }
+  })

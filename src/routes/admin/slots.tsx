@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { createSlot, getSlotsAdmin } from "@/serverActions/slotActions"
+import { createSlot, deleteSlot, getSlotsAdmin, updateSlot } from "@/serverActions/slotActions"
 
 export const Route = createFileRoute("/admin/slots")({ component: SlotsPage })
 
@@ -28,6 +29,9 @@ const defaultValues: SlotForm = {
 
 function SlotsPage() {
   const queryClient = useQueryClient()
+  const [editingSlot, setEditingSlot] = useState<(SlotForm & { slot_id: string }) | null>(null)
+  const [editValues, setEditValues] = useState<SlotForm>(defaultValues)
+  const [deletingSlot, setDeletingSlot] = useState<{ slot_id: string; slot_name: string } | null>(null)
 
   const slotsQuery = useQuery({
     queryKey: ["admin-slots"],
@@ -40,6 +44,23 @@ function SlotsPage() {
       await queryClient.invalidateQueries({ queryKey: ["admin-slots"] })
     },
   })
+
+  const updateSlotMutation = useMutation({
+    mutationFn: updateSlot,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-slots"] })
+      setEditingSlot(null)
+    },
+  })
+
+  const deleteSlotMutation = useMutation({
+    mutationFn: deleteSlot,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-slots"] })
+      setDeletingSlot(null)
+    },
+  })
+      
 
   const form = useForm({
     defaultValues,

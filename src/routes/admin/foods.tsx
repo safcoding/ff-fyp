@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { createFood, getFoods } from "@/serverActions/foodActions"
+import { Modal } from "@/components/ui/modal"
+import { createFood, deleteFood, getFoods, updateFood } from "@/serverActions/foodActions"
 
 export const Route = createFileRoute("/admin/foods")({ component: FoodsPage })
 
@@ -22,6 +24,9 @@ const defaultValues: FoodForm = {
 
 function FoodsPage() {
   const queryClient = useQueryClient()
+  const [editingFood, setEditingFood] = useState<(FoodForm & { food_id: number }) | null>(null)
+  const [editValues, setEditValues] = useState<FoodForm>(defaultValues)
+  const [deletingFood, setDeletingFood] = useState<{ food_id: number; food_name: string } | null>(null)
 
   const foodsQuery = useQuery({
     queryKey: ["admin-foods"],
@@ -35,6 +40,22 @@ function FoodsPage() {
     },
   })
 
+  const updateFoodMutation = useMutation({
+    mutationFn: updateFood,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-foods"] })
+      setEditingFood(null)
+    },
+  })
+
+  const deleteFoodMutation = useMutation({
+    mutationFn: deleteFood,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-foods"] })
+      setDeletingFood(null)
+    },
+  })
+
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
@@ -42,6 +63,14 @@ function FoodsPage() {
       form.reset()
     },
   })
+
+  function openEditModal(food: { food_id: number } & FoodForm) {
+    setEditingFood(food)
+    setEditValues({
+      food_name: food.food_name,
+      food_price: food.food_price,
+    })
+  }
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 p-6">
@@ -115,14 +144,129 @@ function FoodsPage() {
             <div className="space-y-3">
               {foodsQuery.data.map((food) => (
                 <div key={food.food_id} className="rounded-md border p-3 text-sm">
-                  <p className="font-medium">{food.food_name}</p>
-                  <p>Price: {food.food_price}</p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-medium">{food.food_name}</p>
+                      <p>Price: {food.food_price}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(food)}>
+                        Edit
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => setDeletingFood({ food_id: food.food_id, food_name: food.food_name })}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           ) : null}
         </CardContent>
       </Card>
+
+      <Modal
+        open={Boolean(editingFood)}
+        title="Edit Food"
+        description="Update food details."
+        onClose={() => setEditingFood(null)}
+      >
+        <form
+          className="grid gap-4 md:grid-cols-2"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!editingFood) {
+              return
+            }
+            void updateFoodMutation.mutateAsync({
+              data: {
+                food_id: editingFood.food_id,
+                ...editValues,
+              },
+            })
+          }}
+        >
+          <div className="space-y-2">
+            <Label htmlFor="edit-food-name">Food Name</Label>
+            <Input
+              id="edit-food-name"
+              value={editValues.food_name}
+              onChange={(e) => setEditValues((prev) => ({ ...prev, food_name: e.target.value }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-food-price">Food Price</Label>
+            <Input
+              id="edit-food-price"
+              type="number"
+              min={0}
+              step={0.01}
+              value={Number(editValues.food_price)}
+              onChange={(e) =>
+                setEditValues((prev) => ({ ...prev, food_price: Number(e.target.value || 0) }))
+              }
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <div className="flex gap-2">
+              <Button type="submit" disabled={updateFoodMutation.isPending}>
+                {updateFoodMutation.isPending ? "Saving..." : "Save changes"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setEditingFood(null)}>
+                Cancel
+              </Button>
+            </div>
+            {updateFoodMutation.isError ? (
+              <p className="text-sm text-red-600">{updateFoodMutation.error.message}</p>
+            ) : null}
+            {updateFoodMutation.isSuccess ? (
+              <p className="text-sm text-green-700">{updateFoodMutation.data}</p>
+            ) : null}
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={Boolean(deletingFood)}
+        title="Remove Food"
+        description={`This will permanently remove ${deletingFood?.food_name ?? "this food"}.`}
+        onClose={() => setDeletingFood(null)}
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deleteFoodMutation.isPending}
+              onClick={() => {
+                if (!deletingFood) {
+                  return
+                }
+                void deleteFoodMutation.mutateAsync({ data: { food_id: deletingFood.food_id } })
+              }}
+            >
+              {deleteFoodMutation.isPending ? "Removing..." : "Confirm remove"}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setDeletingFood(null)}>
+              Cancel
+            </Button>
+          </div>
+          {deleteFoodMutation.isError ? (
+            <p className="text-sm text-red-600">{deleteFoodMutation.error.message}</p>
+          ) : null}
+          {deleteFoodMutation.isSuccess ? (
+            <p className="text-sm text-green-700">{deleteFoodMutation.data}</p>
+          ) : null}
+        </div>
+      </Modal>
     </div>
   )
 }

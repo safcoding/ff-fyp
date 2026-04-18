@@ -1,14 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Modal } from "@/components/ui/modal"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createPackage, getPackages } from "@/serverActions/packageActions"
+import { createPackage, deletePackage, getPackages, updatePackage } from "@/serverActions/packageActions"
 
 export const Route = createFileRoute("/admin/packages")({ component: PackagesPage })
 
@@ -53,6 +55,11 @@ const priceFields: ReadonlyArray<{ name: keyof PackageForm; label: string }> = [
 
 function PackagesPage() {
   const queryClient = useQueryClient()
+  const [editingPackage, setEditingPackage] = useState<(PackageForm & { package_id: string }) | null>(null)
+  const [editValues, setEditValues] = useState<PackageForm>(defaultValues)
+  const [deletingPackage, setDeletingPackage] = useState<{ package_id: string; package_name: string } | null>(
+    null
+  )
 
   const packagesQuery = useQuery({
     queryKey: ["admin-packages"],
@@ -66,6 +73,22 @@ function PackagesPage() {
     },
   })
 
+  const updatePackageMutation = useMutation({
+    mutationFn: updatePackage,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-packages"] })
+      setEditingPackage(null)
+    },
+  })
+
+  const deletePackageMutation = useMutation({
+    mutationFn: deletePackage,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-packages"] })
+      setDeletingPackage(null)
+    },
+  })
+
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
@@ -73,6 +96,23 @@ function PackagesPage() {
       form.reset()
     },
   })
+
+  function openEditModal(pkg: { package_id: string } & PackageForm) {
+    setEditingPackage(pkg)
+    setEditValues({
+      package_name: pkg.package_name,
+      package_note: pkg.package_note,
+      package_availability: pkg.package_availability,
+      price_my_adult: pkg.price_my_adult,
+      price_my_kid: pkg.price_my_kid,
+      price_my_senior: pkg.price_my_senior,
+      price_my_oku: pkg.price_my_oku,
+      price_non_my_adult: pkg.price_non_my_adult,
+      price_non_my_kid: pkg.price_non_my_kid,
+      price_non_my_senior: pkg.price_non_my_senior,
+      price_non_my_oku: pkg.price_non_my_oku,
+    })
+  }
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-6">
@@ -177,14 +217,161 @@ function PackagesPage() {
             <div className="space-y-3">
               {packagesQuery.data.map((pkg) => (
                 <div key={pkg.package_id} className="rounded-md border p-3 text-sm">
-                  <p className="font-medium">{pkg.package_name}</p>
-                  <p>Available: {pkg.package_availability ? "Yes" : "No"}</p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-medium">{pkg.package_name}</p>
+                      <p>Available: {pkg.package_availability ? "Yes" : "No"}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(pkg)}>
+                        Edit
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() =>
+                          setDeletingPackage({ package_id: pkg.package_id, package_name: pkg.package_name })
+                        }
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           ) : null}
         </CardContent>
       </Card>
+
+      <Modal
+        open={Boolean(editingPackage)}
+        title="Edit Package"
+        description="Update package details and pricing."
+        onClose={() => setEditingPackage(null)}
+      >
+        <form
+          className="space-y-6"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!editingPackage) {
+              return
+            }
+            void updatePackageMutation.mutateAsync({
+              data: {
+                package_id: editingPackage.package_id,
+                ...editValues,
+              },
+            })
+          }}
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="edit-package-name">Package Name</Label>
+              <Input
+                id="edit-package-name"
+                value={editValues.package_name}
+                onChange={(e) => setEditValues((prev) => ({ ...prev, package_name: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Package Availability</Label>
+              <div className="flex h-10 items-center">
+                <Switch
+                  checked={editValues.package_availability}
+                  onCheckedChange={(value) =>
+                    setEditValues((prev) => ({ ...prev, package_availability: value }))
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="edit-package-note">Package Note (optional)</Label>
+              <Textarea
+                id="edit-package-note"
+                value={editValues.package_note}
+                onChange={(e) => setEditValues((prev) => ({ ...prev, package_note: e.target.value }))}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {priceFields.map((meta) => (
+              <div key={`edit-${meta.name}`} className="space-y-2">
+                <Label htmlFor={`edit-${meta.name}`}>{meta.label}</Label>
+                <Input
+                  id={`edit-${meta.name}`}
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={Number(editValues[meta.name])}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      [meta.name]: Number(e.target.value || 0),
+                    }))
+                  }
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Button type="submit" disabled={updatePackageMutation.isPending}>
+                {updatePackageMutation.isPending ? "Saving..." : "Save changes"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setEditingPackage(null)}>
+                Cancel
+              </Button>
+            </div>
+            {updatePackageMutation.isError ? (
+              <p className="text-sm text-red-600">{updatePackageMutation.error.message}</p>
+            ) : null}
+            {updatePackageMutation.isSuccess ? (
+              <p className="text-sm text-green-700">{updatePackageMutation.data}</p>
+            ) : null}
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        open={Boolean(deletingPackage)}
+        title="Remove Package"
+        description={`This will permanently remove ${deletingPackage?.package_name ?? "this package"}.`}
+        onClose={() => setDeletingPackage(null)}
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deletePackageMutation.isPending}
+              onClick={() => {
+                if (!deletingPackage) {
+                  return
+                }
+                void deletePackageMutation.mutateAsync({ data: { package_id: deletingPackage.package_id } })
+              }}
+            >
+              {deletePackageMutation.isPending ? "Removing..." : "Confirm remove"}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setDeletingPackage(null)}>
+              Cancel
+            </Button>
+          </div>
+          {deletePackageMutation.isError ? (
+            <p className="text-sm text-red-600">{deletePackageMutation.error.message}</p>
+          ) : null}
+          {deletePackageMutation.isSuccess ? (
+            <p className="text-sm text-green-700">{deletePackageMutation.data}</p>
+          ) : null}
+        </div>
+      </Modal>
     </div>
   )
 }

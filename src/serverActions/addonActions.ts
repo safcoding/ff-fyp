@@ -36,3 +36,37 @@ export const createAddon = createServerFn({ method: "POST" })
 
     return `Created addon ${created.addon_name}`
   })
+
+const updateAddonSchema = addonSchema.extend({
+  addon_id: z.coerce.number().int().positive(),
+})
+
+const deleteAddonSchema = z.object({
+  addon_id: z.coerce.number().int().positive(),
+})
+
+export const updateAddon = createServerFn({ method: "POST" })
+  .inputValidator(updateAddonSchema)
+  .handler(async ({ data }) => {
+    const updated = await prisma.addons.update({
+      where: { addon_id: data.addon_id },
+      data: {
+        addon_name: data.addon_name,
+        addon_desc: data.addon_desc,
+        addon_price: data.addon_price,
+        addon_avail: data.addon_avail,
+      },
+    })
+
+    return `Updated addon ${updated.addon_name}`
+  })
+
+export const deleteAddon = createServerFn({ method: "POST" })
+  .inputValidator(deleteAddonSchema)
+  .handler(async ({ data }) => {
+    const deleted = await prisma.addons.delete({
+      where: { addon_id: data.addon_id },
+    })
+
+    return `Deleted addon ${deleted.addon_name}`
+  })

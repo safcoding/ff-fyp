@@ -30,3 +30,35 @@ export const createFood = createServerFn({ method: "POST" })
 
     return `Created food ${created.food_name}`
   })
+
+const updateFoodSchema = foodSchema.extend({
+  food_id: z.coerce.number().int().positive(),
+})
+
+const deleteFoodSchema = z.object({
+  food_id: z.coerce.number().int().positive(),
+})
+
+export const updateFood = createServerFn({ method: "POST" })
+  .inputValidator(updateFoodSchema)
+  .handler(async ({ data }) => {
+    const updated = await prisma.foods.update({
+      where: { food_id: data.food_id },
+      data: {
+        food_name: data.food_name,
+        food_price: data.food_price,
+      },
+    })
+
+    return `Updated food ${updated.food_name}`
+  })
+
+export const deleteFood = createServerFn({ method: "POST" })
+  .inputValidator(deleteFoodSchema)
+  .handler(async ({ data }) => {
+    const deleted = await prisma.foods.delete({
+      where: { food_id: data.food_id },
+    })
+
+    return `Deleted food ${deleted.food_name}`
+  })
