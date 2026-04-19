@@ -98,7 +98,13 @@ function SlotsPage() {
             }}
           >
             <form.Field 
-            name="slot_id">
+            name="slot_id"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Slot ID Required' : undefined,
+            }}
+            
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Slot ID</Label>
@@ -108,11 +114,20 @@ function SlotsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
 
-            <form.Field name="slot_name">
+            <form.Field 
+            name="slot_name"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Slot Name Required' : undefined,
+            }}            
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Slot Name</Label>
@@ -122,11 +137,20 @@ function SlotsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
 
-            <form.Field name="slot_start">
+            <form.Field 
+            name="slot_start"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Start Time Required' : undefined,
+            }}         
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Start Time</Label>
@@ -137,11 +161,20 @@ function SlotsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
 
-            <form.Field name="slot_end">
+            <form.Field 
+            name="slot_end"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Slot End Time Required' : undefined,
+            }}
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>End Time</Label>
@@ -152,11 +185,20 @@ function SlotsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
 
-            <form.Field name="slot_capacity">
+            <form.Field 
+            name="slot_capacity"
+            validators={{
+              onBlur: ({ value }) =>
+                value < 1 ? 'At least 1 capacity Needed' : undefined,
+            }}
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Capacity</Label>
@@ -169,6 +211,9 @@ function SlotsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(Number(e.target.value || 0))}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
