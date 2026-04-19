@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getBookings, updateBooking, deleteBooking } from "@/serverActions/bookingActions";
+import { deleteBooking, getBookings, updateBooking } from "@/serverActions/bookingActions";
 import { useMutation } from "@tanstack/react-query";
 
 import { Card,CardHeader,CardTitle,CardContent } from "@/components/ui/card";
@@ -26,7 +26,7 @@ const bookingQuery = useQuery({
   const deleteBookingMutation = useMutation({
     mutationFn: deleteBooking,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["admin-bookings"] })
+    await queryClient.invalidateQueries({ queryKey: ["admin-bookings"] })
     },
   })
 
@@ -41,15 +41,29 @@ const bookingQuery = useQuery({
           {bookingQuery.data ? (
             <div className="space-y-3">
               {bookingQuery.data.map((booking) => (
-                <div key={booking.booking_id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
+                <div key={booking.booking_id} className="rounded-md border p-3 text-sm flex items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-medium">PIC: {booking.pic_name}</p>
                       <p>Booking Date: {booking.booking_date? booking.booking_date.toDateString():"-"}</p>
                       <p>Package: {booking.package_id}</p>
                       <p>Status: {booking.booking_status}</p>
                     </div>
-                  </div>
+                    <div className="flex gap-2">
+                    <Button variant="outline" size="sm">
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() =>
+                        deleteBookingMutation.mutate({
+                          data: { booking_id: booking.booking_id },
+                        })
+                      }
+                    >
+                      Delete
+                    </Button>
+                    </div>
                 </div>
               ))}
             </div>
