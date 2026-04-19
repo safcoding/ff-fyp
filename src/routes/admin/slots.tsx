@@ -97,7 +97,8 @@ function SlotsPage() {
               void form.handleSubmit()
             }}
           >
-            <form.Field name="slot_id">
+            <form.Field 
+            name="slot_id">
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Slot ID</Label>

@@ -87,7 +87,13 @@ function FoodsPage() {
               void form.handleSubmit()
             }}
           >
-            <form.Field name="food_name">
+            <form.Field 
+            name="food_name"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 0 ? 'Food Name Required' : undefined,
+            }} 
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Food Name</Label>
@@ -97,11 +103,20 @@ function FoodsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
 
-            <form.Field name="food_price">
+            <form.Field 
+            name="food_price"
+            validators={{
+              onBlur: ({ value }) =>
+                value <= 0 ? 'Price must be RM0 or more' : undefined,
+            }}            
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Food Price</Label>
@@ -114,6 +129,9 @@ function FoodsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(Number(e.target.value || 0))}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>

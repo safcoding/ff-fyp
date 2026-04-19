@@ -57,10 +57,8 @@ function PackagesPage() {
   const queryClient = useQueryClient()
   const [editingPackage, setEditingPackage] = useState<(PackageForm & { package_id: string }) | null>(null)
   const [editValues, setEditValues] = useState<PackageForm>(defaultValues)
-  const [deletingPackage, setDeletingPackage] = useState<{ package_id: string; package_name: string } | null>(
-    null
-  )
-
+  const [deletingPackage, setDeletingPackage] = useState<{ package_id: string; package_name: string } | null>(null)
+  
   const packagesQuery = useQuery({
     queryKey: ["admin-packages"],
     queryFn: () => getPackages(),
@@ -131,7 +129,13 @@ function PackagesPage() {
             }}
           >
             <div className="grid gap-4 md:grid-cols-2">
-              <form.Field name="package_name">
+              <form.Field 
+              name="package_name"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Package Name Required' : undefined,
+            }}              
+              >
                 {(field) => (
                   <div className="space-y-2">
                     <Label htmlFor={field.name}>Package Name</Label>
@@ -141,6 +145,9 @@ function PackagesPage() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                   </div>
                 )}
               </form.Field>

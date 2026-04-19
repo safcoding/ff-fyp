@@ -135,4 +135,5 @@ code {
   body {
     @apply bg-background text-foreground;
   }
+[role="alert"] { --text: oklch(0.637 0.237 25.331); color: var(--text); }
 }

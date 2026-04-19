@@ -95,7 +95,13 @@ function AddonsPage() {
               void form.handleSubmit()
             }}
           >
-            <form.Field name="addon_name">
+            <form.Field 
+            name="addon_name"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Addon Name is required' : undefined,
+            }}
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Addon Name</Label>
@@ -105,11 +111,22 @@ function AddonsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
+
               )}
+
             </form.Field>
 
-            <form.Field name="addon_price">
+            <form.Field 
+            name="addon_price"
+            validators={{
+              onBlur: ({ value }) =>
+                value < 0 ? 'Price must be RM0 or more' : undefined,
+            }}
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Addon Price</Label>
@@ -122,6 +139,9 @@ function AddonsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(Number(e.target.value || 0))}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
                 </div>
               )}
             </form.Field>
@@ -129,7 +149,7 @@ function AddonsPage() {
             <form.Field name="addon_desc">
               {(field) => (
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor={field.name}>Description</Label>
+                  <Label htmlFor={field.name}>Description (optional)</Label>
                   <Textarea
                     id={field.name}
                     value={field.state.value}
