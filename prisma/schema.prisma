@@ -42,10 +42,11 @@ model bookings {
   org_name          String
   org_state         String
   org_type          String
-  quotation_id      String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quotation_id      String?   @unique @db.Uuid
   slot_id           String
   package_id        String
   booking_date      DateTime? @db.Date
+  booking_status    String?   @default("PENDING")
   packages          packages  @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction)
   slots             slots     @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")
 }

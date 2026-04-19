@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { createAddon, deleteAddon, getAddons, updateAddon } from "@/serverActions/addonActions"
 
 export const Route = createFileRoute("/admin/addons")({ component: AddonsPage })
+  const queryClient = new QueryClient()
 
 type AddonForm = {
   addon_name: string
@@ -29,7 +30,6 @@ const defaultValues: AddonForm = {
 }
 
 function AddonsPage() {
-  const queryClient = useQueryClient()
   const [editingAddon, setEditingAddon] = useState<(AddonForm & { addon_id: number }) | null>(null)
   const [editValues, setEditValues] = useState<AddonForm>(defaultValues)
   const [deletingAddon, setDeletingAddon] = useState<{ addon_id: number; addon_name: string } | null>(null)

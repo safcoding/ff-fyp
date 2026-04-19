@@ -10,6 +10,10 @@ const addonSchema = z.object({
   addon_avail: z.boolean(),
 })
 
+const secretAddonSchema = addonSchema.extend({
+  addon_id: z.coerce.number(),
+})
+
 export const getAddons = createServerFn({ method: "GET" }).handler(async () => {
   const addons = await prisma.addons.findMany({ orderBy: { addon_name: "asc" } })
 
@@ -37,16 +41,10 @@ export const createAddon = createServerFn({ method: "POST" })
     return `Created addon ${created.addon_name}`
   })
 
-const updateAddonSchema = addonSchema.extend({
-  addon_id: z.coerce.number().int().positive(),
-})
 
-const deleteAddonSchema = z.object({
-  addon_id: z.coerce.number().int().positive(),
-})
 
 export const updateAddon = createServerFn({ method: "POST" })
-  .inputValidator(updateAddonSchema)
+  .inputValidator(secretAddonSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.addons.update({
       where: { addon_id: data.addon_id },
@@ -62,7 +60,7 @@ export const updateAddon = createServerFn({ method: "POST" })
   })
 
 export const deleteAddon = createServerFn({ method: "POST" })
-  .inputValidator(deleteAddonSchema)
+  .inputValidator(secretAddonSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.addons.delete({
       where: { addon_id: data.addon_id },

@@ -2,10 +2,9 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useMemo, useState } from "react"
-
+import { getPackages } from "@/serverActions/packageActions"
 import {
   createBooking,
-  getAvailablePackages,
   getBookings,
   getSlots,
 } from "@/serverActions/bookingActions"
@@ -24,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export const Route = createFileRoute("/booking/booking-form")({ component: Booking })
+export const Route = createFileRoute("/booking-form")({ component: Booking })
 
 type Step = 1 | 2 | 3 | 4
 
@@ -109,7 +108,7 @@ function Booking() {
 
   const packagesQuery = useQuery({
     queryKey: ["packages"],
-    queryFn: () => getAvailablePackages(),
+    queryFn: () => getPackages(),
   })
 
   const slotsQuery = useQuery({
@@ -225,7 +224,7 @@ function Booking() {
                   type="date"
                   min={new Date().toISOString().split("T")[0]}
                   value={selectedDate}
-                  onChange={(e) => {
+                  onChange={(e) => {          
                     setSelectedDate(e.target.value)
                     form.setFieldValue("booking_date", e.target.value)
                     form.setFieldValue("slot_id", "")
@@ -461,12 +460,6 @@ function Booking() {
                   )}
                 </form.Field>
               </div>
-
-              <div className="space-y-2">
-                <p className="text-sm">Current total visitors: {totalVisitors}</p>
-                {detailsStepError ? <p className="text-sm text-red-600">{detailsStepError}</p> : null}
-              </div>
-
               <Button type="submit">Next: Review Summary</Button>
             </form>
           ) : null}

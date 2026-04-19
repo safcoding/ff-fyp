@@ -10,6 +10,7 @@ function AdminIndex() {
     { href: "/admin/slots", label: "Manage Slots" },
     { href: "/admin/addons", label: "Manage Addons" },
     { href: "/admin/foods", label: "Manage Foods" },
+    { href: "/admin/bookings", label: "Manage Bookings" },
   ]
 
   return (
