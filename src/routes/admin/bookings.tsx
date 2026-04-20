@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { deleteBooking, getBookings, updateBooking } from "@/serverActions/bookingActions";
 import { useMutation } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/admin/bookings")({ component: BookingPage
 const queryClient = new QueryClient()
 
 function BookingPage() { 
+  const [deletingBooking, setDelete] = useState()
 const bookingQuery = useQuery({
     queryKey: ['admin-bookings'],
     queryFn: getBookings

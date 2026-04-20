@@ -28,10 +28,6 @@ const secretBookingSchema = BookingSchema.extend({
   booking_status: z.string()
 })
 
-const deleteBookingSchema = z.object({
-  booking_id: z.uuid(),
-})
-
 export type BookingInput = z.infer<typeof BookingSchema>
 
 const calculateBookingPrice = (
@@ -231,13 +227,18 @@ export const createBooking = createServerFn({ method: 'POST' })
     return `Updated Booking ${updated.booking_id}`
   })
 
+
+  const deleteBookingSchema = z.object({
+  booking_id: z.uuid(),
+})
+
   export const deleteBooking = createServerFn({ method: "POST" })
     .inputValidator(deleteBookingSchema)
     .handler(async ({ data }) => {
       const deleted = await prisma.bookings.delete({
         where: {booking_id: data.booking_id },
       })
-  
+
       return `Deleted booking ${deleted.booking_id}`
     })
   
