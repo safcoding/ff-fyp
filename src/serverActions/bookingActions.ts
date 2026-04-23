@@ -23,12 +23,44 @@ const BookingSchema = z.object({
         package_id: z.string().min(1),
 })
 
+const AvailabilitySchema = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+})
+
 const secretBookingSchema = BookingSchema.extend({
   booking_id: z.uuid(),
   booking_status: z.string()
 })
 
 export type BookingInput = z.infer<typeof BookingSchema>
+
+function toHHmm(value: Date | string) {
+  if (value instanceof Date) return value.toISOString().slice(11, 16)
+  return value.trim().slice(0, 5)
+}
+
+function getBookingVisitorCount(booking: {
+  pax_my_adult: number
+  pax_my_kid: number
+  pax_my_senior: number
+  pax_my_oku: number
+  pax_non_my_adult: number
+  pax_non_my_kid: number
+  pax_non_my_senior: number
+  pax_non_my_oku: number
+}) {
+  return (
+    booking.pax_my_adult +
+    booking.pax_my_kid +
+    booking.pax_my_senior +
+    booking.pax_my_oku +
+    booking.pax_non_my_adult +
+    booking.pax_non_my_kid +
+    booking.pax_non_my_senior +
+    booking.pax_non_my_oku
+  )
+}
 
 const calculateBookingPrice = (
   data: BookingInput,
@@ -97,6 +129,102 @@ export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
 
   return slots;
 });
+
+export const getBookingAvailability = createServerFn({ method: "POST" })
+  .inputValidator(AvailabilitySchema)
+  .handler(async ({ data }) => {
+    const [year, month] = data.month.split("-").map(Number)
+    const monthStart = new Date(Date.UTC(year, month - 1, 1))
+    const nextMonthStart = new Date(Date.UTC(year, month, 1))
+
+    const [slots, monthBookings] = await Promise.all([
+      prisma.slots.findMany({
+        orderBy: { slot_name: "asc" },
+        select: {
+          slot_id: true,
+          slot_name: true,
+          slot_start: true,
+          slot_end: true,
+          slot_capacity: true,
+        },
+      }),
+      prisma.bookings.findMany({
+        where: {
+          booking_date: {
+            gte: monthStart,
+            lt: nextMonthStart,
+          },
+        },
+        select: {
+          booking_date: true,
+          booking_status: true,
+          slot_id: true,
+          pax_my_adult: true,
+          pax_my_kid: true,
+          pax_my_senior: true,
+          pax_my_oku: true,
+          pax_non_my_adult: true,
+          pax_non_my_kid: true,
+          pax_non_my_senior: true,
+          pax_non_my_oku: true,
+        },
+      }),
+    ])
+
+    const activeBookings = monthBookings.filter((booking) => {
+      const status = (booking.booking_status ?? "").toUpperCase()
+      return status !== "REJECTED" && status !== "CANCELLED"
+    })
+
+    const bookedByDateAndSlot = new Map<string, Map<string, number>>()
+
+    for (const booking of activeBookings) {
+      if (!booking.booking_date) {
+        continue
+      }
+
+      const dateKey = booking.booking_date.toISOString().slice(0, 10)
+      const visitors = getBookingVisitorCount(booking)
+
+      const slotMap = bookedByDateAndSlot.get(dateKey) ?? new Map<string, number>()
+      slotMap.set(booking.slot_id, (slotMap.get(booking.slot_id) ?? 0) + visitors)
+      bookedByDateAndSlot.set(dateKey, slotMap)
+    }
+
+    const fullyBookedDates = Array.from(bookedByDateAndSlot.entries())
+      .filter(([, slotMap]) =>
+        slots.every((slot) => {
+          const booked = slotMap.get(slot.slot_id) ?? 0
+          return booked >= slot.slot_capacity
+        }),
+      )
+      .map(([date]) => date)
+
+    const slotsForDate = data.date
+      ? slots.map((slot) => {
+          const booked = bookedByDateAndSlot.get(data.date!)?.get(slot.slot_id) ?? 0
+          const remaining = Math.max(slot.slot_capacity - booked, 0)
+
+          return {
+            slot_id: slot.slot_id,
+            slot_name: slot.slot_name,
+            slot_start: toHHmm(slot.slot_start),
+            slot_end: toHHmm(slot.slot_end),
+            slot_capacity: slot.slot_capacity,
+            booked_visitors: booked,
+            remaining_capacity: remaining,
+            is_full: remaining <= 0,
+          }
+        })
+      : []
+
+    return {
+      month: data.month,
+      selected_date: data.date ?? null,
+      fully_booked_dates: fullyBookedDates,
+      slots_for_date: slotsForDate,
+    }
+  })
 
 export const createBooking = createServerFn({ method: 'POST' })
   .inputValidator(BookingSchema)

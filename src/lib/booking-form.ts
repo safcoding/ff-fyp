@@ -114,7 +114,7 @@ export function validateDetails(values: FormValues): string | null {
   }
 
   const phone = values.pic_hp.trim()
-  const phonePattern = /^\+?[1-9]\d{7,14}$/
+ const phonePattern = /^\+?[1-9]\d{7,14}$/
   if (!phonePattern.test(phone)) {
     return "Phone must be in valid E.164 format (example: +60123456789)."
   }
