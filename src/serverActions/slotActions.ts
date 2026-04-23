@@ -22,6 +22,16 @@ function toHHmm(value: Date | string) {
   return raw.slice(0, 5) // handles "09:00" or "09:00:00"
 }
 
+function toIsoDateTimeForTimeColumn(value: Date | string) {
+  if (value instanceof Date) return value.toISOString()
+
+  const raw = value.trim()
+  if (/^\d{2}:\d{2}$/.test(raw)) return `1970-01-01T${raw}:00.000Z`
+  if (/^\d{2}:\d{2}:\d{2}$/.test(raw)) return `1970-01-01T${raw}.000Z`
+
+  return `1970-01-01T${raw.slice(0, 8)}.000Z`
+}
+
 export const getSlotsAdmin = createServerFn({ method: "GET" }).handler(async () => {
   const slots = await prisma.slots.findMany({ orderBy: { slot_name: "asc" } })
 
@@ -41,8 +51,8 @@ export const createSlot = createServerFn({ method: "POST" })
       data: {
         slot_id: data.slot_id,
         slot_name: data.slot_name,
-        slot_start: toHHmm(data.slot_start),
-        slot_end: toHHmm(data.slot_end),
+        slot_start: toIsoDateTimeForTimeColumn(data.slot_start),
+        slot_end: toIsoDateTimeForTimeColumn(data.slot_end),
         slot_capacity: data.slot_capacity,
       },
     })
@@ -57,8 +67,8 @@ export const updateSlot = createServerFn({ method: "POST" })
       where: { slot_id: data.slot_id },
       data: {
         slot_name: data.slot_name,
-        slot_start: toHHmm(data.slot_start),
-        slot_end: toHHmm(data.slot_end),
+        slot_start: toIsoDateTimeForTimeColumn(data.slot_start),
+        slot_end: toIsoDateTimeForTimeColumn(data.slot_end),
         slot_capacity: data.slot_capacity,
       },
     })

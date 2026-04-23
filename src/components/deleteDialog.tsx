@@ -1,32 +1,50 @@
-import { AlertDialog,
-        AlertDialogAction,
-        AlertDialogCancel,
-        AlertDialogContent,
-        AlertDialogDescription,
-        AlertDialogFooter,
-        AlertDialogHeader,
-        AlertDialogTitle,
-        AlertDialogTrigger,   
- } from "#/components/ui/alert-dialog"  
- import { Button } from "#/components/ui/button"
+import { Button } from "@/components/ui/button"
+import { Modal } from "@/components/ui/modal"
 
- const deleteDialog = (data) => {
-<AlertDialog>
-  <AlertDialogTrigger asChild>
-    <Button variant="destructive">Delete</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-      <AlertDialogDescription>
-        This action cannot be undone. This will permanently delete your account
-        from our servers.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
-      <AlertDialogAction>Continue</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
+type DeleteDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onConfirm: () => void
+  pending?: boolean
+  title?: string
+  description?: string
+  confirmLabel?: string
+  cancelLabel?: string
+  pendingLabel?: string
+  confirmVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+}
+
+export function DeleteDialog({
+  open,
+  onOpenChange,
+  onConfirm,
+  pending = false,
+  title = "Delete item?",
+  description = "This action cannot be undone.",
+  confirmLabel = "Delete",
+  cancelLabel = "Cancel",
+  pendingLabel = "Deleting...",
+  confirmVariant = "destructive",
+}: DeleteDialogProps) {
+  return (
+    <Modal open={open} title={title} description={description} onClose={() => onOpenChange(false)}>
+      <div className="space-y-4">
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={confirmVariant}
+            disabled={pending}
+            onClick={() => {
+              onConfirm()
+            }}
+          >
+            {pending ? pendingLabel : confirmLabel}
+          </Button>
+          <Button type="button" variant="outline" disabled={pending} onClick={() => onOpenChange(false)}>
+            {cancelLabel}
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  )
 }

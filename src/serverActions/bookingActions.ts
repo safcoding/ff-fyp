@@ -228,12 +228,12 @@ export const createBooking = createServerFn({ method: 'POST' })
   })
 
 
-  const deleteBookingSchema = z.object({
+  const BookingIDSchema = z.object({
   booking_id: z.uuid(),
 })
 
   export const deleteBooking = createServerFn({ method: "POST" })
-    .inputValidator(deleteBookingSchema)
+    .inputValidator(BookingIDSchema)
     .handler(async ({ data }) => {
       const deleted = await prisma.bookings.delete({
         where: {booking_id: data.booking_id },
@@ -241,4 +241,28 @@ export const createBooking = createServerFn({ method: 'POST' })
 
       return `Deleted booking ${deleted.booking_id}`
     })
+
+export const approveBooking = createServerFn({ method: "POST" })
+  .inputValidator(BookingIDSchema)
+  .handler(async ({ data }) => {
+    const booking = await prisma.bookings.findUnique({
+      where: { booking_id: data.booking_id },
+      select: { booking_status: true },
+    })
+
+    if (!booking) {
+      throw new Error("Booking not found")
+    }
+
+    if ((booking.booking_status ?? "").toUpperCase() !== "PENDING") {
+      throw new Error("Only PENDING bookings can be approved")
+    }
+
+    const updated = await prisma.bookings.update({
+      where: { booking_id: data.booking_id },
+      data: { booking_status: "APPROVED" },
+    })
+
+    return `Approved booking ${updated.booking_id}`
+  })
   

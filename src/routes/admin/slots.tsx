@@ -4,6 +4,7 @@ import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { DeleteDialog } from "@/components/deleteDialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -354,40 +355,31 @@ function SlotsPage() {
         </form>
       </Modal>
 
-      <Modal
+      <DeleteDialog
         open={Boolean(deletingSlot)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeletingSlot(null)
+          }
+        }}
+        onConfirm={() => {
+          if (!deletingSlot) {
+            return
+          }
+          void deleteSlotMutation.mutateAsync({ data: { slot_id: deletingSlot.slot_id } })
+        }}
+        pending={deleteSlotMutation.isPending}
         title="Remove Slot"
         description={`This will permanently remove ${deletingSlot?.slot_name ?? "this slot"}.`}
-        onClose={() => setDeletingSlot(null)}
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={deleteSlotMutation.isPending}
-              onClick={() => {
-                if (!deletingSlot) {
-                  return
-                }
-                void deleteSlotMutation.mutateAsync({ data: { slot_id: deletingSlot.slot_id } })
-              }}
-            >
-              {deleteSlotMutation.isPending ? "Removing..." : "Confirm remove"}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setDeletingSlot(null)}>
-              Cancel
-            </Button>
-          </div>
-          {deleteSlotMutation.isError ? (
-            <p className="text-sm text-red-600">{deleteSlotMutation.error.message}</p>
-          ) : null}
-          {deleteSlotMutation.isSuccess ? (
-            <p className="text-sm text-green-700">{deleteSlotMutation.data}</p>
-          ) : null}
-        </div>
-      </Modal>
+        confirmLabel="Confirm remove"
+      />
+
+      {deleteSlotMutation.isError ? (
+        <p className="text-sm text-red-600">{deleteSlotMutation.error.message}</p>
+      ) : null}
+      {deleteSlotMutation.isSuccess ? (
+        <p className="text-sm text-green-700">{deleteSlotMutation.data}</p>
+      ) : null}
     </div>
   )
 }

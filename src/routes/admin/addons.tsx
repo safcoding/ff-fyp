@@ -4,6 +4,7 @@ import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { DeleteDialog } from "@/components/deleteDialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -306,40 +307,31 @@ function AddonsPage() {
         </form>
       </Modal>
 
-      <Modal
+      <DeleteDialog
         open={Boolean(deletingAddon)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeletingAddon(null)
+          }
+        }}
+        onConfirm={() => {
+          if (!deletingAddon) {
+            return
+          }
+          void deleteAddonMutation.mutateAsync({ data: { addon_id: deletingAddon.addon_id } })
+        }}
+        pending={deleteAddonMutation.isPending}
         title="Remove Addon"
         description={`This will permanently remove ${deletingAddon?.addon_name ?? "this addon"}.`}
-        onClose={() => setDeletingAddon(null)}
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={deleteAddonMutation.isPending}
-              onClick={() => {
-                if (!deletingAddon) {
-                  return
-                }
-                void deleteAddonMutation.mutateAsync({ data: { addon_id: deletingAddon.addon_id } })
-              }}
-            >
-              {deleteAddonMutation.isPending ? "Removing..." : "Confirm remove"}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setDeletingAddon(null)}>
-              Cancel
-            </Button>
-          </div>
-          {deleteAddonMutation.isError ? (
-            <p className="text-sm text-red-600">{deleteAddonMutation.error.message}</p>
-          ) : null}
-          {deleteAddonMutation.isSuccess ? (
-            <p className="text-sm text-green-700">{deleteAddonMutation.data}</p>
-          ) : null}
-        </div>
-      </Modal>
+        confirmLabel="Confirm remove"
+      />
+
+      {deleteAddonMutation.isError ? (
+        <p className="text-sm text-red-600">{deleteAddonMutation.error.message}</p>
+      ) : null}
+      {deleteAddonMutation.isSuccess ? (
+        <p className="text-sm text-green-700">{deleteAddonMutation.data}</p>
+      ) : null}
     </div>
   )
 }
