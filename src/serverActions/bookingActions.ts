@@ -17,7 +17,7 @@ const BookingSchema = z.object({
         org_address: z.string().trim().min(1),
         org_name: z.string().trim().min(1),
         org_state: z.string().trim().min(1),
-        org_type: z.string().trim().length(20),
+        org_type: z.string().trim().min(1).max(20),
         booking_date: z.coerce.date(),
         slot_id: z.string().min(1),
         package_id: z.string().min(1),
