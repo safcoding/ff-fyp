@@ -191,13 +191,28 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
       bookedByDateAndSlot.set(dateKey, slotMap)
     }
 
-    const fullyBookedDates = Array.from(bookedByDateAndSlot.entries())
-      .filter(([, slotMap]) =>
-        slots.every((slot) => {
-          const booked = slotMap.get(slot.slot_id) ?? 0
-          return booked >= slot.slot_capacity
-        }),
-      )
+    const dateStatuses: Record<string, "full" | "limited" | "available"> = {}
+
+    for (let cursor = new Date(monthStart); cursor < nextMonthStart; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
+      const dateKey = cursor.toISOString().slice(0, 10)
+      const slotMap = bookedByDateAndSlot.get(dateKey) ?? new Map<string, number>()
+
+      const availableSlotCount = slots.filter((slot) => {
+        const booked = slotMap.get(slot.slot_id) ?? 0
+        return booked < slot.slot_capacity
+      }).length
+
+      if (availableSlotCount === 0) {
+        dateStatuses[dateKey] = "full"
+      } else if (availableSlotCount <= Math.ceil(slots.length / 3)) {
+        dateStatuses[dateKey] = "limited"
+      } else {
+        dateStatuses[dateKey] = "available"
+      }
+    }
+
+    const fullyBookedDates = Object.entries(dateStatuses)
+      .filter(([, status]) => status === "full")
       .map(([date]) => date)
 
     const slotsForDate = data.date
@@ -222,6 +237,7 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
       month: data.month,
       selected_date: data.date ?? null,
       fully_booked_dates: fullyBookedDates,
+      date_statuses: dateStatuses,
       slots_for_date: slotsForDate,
     }
   })
