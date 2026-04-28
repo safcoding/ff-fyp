@@ -4,6 +4,7 @@ import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { DeleteDialog } from "@/components/deleteDialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -345,40 +346,31 @@ function PackagesPage() {
         </form>
       </Modal>
 
-      <Modal
+      <DeleteDialog
         open={Boolean(deletingPackage)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeletingPackage(null)
+          }
+        }}
+        onConfirm={() => {
+          if (!deletingPackage) {
+            return
+          }
+          void deletePackageMutation.mutateAsync({ data: { package_id: deletingPackage.package_id } })
+        }}
+        pending={deletePackageMutation.isPending}
         title="Remove Package"
         description={`This will permanently remove ${deletingPackage?.package_name ?? "this package"}.`}
-        onClose={() => setDeletingPackage(null)}
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={deletePackageMutation.isPending}
-              onClick={() => {
-                if (!deletingPackage) {
-                  return
-                }
-                void deletePackageMutation.mutateAsync({ data: { package_id: deletingPackage.package_id } })
-              }}
-            >
-              {deletePackageMutation.isPending ? "Removing..." : "Confirm remove"}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setDeletingPackage(null)}>
-              Cancel
-            </Button>
-          </div>
-          {deletePackageMutation.isError ? (
-            <p className="text-sm text-red-600">{deletePackageMutation.error.message}</p>
-          ) : null}
-          {deletePackageMutation.isSuccess ? (
-            <p className="text-sm text-green-700">{deletePackageMutation.data}</p>
-          ) : null}
-        </div>
-      </Modal>
+        confirmLabel="Confirm remove"
+      />
+
+      {deletePackageMutation.isError ? (
+        <p className="text-sm text-red-600">{deletePackageMutation.error.message}</p>
+      ) : null}
+      {deletePackageMutation.isSuccess ? (
+        <p className="text-sm text-green-700">{deletePackageMutation.data}</p>
+      ) : null}
     </div>
   )
 }

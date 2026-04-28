@@ -4,6 +4,7 @@ import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { DeleteDialog } from "@/components/deleteDialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -251,40 +252,31 @@ function FoodsPage() {
         </form>
       </Modal>
 
-      <Modal
+      <DeleteDialog
         open={Boolean(deletingFood)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeletingFood(null)
+          }
+        }}
+        onConfirm={() => {
+          if (!deletingFood) {
+            return
+          }
+          void deleteFoodMutation.mutateAsync({ data: { food_id: deletingFood.food_id } })
+        }}
+        pending={deleteFoodMutation.isPending}
         title="Remove Food"
         description={`This will permanently remove ${deletingFood?.food_name ?? "this food"}.`}
-        onClose={() => setDeletingFood(null)}
-      >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={deleteFoodMutation.isPending}
-              onClick={() => {
-                if (!deletingFood) {
-                  return
-                }
-                void deleteFoodMutation.mutateAsync({ data: { food_id: deletingFood.food_id } })
-              }}
-            >
-              {deleteFoodMutation.isPending ? "Removing..." : "Confirm remove"}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => setDeletingFood(null)}>
-              Cancel
-            </Button>
-          </div>
-          {deleteFoodMutation.isError ? (
-            <p className="text-sm text-red-600">{deleteFoodMutation.error.message}</p>
-          ) : null}
-          {deleteFoodMutation.isSuccess ? (
-            <p className="text-sm text-green-700">{deleteFoodMutation.data}</p>
-          ) : null}
-        </div>
-      </Modal>
+        confirmLabel="Confirm remove"
+      />
+
+      {deleteFoodMutation.isError ? (
+        <p className="text-sm text-red-600">{deleteFoodMutation.error.message}</p>
+      ) : null}
+      {deleteFoodMutation.isSuccess ? (
+        <p className="text-sm text-green-700">{deleteFoodMutation.data}</p>
+      ) : null}
     </div>
   )
 }
