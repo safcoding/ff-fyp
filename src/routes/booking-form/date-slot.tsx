@@ -3,8 +3,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { format } from "date-fns"
 import { CalendarDays, Clock, Users } from "lucide-react"
-import type { DayButtonProps } from "react-day-picker"
-
 import { getBookingAvailability } from "@/serverActions/bookingActions"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { StepIndicator } from "@/components/booking/StepIndicator"
@@ -16,17 +14,13 @@ import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/booking-form/date-slot")({ component: BookingDateSlotPage })
 
-type DateStatus = "full" | "limited" | "available" | "none"
-
 function BookingDateSlotPage() {
   const navigate = Route.useNavigate()
   const { values, updateField, isHydrated } = useBookingDraft()
   const [error, setError] = useState<string | null>(null)
-  const [visibleMonth, setVisibleMonth] = useState<Date>(() =>
-    values.booking_date ? new Date(`${values.booking_date}T00:00:00`) : new Date(),
-  )
-
-  const monthKey = format(visibleMonth, "yyyy-MM")
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const selectedDate = values.booking_date ? new Date(`${values.booking_date}T00:00:00`) : undefined
+  const monthKey = format(selectedDate ?? date ?? new Date(), "yyyy-MM")
 
   const availabilityQuery = useQuery({
     queryKey: ["booking-availability", monthKey, values.booking_date],
@@ -40,28 +34,21 @@ function BookingDateSlotPage() {
       }),
   })
 
-  const fullyBookedDates = new Set(availabilityQuery.data?.fully_booked_dates ?? [])
-  const dateStatuses = availabilityQuery.data?.date_statuses ?? {}
   const slotsForSelectedDate = values.booking_date ? availabilityQuery.data?.slots_for_date ?? [] : []
-  const selectedDate = values.booking_date ? new Date(`${values.booking_date}T00:00:00`) : undefined
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  function handleDateSelect(selected: Date | undefined) {
+    setDate(selected)
 
-  const isDateInVisibleMonth = (date: Date) => format(date, "yyyy-MM") === monthKey
-
-  const getDateStatus = (date: Date): DateStatus => {
-    const dateKey = format(date, "yyyy-MM-dd")
-    return (dateStatuses[dateKey] as DateStatus | undefined) ?? "none"
-  }
-
-  const hasAvailability = (date: Date) => {
-    const status = getDateStatus(date)
-    if (status === "none") {
-      // Unknown status means month data has not been resolved yet; do not hard-disable the date.
-      return true
+    if (!selected) {
+      updateField("booking_date", "")
+      updateField("slot_id", "")
+      return
     }
-    return status === "available" || status === "limited"
+
+    const dateKey = format(selected, "yyyy-MM-dd")
+    updateField("booking_date", dateKey)
+    updateField("slot_id", "")
+    setError(null)
   }
 
   if (!isHydrated) {
@@ -113,65 +100,10 @@ function BookingDateSlotPage() {
             <div className="grid gap-8 lg:grid-cols-[1fr,1fr]">
               <div className="flex flex-col">
                 <Calendar
-                  mode="single"
-                  month={visibleMonth}
-                  onMonthChange={setVisibleMonth}
-                  selected={selectedDate}
-                  onSelect={(date) => {
-                    if (!date) {
-                      updateField("booking_date", "")
-                      updateField("slot_id", "")
-                      return
-                    }
-
-                    const dateKey = format(date, "yyyy-MM-dd")
-                    if (fullyBookedDates.has(dateKey)) {
-                      return
-                    }
-
-                    updateField("booking_date", dateKey)
-                    updateField("slot_id", "")
-                    setError(null)
-                  }}
-                  modifiers={{
-                    fullyBooked: (date) => fullyBookedDates.has(format(date, "yyyy-MM-dd")),
-                    limited: (date) => getDateStatus(date) === "limited",
-                    available: (date) => getDateStatus(date) === "available",
-                  }}
-                  classNames={{ day: "relative w-full h-full p-0 text-center group/day aspect-square select-none" }}
-                  components={{
-                    DayButton: ({ day, modifiers, className, ...props }: DayButtonProps) => {
-                      const status = getDateStatus(day.date)
-                      return (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={cn(
-                            "flex size-full flex-col gap-1 rounded-md p-0 leading-none font-normal",
-                            "data-[selected-single=true]:bg-rose-500 data-[selected-single=true]:text-white",
-                            status === "full" && "text-muted-foreground/40 line-through cursor-not-allowed",
-                            status === "limited" && "bg-amber-50 text-amber-700 hover:bg-amber-100",
-                            status === "available" && "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
-                            className,
-                          )}
-                          data-selected-single={modifiers.selected}
-                          {...props}
-                        />
-                      )
-                    },
-                  }}
-                  disabled={(date) => {
-                    if (date < today) {
-                      return true
-                    }
-                    if (!isDateInVisibleMonth(date)) {
-                      return false
-                    }
-                    return !hasAvailability(date)
-                  }}
-                  className="rounded-xl border p-4"
+                mode="single"
+                selected={selectedDate ?? date}
+                onSelect={handleDateSelect}
                 />
-
                 <div className="mt-4 flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full border border-emerald-300 bg-emerald-100" />
