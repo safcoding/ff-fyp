@@ -16,7 +16,7 @@ function App() {
   const packagesPreview = availablePackages.slice(0, 3)
 
   const heroImageSrc = '/banner.jpg'
-  const mapImageSrc = '/eden.png'
+  const mapImageSrc = '/ff-map.png'
 
   return (
     <main className="bg-linear-to-b from-stone-50 via-white to-emerald-50/50 text-stone-900">
@@ -45,45 +45,20 @@ function App() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[1.3fr_1fr] md:px-8">
-        <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+      <section className=" bg-blue-500 align-center mx-auto max-w-6xl gap-8 px-6 py-16">
+        <div className=" overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
           <img
             src={mapImageSrc}
             alt="Map of the attraction"
-            className="h-80 w-full object-cover md:h-105"
+            className="h-full w-full object-cover"
           />
         </div>
-
-        <Card className="border-stone-200 bg-white/90">
-          <CardHeader>
-            <CardTitle className="text-2xl">Map Legend</CardTitle>
-            <CardDescription>Use this as your guide before selecting a package.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 text-sm text-stone-700">
-            <p>
-              <span className="font-semibold text-stone-900">Green paths:</span> Easy-access walking trails and key
-              scenic routes.
-            </p>
-            <p>
-              <span className="font-semibold text-stone-900">Blue points:</span> Activity stations for guided
-              learning and rest stops.
-            </p>
-            <p>
-              <span className="font-semibold text-stone-900">Orange markers:</span> Recommended photo and nature
-              observation zones.
-            </p>
-            <p>
-              <span className="font-semibold text-stone-900">Tip:</span> Choose a package below based on how much of
-              the map you want to cover.
-            </p>
-          </CardContent>
-        </Card>
       </section>
 
       <section className="mx-auto max-w-6xl space-y-6 px-6 pb-16 md:px-8">
         <div className="space-y-2">
           <h2 className="text-3xl font-semibold">Available Packages</h2>
-          <p className="text-sm text-stone-600">A quick look at what visitors can book right now.</p>
+          <p className="text-sm text-stone-600">A quick look at what group packages you can book right now.</p>
         </div>
 
         {packagesQuery.isPending ? <p className="text-sm text-stone-600">Loading packages...</p> : null}
