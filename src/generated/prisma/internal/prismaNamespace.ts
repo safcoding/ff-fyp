@@ -1132,20 +1132,20 @@ export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof Sl
 
 
 export const Booking_addonsScalarFieldEnum = {
-  id: 'id',
   booking_id: 'booking_id',
   addon_id: 'addon_id',
-  addon_quantity: 'addon_quantity'
+  addon_quantity: 'addon_quantity',
+  id: 'id'
 } as const
 
 export type Booking_addonsScalarFieldEnum = (typeof Booking_addonsScalarFieldEnum)[keyof typeof Booking_addonsScalarFieldEnum]
 
 
 export const Booking_foodsScalarFieldEnum = {
-  id: 'id',
   booking_id: 'booking_id',
   food_id: 'food_id',
-  food_quantity: 'food_quantity'
+  food_quantity: 'food_quantity',
+  id: 'id'
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]

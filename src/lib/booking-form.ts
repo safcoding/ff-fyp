@@ -1,6 +1,16 @@
 import type { PackagePricing } from "@/serverActions/packageActions"
 
-export type Step = 1 | 2 | 3 | 4
+export type Step = 1 | 2 | 3 | 4 | 5
+
+export type AddonSelection = {
+  addon_id: number
+  quantity: number
+}
+
+export type FoodSelection = {
+  food_id: number
+  quantity: number
+}
 
 export type FormValues = {
   pax_my_adult: number
@@ -21,6 +31,8 @@ export type FormValues = {
   slot_id: string
   package_id: string
   booking_date: string
+  addons: AddonSelection[]
+  foods: FoodSelection[]
 }
 
 export const bookingDraftStorageKey = "booking-form-draft-v1"
@@ -44,6 +56,8 @@ export const defaultFormValues: FormValues = {
   org_type: "",
   slot_id: "",
   package_id: "",
+  addons: [],
+  foods: [],
 }
 
 export const paxFieldMeta: ReadonlyArray<{ name: keyof FormValues; label: string }> = [
@@ -57,10 +71,15 @@ export const paxFieldMeta: ReadonlyArray<{ name: keyof FormValues; label: string
   { name: "pax_non_my_oku", label: "Non-MY OKU" },
 ]
 
-export function computeTotal(values: FormValues, pricing: PackagePricing | null): number {
+export function computeTotal(
+  values: FormValues,
+  pricing: PackagePricing | null,
+  addons: Array<{ addon_id: number; addon_price: number }> = [],
+  foods: Array<{ food_id: number; food_price: number }> = [],
+): number {
   if (!pricing) return 0
 
-  return (
+  const packageTotal =
     values.pax_my_adult * pricing.price_my_adult +
     values.pax_my_kid * pricing.price_my_kid +
     values.pax_my_senior * pricing.price_my_senior +
@@ -69,7 +88,21 @@ export function computeTotal(values: FormValues, pricing: PackagePricing | null)
     values.pax_non_my_kid * pricing.price_non_my_kid +
     values.pax_non_my_senior * pricing.price_non_my_senior +
     values.pax_non_my_oku * pricing.price_non_my_oku
-  )
+
+  const addonPriceMap = new Map(addons.map((addon) => [addon.addon_id, addon.addon_price]))
+  const foodPriceMap = new Map(foods.map((food) => [food.food_id, food.food_price]))
+
+  const addonTotal = values.addons.reduce((sum, item) => {
+    const unitPrice = addonPriceMap.get(item.addon_id) ?? 0
+    return sum + unitPrice * item.quantity
+  }, 0)
+
+  const foodTotal = values.foods.reduce((sum, item) => {
+    const unitPrice = foodPriceMap.get(item.food_id) ?? 0
+    return sum + unitPrice * item.quantity
+  }, 0)
+
+  return packageTotal + addonTotal + foodTotal
 }
 
 export function getTotalVisitors(values: FormValues) {

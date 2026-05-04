@@ -85,21 +85,21 @@ model slots {
   slot_capacity Int
   bookings      bookings[]
 }
-model booking_addons {
-  id             Int      @id
-  booking_id     String   @db.Uuid
-  addon_id       Int?
-  addon_quantity Int
-  addons         addons?  @relation(fields: [addon_id], references: [addon_id], onDelete: NoAction, onUpdate: NoAction, map: "addon_id_fkey")
-  bookings       bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
 
+model booking_addons {
+  booking_id     String   @db.Uuid
+  addon_id       Int
+  addon_quantity Int
+  id             Int      @id @default(autoincrement())
+  addons         addons   @relation(fields: [addon_id], references: [addon_id], onDelete: NoAction, onUpdate: NoAction, map: "addon_id_fkey")
+  bookings       bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
 }
 
 model booking_foods {
-  id             Int      @id
   booking_id    String   @unique @db.Uuid
   food_id       Int
   food_quantity Int
+  id            Int      @id @default(autoincrement())
   bookings      bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
   foods         foods    @relation(fields: [food_id], references: [food_id], onDelete: NoAction, onUpdate: NoAction, map: "food_id_fkey")
 }

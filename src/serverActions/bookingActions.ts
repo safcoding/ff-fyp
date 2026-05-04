@@ -2,6 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 import z from "zod";
 
+const bookingAddonSchema = z.object({
+  addon_id: z.coerce.number().int().positive(),
+  quantity: z.coerce.number().int().min(0),
+})
+
+const bookingFoodSchema = z.object({
+  food_id: z.coerce.number().int().positive(),
+  quantity: z.coerce.number().int().min(0),
+})
+
 const BookingSchema = z.object({
         pax_my_adult: z.coerce.number().int().min(0),
         pax_my_kid: z.coerce.number().int().min(0),
@@ -21,6 +31,8 @@ const BookingSchema = z.object({
         booking_date: z.coerce.date(),
         slot_id: z.string().min(1),
         package_id: z.string().min(1),
+        addons: z.array(bookingAddonSchema).default([]),
+        foods: z.array(bookingFoodSchema).default([]),
 })
 
 const AvailabilitySchema = z.object({
@@ -74,6 +86,8 @@ const calculateBookingPrice = (
     price_non_my_senior: unknown;
     price_non_my_oku: unknown;
   },
+  addonsTotal: number,
+  foodsTotal: number,
 ) => {
   const total =
     data.pax_my_adult * Number(packagePricing.price_my_adult) +
@@ -83,10 +97,65 @@ const calculateBookingPrice = (
     data.pax_non_my_adult * Number(packagePricing.price_non_my_adult) +
     data.pax_non_my_kid * Number(packagePricing.price_non_my_kid) +
     data.pax_non_my_senior * Number(packagePricing.price_non_my_senior) +
-    data.pax_non_my_oku * Number(packagePricing.price_non_my_oku);
+    data.pax_non_my_oku * Number(packagePricing.price_non_my_oku) +
+    addonsTotal +
+    foodsTotal;
 
   return total;
 };
+
+async function getExtrasTotals(data: BookingInput) {
+  const addonSelections = data.addons.filter((item) => item.quantity > 0)
+  const foodSelections = data.foods.filter((item) => item.quantity > 0)
+
+  const addonIds = Array.from(new Set(addonSelections.map((item) => item.addon_id)))
+  const foodIds = Array.from(new Set(foodSelections.map((item) => item.food_id)))
+
+  const [addons, foods] = await Promise.all([
+    addonIds.length
+      ? prisma.addons.findMany({
+          where: { addon_id: { in: addonIds } },
+          select: { addon_id: true, addon_price: true, addon_avail: true },
+        })
+      : Promise.resolve([]),
+    foodIds.length
+      ? prisma.foods.findMany({
+          where: { food_id: { in: foodIds } },
+          select: { food_id: true, food_price: true },
+        })
+      : Promise.resolve([]),
+  ])
+
+  if (addonIds.length && addons.length !== addonIds.length) {
+    throw new Error("Invalid addon selection: one or more add-ons not found")
+  }
+
+  if (addons.some((addon) => !addon.addon_avail)) {
+    throw new Error("One or more selected add-ons are unavailable")
+  }
+
+  if (foodIds.length && foods.length !== foodIds.length) {
+    throw new Error("Invalid food selection: one or more foods not found")
+  }
+
+  const addonPriceMap = new Map(addons.map((addon) => [addon.addon_id, Number(addon.addon_price)]))
+  const foodPriceMap = new Map(foods.map((food) => [food.food_id, Number(food.food_price)]))
+
+  const addonsTotal = addonSelections.reduce((sum, item) => {
+    return sum + (addonPriceMap.get(item.addon_id) ?? 0) * item.quantity
+  }, 0)
+
+  const foodsTotal = foodSelections.reduce((sum, item) => {
+    return sum + (foodPriceMap.get(item.food_id) ?? 0) * item.quantity
+  }, 0)
+
+  return {
+    addonSelections,
+    foodSelections,
+    addonsTotal,
+    foodsTotal,
+  }
+}
 
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     const bookings = await prisma.bookings.findMany()
@@ -277,7 +346,8 @@ export const createBooking = createServerFn({ method: 'POST' })
       throw new Error("Invalid slot_id: slot not found");
     }
 
-    const bookingPrice = calculateBookingPrice(data, selectedPackage);
+    const { addonSelections, foodSelections, addonsTotal, foodsTotal } = await getExtrasTotals(data)
+    const bookingPrice = calculateBookingPrice(data, selectedPackage, addonsTotal, foodsTotal);
 
     const newBooking = await prisma.bookings.create({
       data: {
@@ -302,6 +372,26 @@ export const createBooking = createServerFn({ method: 'POST' })
         package_id: data.package_id,
       }
     });
+
+    if (addonSelections.length > 0) {
+      await prisma.booking_addons.createMany({
+        data: addonSelections.map((item) => ({
+          booking_id: newBooking.booking_id,
+          addon_id: item.addon_id,
+          addon_quantity: item.quantity,
+        })),
+      })
+    }
+
+    if (foodSelections.length > 0) {
+      await prisma.booking_foods.createMany({
+        data: foodSelections.map((item) => ({
+          booking_id: newBooking.booking_id,
+          food_id: item.food_id,
+          food_quantity: item.quantity,
+        })),
+      })
+    }
     return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}. Total price: ${newBooking.booking_price.toString()}`;
   })
 
@@ -341,7 +431,8 @@ export const createBooking = createServerFn({ method: 'POST' })
       throw new Error("Invalid slot_id: slot not found");
     }
 
-    const bookingPrice = calculateBookingPrice(data, selectedPackage);
+    const { addonSelections, foodSelections, addonsTotal, foodsTotal } = await getExtrasTotals(data)
+    const bookingPrice = calculateBookingPrice(data, selectedPackage, addonsTotal, foodsTotal);
 
 
     const updated = await prisma.bookings.update({
@@ -368,6 +459,34 @@ export const createBooking = createServerFn({ method: 'POST' })
         package_id: data.package_id,
       }
     })
+
+    await prisma.booking_addons.deleteMany({
+      where: { booking_id: data.booking_id },
+    })
+
+    await prisma.booking_foods.deleteMany({
+      where: { booking_id: data.booking_id },
+    })
+
+    if (addonSelections.length > 0) {
+      await prisma.booking_addons.createMany({
+        data: addonSelections.map((item) => ({
+          booking_id: data.booking_id,
+          addon_id: item.addon_id,
+          addon_quantity: item.quantity,
+        })),
+      })
+    }
+
+    if (foodSelections.length > 0) {
+      await prisma.booking_foods.createMany({
+        data: foodSelections.map((item) => ({
+          booking_id: data.booking_id,
+          food_id: item.food_id,
+          food_quantity: item.quantity,
+        })),
+      })
+    }
     return `Updated Booking ${updated.booking_id}`
   })
 

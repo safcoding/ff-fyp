@@ -29,7 +29,7 @@ function BookingDetailsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 3 of 4: Enter visitor and contact details.</CardDescription>
+          <CardDescription>Step 3 of 5: Enter visitor and contact details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={3} />
@@ -44,7 +44,7 @@ function BookingDetailsPage() {
                 return
               }
               setError(null)
-              void navigate({ to: "/booking-form/review" })
+              void navigate({ to: "/booking-form/addons-foods" })
             }}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -131,7 +131,7 @@ function BookingDetailsPage() {
             </div>
 
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <Button type="submit">Next: Review Summary</Button>
+            <Button type="submit">Next: Add-ons and foods</Button>
           </form>
         </CardContent>
       </Card>

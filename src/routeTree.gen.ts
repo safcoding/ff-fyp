@@ -16,6 +16,7 @@ import { Route as BookingFormReviewRouteImport } from './routes/booking-form/rev
 import { Route as BookingFormPackageRouteImport } from './routes/booking-form/package'
 import { Route as BookingFormDetailsRouteImport } from './routes/booking-form/details'
 import { Route as BookingFormDateSlotRouteImport } from './routes/booking-form/date-slot'
+import { Route as BookingFormAddonsFoodsRouteImport } from './routes/booking-form/addons-foods'
 import { Route as AdminSlotsRouteImport } from './routes/admin/slots'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
 import { Route as AdminFoodsRouteImport } from './routes/admin/foods'
@@ -58,6 +59,11 @@ const BookingFormDateSlotRoute = BookingFormDateSlotRouteImport.update({
   path: '/date-slot',
   getParentRoute: () => BookingFormRoute,
 } as any)
+const BookingFormAddonsFoodsRoute = BookingFormAddonsFoodsRouteImport.update({
+  id: '/addons-foods',
+  path: '/addons-foods',
+  getParentRoute: () => BookingFormRoute,
+} as any)
 const AdminSlotsRoute = AdminSlotsRouteImport.update({
   id: '/admin/slots',
   path: '/admin/slots',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/admin/foods': typeof AdminFoodsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/slots': typeof AdminSlotsRoute
+  '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
   '/booking-form/details': typeof BookingFormDetailsRoute
   '/booking-form/package': typeof BookingFormPackageRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/admin/foods': typeof AdminFoodsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/slots': typeof AdminSlotsRoute
+  '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
   '/booking-form/details': typeof BookingFormDetailsRoute
   '/booking-form/package': typeof BookingFormPackageRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/admin/foods': typeof AdminFoodsRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/slots': typeof AdminSlotsRoute
+  '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
   '/booking-form/details': typeof BookingFormDetailsRoute
   '/booking-form/package': typeof BookingFormPackageRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/admin/foods'
     | '/admin/packages'
     | '/admin/slots'
+    | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
     | '/booking-form/details'
     | '/booking-form/package'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/admin/foods'
     | '/admin/packages'
     | '/admin/slots'
+    | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
     | '/booking-form/details'
     | '/booking-form/package'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/admin/foods'
     | '/admin/packages'
     | '/admin/slots'
+    | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
     | '/booking-form/details'
     | '/booking-form/package'
@@ -246,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingFormDateSlotRouteImport
       parentRoute: typeof BookingFormRoute
     }
+    '/booking-form/addons-foods': {
+      id: '/booking-form/addons-foods'
+      path: '/addons-foods'
+      fullPath: '/booking-form/addons-foods'
+      preLoaderRoute: typeof BookingFormAddonsFoodsRouteImport
+      parentRoute: typeof BookingFormRoute
+    }
     '/admin/slots': {
       id: '/admin/slots'
       path: '/admin/slots'
@@ -292,6 +311,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface BookingFormRouteChildren {
+  BookingFormAddonsFoodsRoute: typeof BookingFormAddonsFoodsRoute
   BookingFormDateSlotRoute: typeof BookingFormDateSlotRoute
   BookingFormDetailsRoute: typeof BookingFormDetailsRoute
   BookingFormPackageRoute: typeof BookingFormPackageRoute
@@ -299,6 +319,7 @@ interface BookingFormRouteChildren {
 }
 
 const BookingFormRouteChildren: BookingFormRouteChildren = {
+  BookingFormAddonsFoodsRoute: BookingFormAddonsFoodsRoute,
   BookingFormDateSlotRoute: BookingFormDateSlotRoute,
   BookingFormDetailsRoute: BookingFormDetailsRoute,
   BookingFormPackageRoute: BookingFormPackageRoute,

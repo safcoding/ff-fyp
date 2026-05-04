@@ -67,7 +67,7 @@ function BookingDateSlotPage() {
             <CalendarDays className="h-6 w-6 text-rose-500" />
             Booking Wizard
           </CardTitle>
-          <CardDescription>Step 1 of 4: Select date and slot.</CardDescription>
+          <CardDescription>Step 1 of 5: Select date and slot.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={1} />

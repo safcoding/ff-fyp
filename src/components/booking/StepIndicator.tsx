@@ -6,8 +6,8 @@ type StepIndicatorProps = {
 
 export function StepIndicator({ step }: StepIndicatorProps) {
   return (
-    <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-      {[1, 2, 3, 4].map((item) => (
+    <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
+      {[1, 2, 3, 4, 5].map((item) => (
         <div
           key={item}
           className={`rounded-md border px-3 py-2 text-sm ${

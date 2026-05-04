@@ -359,9 +359,9 @@ export type addonsSumOrderByAggregateInput = {
   addon_price?: Prisma.SortOrder
 }
 
-export type AddonsNullableScalarRelationFilter = {
-  is?: Prisma.addonsWhereInput | null
-  isNot?: Prisma.addonsWhereInput | null
+export type AddonsScalarRelationFilter = {
+  is?: Prisma.addonsWhereInput
+  isNot?: Prisma.addonsWhereInput
 }
 
 export type DecimalFieldUpdateOperationsInput = {
@@ -382,12 +382,10 @@ export type addonsCreateNestedOneWithoutBooking_addonsInput = {
   connect?: Prisma.addonsWhereUniqueInput
 }
 
-export type addonsUpdateOneWithoutBooking_addonsNestedInput = {
+export type addonsUpdateOneRequiredWithoutBooking_addonsNestedInput = {
   create?: Prisma.XOR<Prisma.addonsCreateWithoutBooking_addonsInput, Prisma.addonsUncheckedCreateWithoutBooking_addonsInput>
   connectOrCreate?: Prisma.addonsCreateOrConnectWithoutBooking_addonsInput
   upsert?: Prisma.addonsUpsertWithoutBooking_addonsInput
-  disconnect?: Prisma.addonsWhereInput | boolean
-  delete?: Prisma.addonsWhereInput | boolean
   connect?: Prisma.addonsWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.addonsUpdateToOneWithWhereWithoutBooking_addonsInput, Prisma.addonsUpdateWithoutBooking_addonsInput>, Prisma.addonsUncheckedUpdateWithoutBooking_addonsInput>
 }

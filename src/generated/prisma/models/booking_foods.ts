@@ -27,71 +27,71 @@ export type AggregateBooking_foods = {
 }
 
 export type Booking_foodsAvgAggregateOutputType = {
-  id: number | null
   food_id: number | null
   food_quantity: number | null
+  id: number | null
 }
 
 export type Booking_foodsSumAggregateOutputType = {
-  id: number | null
   food_id: number | null
   food_quantity: number | null
+  id: number | null
 }
 
 export type Booking_foodsMinAggregateOutputType = {
-  id: number | null
   booking_id: string | null
   food_id: number | null
   food_quantity: number | null
+  id: number | null
 }
 
 export type Booking_foodsMaxAggregateOutputType = {
-  id: number | null
   booking_id: string | null
   food_id: number | null
   food_quantity: number | null
+  id: number | null
 }
 
 export type Booking_foodsCountAggregateOutputType = {
-  id: number
   booking_id: number
   food_id: number
   food_quantity: number
+  id: number
   _all: number
 }
 
 
 export type Booking_foodsAvgAggregateInputType = {
-  id?: true
   food_id?: true
   food_quantity?: true
+  id?: true
 }
 
 export type Booking_foodsSumAggregateInputType = {
-  id?: true
   food_id?: true
   food_quantity?: true
+  id?: true
 }
 
 export type Booking_foodsMinAggregateInputType = {
-  id?: true
   booking_id?: true
   food_id?: true
   food_quantity?: true
+  id?: true
 }
 
 export type Booking_foodsMaxAggregateInputType = {
-  id?: true
   booking_id?: true
   food_id?: true
   food_quantity?: true
+  id?: true
 }
 
 export type Booking_foodsCountAggregateInputType = {
-  id?: true
   booking_id?: true
   food_id?: true
   food_quantity?: true
+  id?: true
   _all?: true
 }
 
@@ -182,10 +182,10 @@ export type booking_foodsGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 export type Booking_foodsGroupByOutputType = {
-  id: number
   booking_id: string
   food_id: number
   food_quantity: number
+  id: number
   _count: Booking_foodsCountAggregateOutputType | null
   _avg: Booking_foodsAvgAggregateOutputType | null
   _sum: Booking_foodsSumAggregateOutputType | null
@@ -212,26 +212,26 @@ export type booking_foodsWhereInput = {
   AND?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
   OR?: Prisma.booking_foodsWhereInput[]
   NOT?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
-  id?: Prisma.IntFilter<"booking_foods"> | number
   booking_id?: Prisma.UuidFilter<"booking_foods"> | string
   food_id?: Prisma.IntFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntFilter<"booking_foods"> | number
+  id?: Prisma.IntFilter<"booking_foods"> | number
   bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
   foods?: Prisma.XOR<Prisma.FoodsScalarRelationFilter, Prisma.foodsWhereInput>
 }
 
 export type booking_foodsOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
   booking_id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
   bookings?: Prisma.bookingsOrderByWithRelationInput
   foods?: Prisma.foodsOrderByWithRelationInput
 }
 
 export type booking_foodsWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
   booking_id?: string
+  id?: number
   AND?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
   OR?: Prisma.booking_foodsWhereInput[]
   NOT?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
@@ -242,10 +242,10 @@ export type booking_foodsWhereUniqueInput = Prisma.AtLeast<{
 }, "id" | "booking_id">
 
 export type booking_foodsOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
   booking_id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
   _count?: Prisma.booking_foodsCountOrderByAggregateInput
   _avg?: Prisma.booking_foodsAvgOrderByAggregateInput
   _max?: Prisma.booking_foodsMaxOrderByAggregateInput
@@ -257,57 +257,54 @@ export type booking_foodsScalarWhereWithAggregatesInput = {
   AND?: Prisma.booking_foodsScalarWhereWithAggregatesInput | Prisma.booking_foodsScalarWhereWithAggregatesInput[]
   OR?: Prisma.booking_foodsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.booking_foodsScalarWhereWithAggregatesInput | Prisma.booking_foodsScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
   booking_id?: Prisma.UuidWithAggregatesFilter<"booking_foods"> | string
   food_id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
+  id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
 }
 
 export type booking_foodsCreateInput = {
-  id: number
   food_quantity: number
   bookings: Prisma.bookingsCreateNestedOneWithoutBooking_foodsInput
   foods: Prisma.foodsCreateNestedOneWithoutBooking_foodsInput
 }
 
 export type booking_foodsUncheckedCreateInput = {
-  id: number
   booking_id: string
   food_id: number
   food_quantity: number
+  id?: number
 }
 
 export type booking_foodsUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_foodsNestedInput
   foods?: Prisma.foodsUpdateOneRequiredWithoutBooking_foodsNestedInput
 }
 
 export type booking_foodsUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   food_id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type booking_foodsCreateManyInput = {
-  id: number
   booking_id: string
   food_id: number
   food_quantity: number
+  id?: number
 }
 
 export type booking_foodsUpdateManyMutationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type booking_foodsUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   food_id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type Booking_foodsNullableScalarRelationFilter = {
@@ -326,36 +323,36 @@ export type booking_foodsOrderByRelationAggregateInput = {
 }
 
 export type booking_foodsCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   booking_id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
 }
 
 export type booking_foodsAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
 }
 
 export type booking_foodsMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   booking_id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
 }
 
 export type booking_foodsMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   booking_id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
 }
 
 export type booking_foodsSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
+  id?: Prisma.SortOrder
 }
 
 export type booking_foodsCreateNestedOneWithoutBookingsInput = {
@@ -433,15 +430,14 @@ export type booking_foodsUncheckedUpdateManyWithoutFoodsNestedInput = {
 }
 
 export type booking_foodsCreateWithoutBookingsInput = {
-  id: number
   food_quantity: number
   foods: Prisma.foodsCreateNestedOneWithoutBooking_foodsInput
 }
 
 export type booking_foodsUncheckedCreateWithoutBookingsInput = {
-  id: number
   food_id: number
   food_quantity: number
+  id?: number
 }
 
 export type booking_foodsCreateOrConnectWithoutBookingsInput = {
@@ -461,27 +457,25 @@ export type booking_foodsUpdateToOneWithWhereWithoutBookingsInput = {
 }
 
 export type booking_foodsUpdateWithoutBookingsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   foods?: Prisma.foodsUpdateOneRequiredWithoutBooking_foodsNestedInput
 }
 
 export type booking_foodsUncheckedUpdateWithoutBookingsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   food_id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type booking_foodsCreateWithoutFoodsInput = {
-  id: number
   food_quantity: number
   bookings: Prisma.bookingsCreateNestedOneWithoutBooking_foodsInput
 }
 
 export type booking_foodsUncheckedCreateWithoutFoodsInput = {
-  id: number
   booking_id: string
   food_quantity: number
+  id?: number
 }
 
 export type booking_foodsCreateOrConnectWithoutFoodsInput = {
@@ -514,73 +508,72 @@ export type booking_foodsScalarWhereInput = {
   AND?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
   OR?: Prisma.booking_foodsScalarWhereInput[]
   NOT?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
-  id?: Prisma.IntFilter<"booking_foods"> | number
   booking_id?: Prisma.UuidFilter<"booking_foods"> | string
   food_id?: Prisma.IntFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntFilter<"booking_foods"> | number
+  id?: Prisma.IntFilter<"booking_foods"> | number
 }
 
 export type booking_foodsCreateManyFoodsInput = {
-  id: number
   booking_id: string
   food_quantity: number
+  id?: number
 }
 
 export type booking_foodsUpdateWithoutFoodsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_foodsNestedInput
 }
 
 export type booking_foodsUncheckedUpdateWithoutFoodsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type booking_foodsUncheckedUpdateManyWithoutFoodsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
 
 export type booking_foodsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   booking_id?: boolean
   food_id?: boolean
   food_quantity?: boolean
+  id?: boolean
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_foods"]>
 
 export type booking_foodsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   booking_id?: boolean
   food_id?: boolean
   food_quantity?: boolean
+  id?: boolean
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_foods"]>
 
 export type booking_foodsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   booking_id?: boolean
   food_id?: boolean
   food_quantity?: boolean
+  id?: boolean
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_foods"]>
 
 export type booking_foodsSelectScalar = {
-  id?: boolean
   booking_id?: boolean
   food_id?: boolean
   food_quantity?: boolean
+  id?: boolean
 }
 
-export type booking_foodsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "booking_id" | "food_id" | "food_quantity", ExtArgs["result"]["booking_foods"]>
+export type booking_foodsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "food_id" | "food_quantity" | "id", ExtArgs["result"]["booking_foods"]>
 export type booking_foodsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
@@ -601,10 +594,10 @@ export type $booking_foodsPayload<ExtArgs extends runtime.Types.Extensions.Inter
     foods: Prisma.$foodsPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
     booking_id: string
     food_id: number
     food_quantity: number
+    id: number
   }, ExtArgs["result"]["booking_foods"]>
   composites: {}
 }
@@ -688,8 +681,8 @@ export interface booking_foodsDelegate<ExtArgs extends runtime.Types.Extensions.
    * // Get first 10 Booking_foods
    * const booking_foods = await prisma.booking_foods.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const booking_foodsWithIdOnly = await prisma.booking_foods.findMany({ select: { id: true } })
+   * // Only select the `booking_id`
+   * const booking_foodsWithBooking_idOnly = await prisma.booking_foods.findMany({ select: { booking_id: true } })
    * 
    */
   findMany<T extends booking_foodsFindManyArgs>(args?: Prisma.SelectSubset<T, booking_foodsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$booking_foodsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -733,9 +726,9 @@ export interface booking_foodsDelegate<ExtArgs extends runtime.Types.Extensions.
    *   ]
    * })
    * 
-   * // Create many Booking_foods and only return the `id`
-   * const booking_foodsWithIdOnly = await prisma.booking_foods.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Booking_foods and only return the `booking_id`
+   * const booking_foodsWithBooking_idOnly = await prisma.booking_foods.createManyAndReturn({
+   *   select: { booking_id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -824,9 +817,9 @@ export interface booking_foodsDelegate<ExtArgs extends runtime.Types.Extensions.
    *   ]
    * })
    * 
-   * // Update zero or more Booking_foods and only return the `id`
-   * const booking_foodsWithIdOnly = await prisma.booking_foods.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Booking_foods and only return the `booking_id`
+   * const booking_foodsWithBooking_idOnly = await prisma.booking_foods.updateManyAndReturn({
+   *   select: { booking_id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1030,10 +1023,10 @@ export interface Prisma__booking_foodsClient<T, Null = never, ExtArgs extends ru
  * Fields of the booking_foods model
  */
 export interface booking_foodsFieldRefs {
-  readonly id: Prisma.FieldRef<"booking_foods", 'Int'>
   readonly booking_id: Prisma.FieldRef<"booking_foods", 'String'>
   readonly food_id: Prisma.FieldRef<"booking_foods", 'Int'>
   readonly food_quantity: Prisma.FieldRef<"booking_foods", 'Int'>
+  readonly id: Prisma.FieldRef<"booking_foods", 'Int'>
 }
     
 

@@ -35,7 +35,7 @@ function BookingPackagePage() {
       <Card>
         <CardHeader>
           <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 2 of 4: Select a package.</CardDescription>
+          <CardDescription>Step 2 of 5: Select a package.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={2} />
