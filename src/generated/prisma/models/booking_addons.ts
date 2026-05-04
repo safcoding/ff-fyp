@@ -193,7 +193,7 @@ export type Booking_addonsGroupByOutputType = {
   _max: Booking_addonsMaxAggregateOutputType | null
 }
 
-type GetBooking_addonsGroupByPayload<T extends booking_addonsGroupByArgs> = Prisma.PrismaPromise<
+export type GetBooking_addonsGroupByPayload<T extends booking_addonsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Booking_addonsGroupByOutputType, T['by']> &
       {
@@ -1250,6 +1250,11 @@ export type booking_addonsFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` booking_addons.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of booking_addons.
+   */
   distinct?: Prisma.Booking_addonsScalarFieldEnum | Prisma.Booking_addonsScalarFieldEnum[]
 }
 

@@ -57,3 +57,8 @@ export type booking_addons = Prisma.booking_addonsModel
  * 
  */
 export type booking_foods = Prisma.booking_foodsModel
+/**
+ * Model quotations
+ * 
+ */
+export type quotations = Prisma.quotationsModel

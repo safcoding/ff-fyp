@@ -58,7 +58,8 @@ export const ModelName = {
   packages: 'packages',
   slots: 'slots',
   booking_addons: 'booking_addons',
-  booking_foods: 'booking_foods'
+  booking_foods: 'booking_foods',
+  quotations: 'quotations'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -184,6 +185,14 @@ export const Booking_foodsScalarFieldEnum = {
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
+
+
+export const QuotationsScalarFieldEnum = {
+  quotation_id: 'quotation_id',
+  booking_id: 'booking_id'
+} as const
+
+export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof typeof QuotationsScalarFieldEnum]
 
 
 export const SortOrder = {

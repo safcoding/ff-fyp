@@ -52,6 +52,7 @@ model bookings {
   booking_foods     booking_foods?
   packages          packages         @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction)
   slots             slots            @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")
+  quotations        quotations[]
 }
 
 model foods {
@@ -102,4 +103,10 @@ model booking_foods {
   id            Int      @id @default(autoincrement())
   bookings      bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
   foods         foods    @relation(fields: [food_id], references: [food_id], onDelete: NoAction, onUpdate: NoAction, map: "food_id_fkey")
+}
+
+model quotations {
+  quotation_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  booking_id   String?   @db.Uuid
+  bookings     bookings? @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_fkey")
 }

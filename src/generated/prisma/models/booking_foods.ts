@@ -193,7 +193,7 @@ export type Booking_foodsGroupByOutputType = {
   _max: Booking_foodsMaxAggregateOutputType | null
 }
 
-type GetBooking_foodsGroupByPayload<T extends booking_foodsGroupByArgs> = Prisma.PrismaPromise<
+export type GetBooking_foodsGroupByPayload<T extends booking_foodsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Booking_foodsGroupByOutputType, T['by']> &
       {
@@ -1223,6 +1223,11 @@ export type booking_foodsFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` booking_foods.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of booking_foods.
+   */
   distinct?: Prisma.Booking_foodsScalarFieldEnum | Prisma.Booking_foodsScalarFieldEnum[]
 }
 

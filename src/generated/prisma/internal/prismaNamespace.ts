@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.4.1
- * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.4.1",
-  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -391,7 +391,8 @@ export const ModelName = {
   packages: 'packages',
   slots: 'slots',
   booking_addons: 'booking_addons',
-  booking_foods: 'booking_foods'
+  booking_foods: 'booking_foods',
+  quotations: 'quotations'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    quotations: {
+      payload: Prisma.$quotationsPayload<ExtArgs>
+      fields: Prisma.quotationsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.quotationsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.quotationsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
+        }
+        findFirst: {
+          args: Prisma.quotationsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.quotationsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
+        }
+        findMany: {
+          args: Prisma.quotationsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>[]
+        }
+        create: {
+          args: Prisma.quotationsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
+        }
+        createMany: {
+          args: Prisma.quotationsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.quotationsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>[]
+        }
+        delete: {
+          args: Prisma.quotationsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
+        }
+        update: {
+          args: Prisma.quotationsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
+        }
+        deleteMany: {
+          args: Prisma.quotationsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.quotationsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.quotationsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>[]
+        }
+        upsert: {
+          args: Prisma.quotationsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
+        }
+        aggregate: {
+          args: Prisma.QuotationsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuotations>
+        }
+        groupBy: {
+          args: Prisma.quotationsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuotationsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.quotationsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuotationsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1149,6 +1224,14 @@ export const Booking_foodsScalarFieldEnum = {
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
+
+
+export const QuotationsScalarFieldEnum = {
+  quotation_id: 'quotation_id',
+  booking_id: 'booking_id'
+} as const
+
+export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof typeof QuotationsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1350,6 +1433,21 @@ export type PrismaClientOptions = ({
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[]
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
@@ -1360,6 +1458,7 @@ export type GlobalOmitConfig = {
   slots?: Prisma.slotsOmit
   booking_addons?: Prisma.booking_addonsOmit
   booking_foods?: Prisma.booking_foodsOmit
+  quotations?: Prisma.quotationsOmit
 }
 
 /* Types for Logging */
