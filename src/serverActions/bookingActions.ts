@@ -158,9 +158,30 @@ async function getExtrasTotals(data: BookingInput) {
 }
 
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
-    const bookings = await prisma.bookings.findMany()
+    const bookings = await prisma.bookings.findMany({
+      include: {
+        booking_addons: {
+          include: {
+            addons: {
+              select: {
+                addon_name: true,
+              },
+            },
+          },
+        },
+        booking_foods: {
+          include: {
+            foods: {
+              select: {
+                food_name: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
     return bookings.map(b => ({
-      
     booking_id: b.booking_id,
         booking_price: b.booking_price.toString(),
         pax_my_adult: b.pax_my_adult,      
@@ -182,7 +203,19 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
         quotation_id: b.quotation_id,
         slot_id : b.slot_id,
         package_id : b.package_id, 
-        booking_status: b.booking_status
+        booking_status: b.booking_status,
+        booking_addons: b.booking_addons.map((item) => ({
+          addon_id: item.addon_id,
+          addon_name: item.addons.addon_name,
+          addon_quantity: item.addon_quantity,
+        })),
+        booking_foods: b.booking_foods
+          ? [{
+              food_id: b.booking_foods.food_id,
+              food_name: b.booking_foods.foods.food_name,
+              food_quantity: b.booking_foods.food_quantity,
+            }]
+          : [],
     }))
 })
 

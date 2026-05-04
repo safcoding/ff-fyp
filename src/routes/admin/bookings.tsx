@@ -161,6 +161,34 @@ function BookingPage() {
                           </div>
                         </div>
 
+                        <div className="grid gap-3 md:grid-cols-2">
+                          <div className="rounded-md bg-muted/30 p-3 space-y-1">
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Add-ons</p>
+                            {booking.booking_addons?.length ? (
+                              booking.booking_addons.map((addon) => (
+                                <p key={`${booking.booking_id}-addon-${addon.addon_id}`}>
+                                  <span className="font-medium">{addon.addon_name}:</span> {addon.addon_quantity}
+                                </p>
+                              ))
+                            ) : (
+                              <p className="text-muted-foreground">No add-ons selected.</p>
+                            )}
+                          </div>
+
+                          <div className="rounded-md bg-muted/30 p-3 space-y-1">
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Foods</p>
+                            {booking.booking_foods?.length ? (
+                              booking.booking_foods.map((food) => (
+                                <p key={`${booking.booking_id}-food-${food.food_id}`}>
+                                  <span className="font-medium">{food.food_name}:</span> {food.food_quantity}
+                                </p>
+                              ))
+                            ) : (
+                              <p className="text-muted-foreground">No foods selected.</p>
+                            )}
+                          </div>
+                        </div>
+
                         {isPending ? (
                           <div className="flex items-center justify-between rounded-md border bg-amber-50 p-3 text-sm">
                             <p className="text-amber-900">
