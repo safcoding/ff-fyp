@@ -16,17 +16,18 @@ model User {
 }
 
 model addons {
-  addon_id    Int     @id @default(autoincrement())
-  addon_name  String
-  addon_desc  String
-  addon_price Decimal @db.Decimal(6, 2)
-  addon_avail Boolean
+  addon_id       Int              @id @default(autoincrement())
+  addon_name     String
+  addon_desc     String
+  addon_price    Decimal          @db.Decimal(6, 2)
+  addon_avail    Boolean
+  booking_addons booking_addons[]
 }
 
 model bookings {
-  booking_id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  booking_price     Decimal   @db.Decimal(10, 2)
-  created_at        DateTime  @default(now()) @db.Timestamp(6)
+  booking_id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  booking_price     Decimal          @db.Decimal(10, 2)
+  created_at        DateTime         @default(now()) @db.Timestamp(6)
   pax_my_adult      Int
   pax_my_kid        Int
   pax_my_senior     Int
@@ -42,19 +43,22 @@ model bookings {
   org_name          String
   org_state         String
   org_type          String
-  quotation_id      String?   @unique @db.Uuid
+  quotation_id      String?          @unique @db.Uuid
   slot_id           String
   package_id        String
-  booking_date      DateTime? @db.Date
-  booking_status    String?   @default("PENDING")
-  packages          packages  @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction)
-  slots             slots     @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")
+  booking_date      DateTime?        @db.Date
+  booking_status    String?          @default("PENDING")
+  booking_addons    booking_addons[]
+  booking_foods     booking_foods?
+  packages          packages         @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction)
+  slots             slots            @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")
 }
 
 model foods {
-  food_id    Int     @id @default(autoincrement())
-  food_name  String
-  food_price Decimal @db.Decimal(6, 2)
+  food_id       Int             @id @default(autoincrement())
+  food_name     String
+  food_price    Decimal         @db.Decimal(6, 2)
+  booking_foods booking_foods[]
 }
 
 model packages {
@@ -80,4 +84,22 @@ model slots {
   slot_end      DateTime   @db.Time(6)
   slot_capacity Int
   bookings      bookings[]
+}
+model booking_addons {
+  id             Int      @id
+  booking_id     String   @db.Uuid
+  addon_id       Int?
+  addon_quantity Int
+  addons         addons?  @relation(fields: [addon_id], references: [addon_id], onDelete: NoAction, onUpdate: NoAction, map: "addon_id_fkey")
+  bookings       bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
+
+}
+
+model booking_foods {
+  id             Int      @id
+  booking_id    String   @unique @db.Uuid
+  food_id       Int
+  food_quantity Int
+  bookings      bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
+  foods         foods    @relation(fields: [food_id], references: [food_id], onDelete: NoAction, onUpdate: NoAction, map: "food_id_fkey")
 }

@@ -56,7 +56,9 @@ export const ModelName = {
   bookings: 'bookings',
   foods: 'foods',
   packages: 'packages',
-  slots: 'slots'
+  slots: 'slots',
+  booking_addons: 'booking_addons',
+  booking_foods: 'booking_foods'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -162,6 +164,26 @@ export const SlotsScalarFieldEnum = {
 } as const
 
 export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof SlotsScalarFieldEnum]
+
+
+export const Booking_addonsScalarFieldEnum = {
+  id: 'id',
+  booking_id: 'booking_id',
+  addon_id: 'addon_id',
+  addon_quantity: 'addon_quantity'
+} as const
+
+export type Booking_addonsScalarFieldEnum = (typeof Booking_addonsScalarFieldEnum)[keyof typeof Booking_addonsScalarFieldEnum]
+
+
+export const Booking_foodsScalarFieldEnum = {
+  id: 'id',
+  booking_id: 'booking_id',
+  food_id: 'food_id',
+  food_quantity: 'food_quantity'
+} as const
+
+export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -5,7 +5,7 @@ import { prisma } from "@/db"
 
 const addonSchema = z.object({
   addon_name: z.string().trim().min(1),
-  addon_desc: z.string().trim().min(1),
+  addon_desc: z.string().trim().min(0),
   addon_price: z.coerce.number().nonnegative(),
   addon_avail: z.boolean(),
 })

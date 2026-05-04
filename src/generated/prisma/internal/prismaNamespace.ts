@@ -389,7 +389,9 @@ export const ModelName = {
   bookings: 'bookings',
   foods: 'foods',
   packages: 'packages',
-  slots: 'slots'
+  slots: 'slots',
+  booking_addons: 'booking_addons',
+  booking_foods: 'booking_foods'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +855,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    booking_addons: {
+      payload: Prisma.$booking_addonsPayload<ExtArgs>
+      fields: Prisma.booking_addonsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.booking_addonsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.booking_addonsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>
+        }
+        findFirst: {
+          args: Prisma.booking_addonsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.booking_addonsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>
+        }
+        findMany: {
+          args: Prisma.booking_addonsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>[]
+        }
+        create: {
+          args: Prisma.booking_addonsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>
+        }
+        createMany: {
+          args: Prisma.booking_addonsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.booking_addonsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>[]
+        }
+        delete: {
+          args: Prisma.booking_addonsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>
+        }
+        update: {
+          args: Prisma.booking_addonsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>
+        }
+        deleteMany: {
+          args: Prisma.booking_addonsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.booking_addonsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.booking_addonsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>[]
+        }
+        upsert: {
+          args: Prisma.booking_addonsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_addonsPayload>
+        }
+        aggregate: {
+          args: Prisma.Booking_addonsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBooking_addons>
+        }
+        groupBy: {
+          args: Prisma.booking_addonsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_addonsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.booking_addonsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_addonsCountAggregateOutputType> | number
+        }
+      }
+    }
+    booking_foods: {
+      payload: Prisma.$booking_foodsPayload<ExtArgs>
+      fields: Prisma.booking_foodsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.booking_foodsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.booking_foodsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>
+        }
+        findFirst: {
+          args: Prisma.booking_foodsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.booking_foodsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>
+        }
+        findMany: {
+          args: Prisma.booking_foodsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>[]
+        }
+        create: {
+          args: Prisma.booking_foodsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>
+        }
+        createMany: {
+          args: Prisma.booking_foodsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.booking_foodsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>[]
+        }
+        delete: {
+          args: Prisma.booking_foodsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>
+        }
+        update: {
+          args: Prisma.booking_foodsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>
+        }
+        deleteMany: {
+          args: Prisma.booking_foodsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.booking_foodsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.booking_foodsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>[]
+        }
+        upsert: {
+          args: Prisma.booking_foodsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_foodsPayload>
+        }
+        aggregate: {
+          args: Prisma.Booking_foodsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBooking_foods>
+        }
+        groupBy: {
+          args: Prisma.booking_foodsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_foodsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.booking_foodsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_foodsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -979,6 +1129,26 @@ export const SlotsScalarFieldEnum = {
 } as const
 
 export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof SlotsScalarFieldEnum]
+
+
+export const Booking_addonsScalarFieldEnum = {
+  id: 'id',
+  booking_id: 'booking_id',
+  addon_id: 'addon_id',
+  addon_quantity: 'addon_quantity'
+} as const
+
+export type Booking_addonsScalarFieldEnum = (typeof Booking_addonsScalarFieldEnum)[keyof typeof Booking_addonsScalarFieldEnum]
+
+
+export const Booking_foodsScalarFieldEnum = {
+  id: 'id',
+  booking_id: 'booking_id',
+  food_id: 'food_id',
+  food_quantity: 'food_quantity'
+} as const
+
+export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1188,6 +1358,8 @@ export type GlobalOmitConfig = {
   foods?: Prisma.foodsOmit
   packages?: Prisma.packagesOmit
   slots?: Prisma.slotsOmit
+  booking_addons?: Prisma.booking_addonsOmit
+  booking_foods?: Prisma.booking_foodsOmit
 }
 
 /* Types for Logging */

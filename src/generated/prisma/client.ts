@@ -69,3 +69,13 @@ export type packages = Prisma.packagesModel
  * 
  */
 export type slots = Prisma.slotsModel
+/**
+ * Model booking_addons
+ * 
+ */
+export type booking_addons = Prisma.booking_addonsModel
+/**
+ * Model booking_foods
+ * 
+ */
+export type booking_foods = Prisma.booking_foodsModel
