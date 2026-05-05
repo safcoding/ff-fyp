@@ -143,6 +143,7 @@ export const PackagesScalarFieldEnum = {
   package_name: 'package_name',
   package_availability: 'package_availability',
   package_note: 'package_note',
+  package_features: 'package_features',
   price_my_adult: 'price_my_adult',
   price_my_kid: 'price_my_kid',
   price_my_senior: 'price_my_senior',

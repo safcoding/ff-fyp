@@ -67,6 +67,7 @@ model packages {
   package_name         String
   package_availability Boolean
   package_note         String?
+  package_features String[] @default([])
   price_my_adult       Decimal    @db.Decimal(3, 0)
   price_my_kid         Decimal    @db.Decimal(3, 0)
   price_my_senior      Decimal    @db.Decimal(3, 0)

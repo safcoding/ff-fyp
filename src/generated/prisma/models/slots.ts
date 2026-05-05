@@ -192,7 +192,7 @@ export type SlotsGroupByOutputType = {
   _max: SlotsMaxAggregateOutputType | null
 }
 
-export type GetSlotsGroupByPayload<T extends slotsGroupByArgs> = Prisma.PrismaPromise<
+type GetSlotsGroupByPayload<T extends slotsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SlotsGroupByOutputType, T['by']> &
       {
@@ -1132,11 +1132,6 @@ export type slotsFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Skip the first `n` slots.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of slots.
-   */
   distinct?: Prisma.SlotsScalarFieldEnum | Prisma.SlotsScalarFieldEnum[]
 }
 

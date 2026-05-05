@@ -4,8 +4,10 @@ import { useState } from "react"
 import {
   approveBooking as approveBookingAction,
   deleteBooking as deleteBookingAction,
+  getBookingById,
   getBookings,
 } from "@/serverActions/bookingActions"
+import { buildQuotationPdfBlob } from "@/components/booking/QuotationPdf"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { DeleteDialog } from "@/components/deleteDialog"
 
@@ -38,6 +40,19 @@ function BookingPage() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin-bookings"] })
       setApprovingBooking(null)
+    },
+  })
+
+  const quotationMutation = useMutation({
+    mutationFn: getBookingById,
+    onSuccess: async (booking) => {
+      const blob = await buildQuotationPdfBlob(booking)
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `quotation-${booking.booking_id}.pdf`
+      link.click()
+      URL.revokeObjectURL(url)
     },
   })
 
@@ -189,6 +204,21 @@ function BookingPage() {
                           </div>
                         </div>
 
+                        <div className="flex flex-wrap gap-2">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={quotationMutation.isPending}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              quotationMutation.mutate({ data: { booking_id: booking.booking_id } })
+                            }}
+                          >
+                            {quotationMutation.isPending ? "Preparing quotation..." : "Download quotation"}
+                          </Button>
+                        </div>
+
                         {isPending ? (
                           <div className="flex items-center justify-between rounded-md border bg-amber-50 p-3 text-sm">
                             <p className="text-amber-900">
@@ -254,6 +284,10 @@ function BookingPage() {
       ) : null}
       {approveBookingMutation.isSuccess ? (
         <p className="text-sm text-green-700">{approveBookingMutation.data}</p>
+      ) : null}
+
+      {quotationMutation.isError ? (
+        <p className="text-sm text-red-600">{quotationMutation.error.message}</p>
       ) : null}
     </>
   )

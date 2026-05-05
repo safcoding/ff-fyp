@@ -196,7 +196,7 @@ export type AddonsGroupByOutputType = {
   _max: AddonsMaxAggregateOutputType | null
 }
 
-export type GetAddonsGroupByPayload<T extends addonsGroupByArgs> = Prisma.PrismaPromise<
+type GetAddonsGroupByPayload<T extends addonsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AddonsGroupByOutputType, T['by']> &
       {
@@ -1145,11 +1145,6 @@ export type addonsFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` addons.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of addons.
-   */
   distinct?: Prisma.AddonsScalarFieldEnum | Prisma.AddonsScalarFieldEnum[]
 }
 

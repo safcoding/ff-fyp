@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as BookingFormRouteImport } from './routes/booking-form'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -24,6 +25,11 @@ import { Route as AdminBookingsRouteImport } from './routes/admin/bookings'
 import { Route as AdminAddonsRouteImport } from './routes/admin/addons'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const PackagesRoute = PackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookingFormRoute = BookingFormRouteImport.update({
   id: '/booking-form',
   path: '/booking-form',
@@ -98,6 +104,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/booking-form': typeof BookingFormRouteWithChildren
+  '/packages': typeof PackagesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/foods': typeof AdminFoodsRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/booking-form': typeof BookingFormRouteWithChildren
+  '/packages': typeof PackagesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/foods': typeof AdminFoodsRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/booking-form': typeof BookingFormRouteWithChildren
+  '/packages': typeof PackagesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/foods': typeof AdminFoodsRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/booking-form'
+    | '/packages'
     | '/admin/addons'
     | '/admin/bookings'
     | '/admin/foods'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/booking-form'
+    | '/packages'
     | '/admin/addons'
     | '/admin/bookings'
     | '/admin/foods'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/booking-form'
+    | '/packages'
     | '/admin/addons'
     | '/admin/bookings'
     | '/admin/foods'
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookingFormRoute: typeof BookingFormRouteWithChildren
+  PackagesRoute: typeof PackagesRoute
   AdminAddonsRoute: typeof AdminAddonsRoute
   AdminBookingsRoute: typeof AdminBookingsRoute
   AdminFoodsRoute: typeof AdminFoodsRoute
@@ -209,6 +222,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/packages': {
+      id: '/packages'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof PackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/booking-form': {
       id: '/booking-form'
       path: '/booking-form'
@@ -333,6 +353,7 @@ const BookingFormRouteWithChildren = BookingFormRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookingFormRoute: BookingFormRouteWithChildren,
+  PackagesRoute: PackagesRoute,
   AdminAddonsRoute: AdminAddonsRoute,
   AdminBookingsRoute: AdminBookingsRoute,
   AdminFoodsRoute: AdminFoodsRoute,

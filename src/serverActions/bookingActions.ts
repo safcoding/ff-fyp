@@ -40,6 +40,10 @@ const AvailabilitySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 })
 
+const BookingIdSchema = z.object({
+  booking_id: z.uuid(),
+})
+
 const secretBookingSchema = BookingSchema.extend({
   booking_id: z.uuid(),
   booking_status: z.string()
@@ -218,6 +222,75 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
           : [],
     }))
 })
+
+export const getBookingById = createServerFn({ method: "POST" })
+  .inputValidator(BookingIdSchema)
+  .handler(async ({ data }) => {
+    const booking = await prisma.bookings.findUnique({
+      where: { booking_id: data.booking_id },
+      include: {
+        booking_addons: {
+          include: {
+            addons: {
+              select: {
+                addon_name: true,
+              },
+            },
+          },
+        },
+        booking_foods: {
+          include: {
+            foods: {
+              select: {
+                food_name: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (!booking) {
+      throw new Error("Booking not found")
+    }
+
+    return {
+      booking_id: booking.booking_id,
+      booking_price: booking.booking_price.toString(),
+      booking_date: booking.booking_date,
+      slot_id: booking.slot_id,
+      package_id: booking.package_id,
+      pic_name: booking.pic_name,
+      pic_email: booking.pic_email,
+      pic_hp: booking.pic_hp,
+      org_address: booking.org_address,
+      org_name: booking.org_name,
+      org_state: booking.org_state,
+      org_type: booking.org_type,
+      pax_my_adult: booking.pax_my_adult,
+      pax_my_kid: booking.pax_my_kid,
+      pax_my_senior: booking.pax_my_senior,
+      pax_my_oku: booking.pax_my_oku,
+      pax_non_my_adult: booking.pax_non_my_adult,
+      pax_non_my_kid: booking.pax_non_my_kid,
+      pax_non_my_senior: booking.pax_non_my_senior,
+      pax_non_my_oku: booking.pax_non_my_oku,
+      booking_addons: booking.booking_addons.map((item) => ({
+        addon_id: item.addon_id,
+        addon_name: item.addons.addon_name,
+        addon_quantity: item.addon_quantity,
+      })),
+      booking_foods: booking.booking_foods
+        ? [
+            {
+              food_id: booking.booking_foods.food_id,
+              food_name: booking.booking_foods.foods.food_name,
+              food_quantity: booking.booking_foods.food_quantity,
+            },
+          ]
+        : [],
+    }
+  })
 
 export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
   const slots = await prisma.slots.findMany({

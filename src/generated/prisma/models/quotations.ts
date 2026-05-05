@@ -137,7 +137,7 @@ export type QuotationsGroupByOutputType = {
   _max: QuotationsMaxAggregateOutputType | null
 }
 
-export type GetQuotationsGroupByPayload<T extends quotationsGroupByArgs> = Prisma.PrismaPromise<
+type GetQuotationsGroupByPayload<T extends quotationsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<QuotationsGroupByOutputType, T['by']> &
       {
@@ -1017,11 +1017,6 @@ export type quotationsFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` quotations.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of quotations.
-   */
   distinct?: Prisma.QuotationsScalarFieldEnum | Prisma.QuotationsScalarFieldEnum[]
 }
 

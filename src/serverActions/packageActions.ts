@@ -30,6 +30,7 @@ export function getPackagePricing(pkg: Record<string, unknown>): PackagePricing 
 const packageSchema = z.object({
   package_name: z.string().trim().min(1),
   package_note: z.string().trim().optional(),
+  package_features: z.array(z.string().trim().min(1)).min(1),
   package_availability: z.boolean(),
   price_my_adult: z.coerce.number().nonnegative(),
   price_my_kid: z.coerce.number().nonnegative(),
@@ -50,6 +51,7 @@ export const getPackages = createServerFn({ method: "GET" }).handler(async () =>
     package_id: pkg.package_id,
     package_name: pkg.package_name,
     package_note: pkg.package_note,
+    package_features: pkg.package_features,
     package_availability: pkg.package_availability,
     price_my_adult: Number(pkg.price_my_adult),
     price_my_kid: Number(pkg.price_my_kid),
@@ -69,6 +71,7 @@ export const createPackage = createServerFn({ method: "POST" })
       data: {
         package_name: data.package_name,
         package_note: data.package_note || null,
+        package_features: data.package_features,
         package_availability: data.package_availability,
         price_my_adult: data.price_my_adult,
         price_my_kid: data.price_my_kid,
@@ -100,6 +103,7 @@ export const updatePackage = createServerFn({ method: "POST" })
       data: {
         package_name: data.package_name,
         package_note: data.package_note || null,
+        package_features: data.package_features,
         package_availability: data.package_availability,
         price_my_adult: data.price_my_adult,
         price_my_kid: data.price_my_kid,
