@@ -310,6 +310,7 @@ export type bookingsWhereInput = {
   discount_id?: Prisma.StringNullableFilter<"bookings"> | string | null
   booking_addons?: Prisma.Booking_addonsListRelationFilter
   booking_foods?: Prisma.XOR<Prisma.Booking_foodsNullableScalarRelationFilter, Prisma.booking_foodsWhereInput> | null
+  booking_packages?: Prisma.Booking_packagesListRelationFilter
   discounts?: Prisma.XOR<Prisma.DiscountsNullableScalarRelationFilter, Prisma.discountsWhereInput> | null
   quotations_bookings_quotation_idToquotations?: Prisma.XOR<Prisma.QuotationsNullableScalarRelationFilter, Prisma.quotationsWhereInput> | null
   slots?: Prisma.XOR<Prisma.SlotsScalarRelationFilter, Prisma.slotsWhereInput>
@@ -335,6 +336,7 @@ export type bookingsOrderByWithRelationInput = {
   discount_id?: Prisma.SortOrderInput | Prisma.SortOrder
   booking_addons?: Prisma.booking_addonsOrderByRelationAggregateInput
   booking_foods?: Prisma.booking_foodsOrderByWithRelationInput
+  booking_packages?: Prisma.booking_packagesOrderByRelationAggregateInput
   discounts?: Prisma.discountsOrderByWithRelationInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsOrderByWithRelationInput
   slots?: Prisma.slotsOrderByWithRelationInput
@@ -363,6 +365,7 @@ export type bookingsWhereUniqueInput = Prisma.AtLeast<{
   discount_id?: Prisma.StringNullableFilter<"bookings"> | string | null
   booking_addons?: Prisma.Booking_addonsListRelationFilter
   booking_foods?: Prisma.XOR<Prisma.Booking_foodsNullableScalarRelationFilter, Prisma.booking_foodsWhereInput> | null
+  booking_packages?: Prisma.Booking_packagesListRelationFilter
   discounts?: Prisma.XOR<Prisma.DiscountsNullableScalarRelationFilter, Prisma.discountsWhereInput> | null
   quotations_bookings_quotation_idToquotations?: Prisma.XOR<Prisma.QuotationsNullableScalarRelationFilter, Prisma.quotationsWhereInput> | null
   slots?: Prisma.XOR<Prisma.SlotsScalarRelationFilter, Prisma.slotsWhereInput>
@@ -431,6 +434,7 @@ export type bookingsCreateInput = {
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
@@ -456,6 +460,7 @@ export type bookingsUncheckedCreateInput = {
   discount_id?: string | null
   booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
   quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
 }
 
@@ -475,6 +480,7 @@ export type bookingsUpdateInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
@@ -500,6 +506,7 @@ export type bookingsUncheckedUpdateInput = {
   discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
@@ -784,6 +791,20 @@ export type bookingsUncheckedUpdateManyWithoutQuotations_bookings_quotation_idTo
   deleteMany?: Prisma.bookingsScalarWhereInput | Prisma.bookingsScalarWhereInput[]
 }
 
+export type bookingsCreateNestedOneWithoutBooking_packagesInput = {
+  create?: Prisma.XOR<Prisma.bookingsCreateWithoutBooking_packagesInput, Prisma.bookingsUncheckedCreateWithoutBooking_packagesInput>
+  connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutBooking_packagesInput
+  connect?: Prisma.bookingsWhereUniqueInput
+}
+
+export type bookingsUpdateOneRequiredWithoutBooking_packagesNestedInput = {
+  create?: Prisma.XOR<Prisma.bookingsCreateWithoutBooking_packagesInput, Prisma.bookingsUncheckedCreateWithoutBooking_packagesInput>
+  connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutBooking_packagesInput
+  upsert?: Prisma.bookingsUpsertWithoutBooking_packagesInput
+  connect?: Prisma.bookingsWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.bookingsUpdateToOneWithWhereWithoutBooking_packagesInput, Prisma.bookingsUpdateWithoutBooking_packagesInput>, Prisma.bookingsUncheckedUpdateWithoutBooking_packagesInput>
+}
+
 export type bookingsCreateNestedManyWithoutDiscountsInput = {
   create?: Prisma.XOR<Prisma.bookingsCreateWithoutDiscountsInput, Prisma.bookingsUncheckedCreateWithoutDiscountsInput> | Prisma.bookingsCreateWithoutDiscountsInput[] | Prisma.bookingsUncheckedCreateWithoutDiscountsInput[]
   connectOrCreate?: Prisma.bookingsCreateOrConnectWithoutDiscountsInput | Prisma.bookingsCreateOrConnectWithoutDiscountsInput[]
@@ -842,6 +863,7 @@ export type bookingsCreateWithoutSlotsInput = {
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
   quotations?: Prisma.quotationsCreateNestedManyWithoutBookingsInput
@@ -865,6 +887,7 @@ export type bookingsUncheckedCreateWithoutSlotsInput = {
   discount_id?: string | null
   booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
   quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
 }
 
@@ -931,6 +954,7 @@ export type bookingsCreateWithoutBooking_addonsInput = {
   booking_date?: Date | string | null
   booking_status?: $Enums.booking_status | null
   booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
@@ -955,6 +979,7 @@ export type bookingsUncheckedCreateWithoutBooking_addonsInput = {
   booking_status?: $Enums.booking_status | null
   discount_id?: string | null
   booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
   quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
 }
 
@@ -989,6 +1014,7 @@ export type bookingsUpdateWithoutBooking_addonsInput = {
   booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
@@ -1013,6 +1039,7 @@ export type bookingsUncheckedUpdateWithoutBooking_addonsInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
@@ -1031,6 +1058,7 @@ export type bookingsCreateWithoutBooking_foodsInput = {
   booking_date?: Date | string | null
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
@@ -1055,6 +1083,7 @@ export type bookingsUncheckedCreateWithoutBooking_foodsInput = {
   booking_status?: $Enums.booking_status | null
   discount_id?: string | null
   booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
   quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
 }
 
@@ -1089,6 +1118,7 @@ export type bookingsUpdateWithoutBooking_foodsInput = {
   booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
@@ -1113,6 +1143,7 @@ export type bookingsUncheckedUpdateWithoutBooking_foodsInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
@@ -1132,6 +1163,7 @@ export type bookingsCreateWithoutQuotations_bookings_quotation_idToquotationsInp
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
   quotations?: Prisma.quotationsCreateNestedManyWithoutBookingsInput
@@ -1155,6 +1187,7 @@ export type bookingsUncheckedCreateWithoutQuotations_bookings_quotation_idToquot
   discount_id?: string | null
   booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
   quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
 }
 
@@ -1184,6 +1217,7 @@ export type bookingsCreateWithoutQuotationsInput = {
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
@@ -1208,6 +1242,7 @@ export type bookingsUncheckedCreateWithoutQuotationsInput = {
   discount_id?: string | null
   booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
 }
 
 export type bookingsCreateOrConnectWithoutQuotationsInput = {
@@ -1258,6 +1293,7 @@ export type bookingsUpdateWithoutQuotationsInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
@@ -1282,6 +1318,111 @@ export type bookingsUncheckedUpdateWithoutQuotationsInput = {
   discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
+}
+
+export type bookingsCreateWithoutBooking_packagesInput = {
+  booking_id: string
+  booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Date | string
+  pax_total: number
+  pic_name: string
+  pic_email: string
+  pic_hp: string
+  org_address: string
+  org_name: string
+  org_state: string
+  org_type: $Enums.states
+  booking_date?: Date | string | null
+  booking_status?: $Enums.booking_status | null
+  booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
+  booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  discounts?: Prisma.discountsCreateNestedOneWithoutBookingsInput
+  quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
+  slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
+  quotations?: Prisma.quotationsCreateNestedManyWithoutBookingsInput
+}
+
+export type bookingsUncheckedCreateWithoutBooking_packagesInput = {
+  booking_id: string
+  booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Date | string
+  pax_total: number
+  pic_name: string
+  pic_email: string
+  pic_hp: string
+  org_address: string
+  org_name: string
+  org_state: string
+  org_type: $Enums.states
+  quotation_id?: string | null
+  slot_id: string
+  booking_date?: Date | string | null
+  booking_status?: $Enums.booking_status | null
+  discount_id?: string | null
+  booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
+  booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
+}
+
+export type bookingsCreateOrConnectWithoutBooking_packagesInput = {
+  where: Prisma.bookingsWhereUniqueInput
+  create: Prisma.XOR<Prisma.bookingsCreateWithoutBooking_packagesInput, Prisma.bookingsUncheckedCreateWithoutBooking_packagesInput>
+}
+
+export type bookingsUpsertWithoutBooking_packagesInput = {
+  update: Prisma.XOR<Prisma.bookingsUpdateWithoutBooking_packagesInput, Prisma.bookingsUncheckedUpdateWithoutBooking_packagesInput>
+  create: Prisma.XOR<Prisma.bookingsCreateWithoutBooking_packagesInput, Prisma.bookingsUncheckedCreateWithoutBooking_packagesInput>
+  where?: Prisma.bookingsWhereInput
+}
+
+export type bookingsUpdateToOneWithWhereWithoutBooking_packagesInput = {
+  where?: Prisma.bookingsWhereInput
+  data: Prisma.XOR<Prisma.bookingsUpdateWithoutBooking_packagesInput, Prisma.bookingsUncheckedUpdateWithoutBooking_packagesInput>
+}
+
+export type bookingsUpdateWithoutBooking_packagesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
+  pic_name?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_email?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_hp?: Prisma.StringFieldUpdateOperationsInput | string
+  org_address?: Prisma.StringFieldUpdateOperationsInput | string
+  org_name?: Prisma.StringFieldUpdateOperationsInput | string
+  org_state?: Prisma.StringFieldUpdateOperationsInput | string
+  org_type?: Prisma.EnumstatesFieldUpdateOperationsInput | $Enums.states
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
+  booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
+  booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
+  quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
+  slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
+  quotations?: Prisma.quotationsUpdateManyWithoutBookingsNestedInput
+}
+
+export type bookingsUncheckedUpdateWithoutBooking_packagesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pax_total?: Prisma.IntFieldUpdateOperationsInput | number
+  pic_name?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_email?: Prisma.StringFieldUpdateOperationsInput | string
+  pic_hp?: Prisma.StringFieldUpdateOperationsInput | string
+  org_address?: Prisma.StringFieldUpdateOperationsInput | string
+  org_name?: Prisma.StringFieldUpdateOperationsInput | string
+  org_state?: Prisma.StringFieldUpdateOperationsInput | string
+  org_type?: Prisma.EnumstatesFieldUpdateOperationsInput | $Enums.states
+  quotation_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slot_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
+  discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
+  booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
 export type bookingsCreateWithoutDiscountsInput = {
@@ -1300,6 +1441,7 @@ export type bookingsCreateWithoutDiscountsInput = {
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesCreateNestedManyWithoutBookingsInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput
   slots: Prisma.slotsCreateNestedOneWithoutBookingsInput
   quotations?: Prisma.quotationsCreateNestedManyWithoutBookingsInput
@@ -1323,6 +1465,7 @@ export type bookingsUncheckedCreateWithoutDiscountsInput = {
   booking_status?: $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutBookingsInput
   booking_foods?: Prisma.booking_foodsUncheckedCreateNestedOneWithoutBookingsInput
+  booking_packages?: Prisma.booking_packagesUncheckedCreateNestedManyWithoutBookingsInput
   quotations?: Prisma.quotationsUncheckedCreateNestedManyWithoutBookingsInput
 }
 
@@ -1386,6 +1529,7 @@ export type bookingsUpdateWithoutSlotsInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
   quotations?: Prisma.quotationsUpdateManyWithoutBookingsNestedInput
@@ -1409,6 +1553,7 @@ export type bookingsUncheckedUpdateWithoutSlotsInput = {
   discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
@@ -1464,6 +1609,7 @@ export type bookingsUpdateWithoutQuotations_bookings_quotation_idToquotationsInp
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   discounts?: Prisma.discountsUpdateOneWithoutBookingsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUpdateManyWithoutBookingsNestedInput
@@ -1487,6 +1633,7 @@ export type bookingsUncheckedUpdateWithoutQuotations_bookings_quotation_idToquot
   discount_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
@@ -1542,6 +1689,7 @@ export type bookingsUpdateWithoutDiscountsInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUpdateManyWithoutBookingsNestedInput
   quotations_bookings_quotation_idToquotations?: Prisma.quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput
   slots?: Prisma.slotsUpdateOneRequiredWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUpdateManyWithoutBookingsNestedInput
@@ -1565,6 +1713,7 @@ export type bookingsUncheckedUpdateWithoutDiscountsInput = {
   booking_status?: Prisma.NullableEnumbooking_statusFieldUpdateOperationsInput | $Enums.booking_status | null
   booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutBookingsNestedInput
   booking_foods?: Prisma.booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput
+  booking_packages?: Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput
   quotations?: Prisma.quotationsUncheckedUpdateManyWithoutBookingsNestedInput
 }
 
@@ -1593,11 +1742,13 @@ export type bookingsUncheckedUpdateManyWithoutDiscountsInput = {
 
 export type BookingsCountOutputType = {
   booking_addons: number
+  booking_packages: number
   quotations: number
 }
 
 export type BookingsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   booking_addons?: boolean | BookingsCountOutputTypeCountBooking_addonsArgs
+  booking_packages?: boolean | BookingsCountOutputTypeCountBooking_packagesArgs
   quotations?: boolean | BookingsCountOutputTypeCountQuotationsArgs
 }
 
@@ -1616,6 +1767,13 @@ export type BookingsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
  */
 export type BookingsCountOutputTypeCountBooking_addonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.booking_addonsWhereInput
+}
+
+/**
+ * BookingsCountOutputType without action
+ */
+export type BookingsCountOutputTypeCountBooking_packagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.booking_packagesWhereInput
 }
 
 /**
@@ -1645,6 +1803,7 @@ export type bookingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   discount_id?: boolean
   booking_addons?: boolean | Prisma.bookings$booking_addonsArgs<ExtArgs>
   booking_foods?: boolean | Prisma.bookings$booking_foodsArgs<ExtArgs>
+  booking_packages?: boolean | Prisma.bookings$booking_packagesArgs<ExtArgs>
   discounts?: boolean | Prisma.bookings$discountsArgs<ExtArgs>
   quotations_bookings_quotation_idToquotations?: boolean | Prisma.bookings$quotations_bookings_quotation_idToquotationsArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
@@ -1719,6 +1878,7 @@ export type bookingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type bookingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   booking_addons?: boolean | Prisma.bookings$booking_addonsArgs<ExtArgs>
   booking_foods?: boolean | Prisma.bookings$booking_foodsArgs<ExtArgs>
+  booking_packages?: boolean | Prisma.bookings$booking_packagesArgs<ExtArgs>
   discounts?: boolean | Prisma.bookings$discountsArgs<ExtArgs>
   quotations_bookings_quotation_idToquotations?: boolean | Prisma.bookings$quotations_bookings_quotation_idToquotationsArgs<ExtArgs>
   slots?: boolean | Prisma.slotsDefaultArgs<ExtArgs>
@@ -1741,6 +1901,7 @@ export type $bookingsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     booking_addons: Prisma.$booking_addonsPayload<ExtArgs>[]
     booking_foods: Prisma.$booking_foodsPayload<ExtArgs> | null
+    booking_packages: Prisma.$booking_packagesPayload<ExtArgs>[]
     discounts: Prisma.$discountsPayload<ExtArgs> | null
     quotations_bookings_quotation_idToquotations: Prisma.$quotationsPayload<ExtArgs> | null
     slots: Prisma.$slotsPayload<ExtArgs>
@@ -2159,6 +2320,7 @@ export interface Prisma__bookingsClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   booking_addons<T extends Prisma.bookings$booking_addonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookings$booking_addonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$booking_addonsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   booking_foods<T extends Prisma.bookings$booking_foodsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookings$booking_foodsArgs<ExtArgs>>): Prisma.Prisma__booking_foodsClient<runtime.Types.Result.GetResult<Prisma.$booking_foodsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  booking_packages<T extends Prisma.bookings$booking_packagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookings$booking_packagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$booking_packagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   discounts<T extends Prisma.bookings$discountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookings$discountsArgs<ExtArgs>>): Prisma.Prisma__discountsClient<runtime.Types.Result.GetResult<Prisma.$discountsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   quotations_bookings_quotation_idToquotations<T extends Prisma.bookings$quotations_bookings_quotation_idToquotationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookings$quotations_bookings_quotation_idToquotationsArgs<ExtArgs>>): Prisma.Prisma__quotationsClient<runtime.Types.Result.GetResult<Prisma.$quotationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   slots<T extends Prisma.slotsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.slotsDefaultArgs<ExtArgs>>): Prisma.Prisma__slotsClient<runtime.Types.Result.GetResult<Prisma.$slotsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2644,6 +2806,30 @@ export type bookings$booking_foodsArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.booking_foodsInclude<ExtArgs> | null
   where?: Prisma.booking_foodsWhereInput
+}
+
+/**
+ * bookings.booking_packages
+ */
+export type bookings$booking_packagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the booking_packages
+   */
+  select?: Prisma.booking_packagesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the booking_packages
+   */
+  omit?: Prisma.booking_packagesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
+  where?: Prisma.booking_packagesWhereInput
+  orderBy?: Prisma.booking_packagesOrderByWithRelationInput | Prisma.booking_packagesOrderByWithRelationInput[]
+  cursor?: Prisma.booking_packagesWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Booking_packagesScalarFieldEnum | Prisma.Booking_packagesScalarFieldEnum[]
 }
 
 /**

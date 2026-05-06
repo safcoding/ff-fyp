@@ -43,7 +43,7 @@ model bookings {
   discount_id                                  String?
   booking_addons                               booking_addons[]
   booking_foods                                booking_foods?
-  booking_packages                             booking_packages[] @ignore
+  booking_packages                             booking_packages[] 
   discounts                                    discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: NoAction, onUpdate: NoAction, map: "discount_id_fkey")
   quotations_bookings_quotation_idToquotations quotations?        @relation("bookings_quotation_idToquotations", fields: [quotation_id], references: [quotation_id], onDelete: NoAction, onUpdate: NoAction, map: "quotation_id_fkey")
   slots                                        slots              @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")

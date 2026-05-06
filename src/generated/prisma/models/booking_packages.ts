@@ -304,6 +304,7 @@ export type booking_packagesWhereInput = {
   pax_non_my_senior?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   pax_non_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   subtotal?: Prisma.DecimalNullableFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
 }
 
 export type booking_packagesOrderByWithRelationInput = {
@@ -319,6 +320,7 @@ export type booking_packagesOrderByWithRelationInput = {
   pax_non_my_senior?: Prisma.SortOrderInput | Prisma.SortOrder
   pax_non_my_oku?: Prisma.SortOrderInput | Prisma.SortOrder
   subtotal?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookings?: Prisma.bookingsOrderByWithRelationInput
 }
 
 export type booking_packagesWhereUniqueInput = Prisma.AtLeast<{
@@ -337,6 +339,7 @@ export type booking_packagesWhereUniqueInput = Prisma.AtLeast<{
   pax_non_my_senior?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   pax_non_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   subtotal?: Prisma.DecimalNullableFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
 }, "id">
 
 export type booking_packagesOrderByWithAggregationInput = {
@@ -387,6 +390,7 @@ export type booking_packagesCreateInput = {
   pax_non_my_senior?: number | null
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bookings: Prisma.bookingsCreateNestedOneWithoutBooking_packagesInput
 }
 
 export type booking_packagesUncheckedCreateInput = {
@@ -414,6 +418,7 @@ export type booking_packagesUpdateInput = {
   pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_packagesNestedInput
 }
 
 export type booking_packagesUncheckedUpdateInput = {
@@ -471,6 +476,16 @@ export type booking_packagesUncheckedUpdateManyInput = {
   pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type Booking_packagesListRelationFilter = {
+  every?: Prisma.booking_packagesWhereInput
+  some?: Prisma.booking_packagesWhereInput
+  none?: Prisma.booking_packagesWhereInput
+}
+
+export type booking_packagesOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type booking_packagesCountOrderByAggregateInput = {
@@ -542,6 +557,48 @@ export type booking_packagesSumOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
 }
 
+export type booking_packagesCreateNestedManyWithoutBookingsInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutBookingsInput, Prisma.booking_packagesUncheckedCreateWithoutBookingsInput> | Prisma.booking_packagesCreateWithoutBookingsInput[] | Prisma.booking_packagesUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutBookingsInput | Prisma.booking_packagesCreateOrConnectWithoutBookingsInput[]
+  createMany?: Prisma.booking_packagesCreateManyBookingsInputEnvelope
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+}
+
+export type booking_packagesUncheckedCreateNestedManyWithoutBookingsInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutBookingsInput, Prisma.booking_packagesUncheckedCreateWithoutBookingsInput> | Prisma.booking_packagesCreateWithoutBookingsInput[] | Prisma.booking_packagesUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutBookingsInput | Prisma.booking_packagesCreateOrConnectWithoutBookingsInput[]
+  createMany?: Prisma.booking_packagesCreateManyBookingsInputEnvelope
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+}
+
+export type booking_packagesUpdateManyWithoutBookingsNestedInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutBookingsInput, Prisma.booking_packagesUncheckedCreateWithoutBookingsInput> | Prisma.booking_packagesCreateWithoutBookingsInput[] | Prisma.booking_packagesUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutBookingsInput | Prisma.booking_packagesCreateOrConnectWithoutBookingsInput[]
+  upsert?: Prisma.booking_packagesUpsertWithWhereUniqueWithoutBookingsInput | Prisma.booking_packagesUpsertWithWhereUniqueWithoutBookingsInput[]
+  createMany?: Prisma.booking_packagesCreateManyBookingsInputEnvelope
+  set?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  disconnect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  delete?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  update?: Prisma.booking_packagesUpdateWithWhereUniqueWithoutBookingsInput | Prisma.booking_packagesUpdateWithWhereUniqueWithoutBookingsInput[]
+  updateMany?: Prisma.booking_packagesUpdateManyWithWhereWithoutBookingsInput | Prisma.booking_packagesUpdateManyWithWhereWithoutBookingsInput[]
+  deleteMany?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
+}
+
+export type booking_packagesUncheckedUpdateManyWithoutBookingsNestedInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutBookingsInput, Prisma.booking_packagesUncheckedCreateWithoutBookingsInput> | Prisma.booking_packagesCreateWithoutBookingsInput[] | Prisma.booking_packagesUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutBookingsInput | Prisma.booking_packagesCreateOrConnectWithoutBookingsInput[]
+  upsert?: Prisma.booking_packagesUpsertWithWhereUniqueWithoutBookingsInput | Prisma.booking_packagesUpsertWithWhereUniqueWithoutBookingsInput[]
+  createMany?: Prisma.booking_packagesCreateManyBookingsInputEnvelope
+  set?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  disconnect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  delete?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  update?: Prisma.booking_packagesUpdateWithWhereUniqueWithoutBookingsInput | Prisma.booking_packagesUpdateWithWhereUniqueWithoutBookingsInput[]
+  updateMany?: Prisma.booking_packagesUpdateManyWithWhereWithoutBookingsInput | Prisma.booking_packagesUpdateManyWithWhereWithoutBookingsInput[]
+  deleteMany?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -556,6 +613,130 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
   multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type booking_packagesCreateWithoutBookingsInput = {
+  pax_my_adult?: number | null
+  pax_my_kid?: number | null
+  pax_my_senior?: number | null
+  pax_my_oku?: number | null
+  pax_non_my_adult?: number | null
+  pax_non_my_kid?: string | null
+  pax_non_my_senior?: number | null
+  pax_non_my_oku?: number | null
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_packagesUncheckedCreateWithoutBookingsInput = {
+  id?: number
+  package_id?: string | null
+  pax_my_adult?: number | null
+  pax_my_kid?: number | null
+  pax_my_senior?: number | null
+  pax_my_oku?: number | null
+  pax_non_my_adult?: number | null
+  pax_non_my_kid?: string | null
+  pax_non_my_senior?: number | null
+  pax_non_my_oku?: number | null
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_packagesCreateOrConnectWithoutBookingsInput = {
+  where: Prisma.booking_packagesWhereUniqueInput
+  create: Prisma.XOR<Prisma.booking_packagesCreateWithoutBookingsInput, Prisma.booking_packagesUncheckedCreateWithoutBookingsInput>
+}
+
+export type booking_packagesCreateManyBookingsInputEnvelope = {
+  data: Prisma.booking_packagesCreateManyBookingsInput | Prisma.booking_packagesCreateManyBookingsInput[]
+  skipDuplicates?: boolean
+}
+
+export type booking_packagesUpsertWithWhereUniqueWithoutBookingsInput = {
+  where: Prisma.booking_packagesWhereUniqueInput
+  update: Prisma.XOR<Prisma.booking_packagesUpdateWithoutBookingsInput, Prisma.booking_packagesUncheckedUpdateWithoutBookingsInput>
+  create: Prisma.XOR<Prisma.booking_packagesCreateWithoutBookingsInput, Prisma.booking_packagesUncheckedCreateWithoutBookingsInput>
+}
+
+export type booking_packagesUpdateWithWhereUniqueWithoutBookingsInput = {
+  where: Prisma.booking_packagesWhereUniqueInput
+  data: Prisma.XOR<Prisma.booking_packagesUpdateWithoutBookingsInput, Prisma.booking_packagesUncheckedUpdateWithoutBookingsInput>
+}
+
+export type booking_packagesUpdateManyWithWhereWithoutBookingsInput = {
+  where: Prisma.booking_packagesScalarWhereInput
+  data: Prisma.XOR<Prisma.booking_packagesUpdateManyMutationInput, Prisma.booking_packagesUncheckedUpdateManyWithoutBookingsInput>
+}
+
+export type booking_packagesScalarWhereInput = {
+  AND?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
+  OR?: Prisma.booking_packagesScalarWhereInput[]
+  NOT?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
+  id?: Prisma.IntFilter<"booking_packages"> | number
+  booking_id?: Prisma.StringFilter<"booking_packages"> | string
+  package_id?: Prisma.StringNullableFilter<"booking_packages"> | string | null
+  pax_my_adult?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  pax_my_kid?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  pax_my_senior?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  pax_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  pax_non_my_adult?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  pax_non_my_kid?: Prisma.StringNullableFilter<"booking_packages"> | string | null
+  pax_non_my_senior?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  pax_non_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  subtotal?: Prisma.DecimalNullableFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_packagesCreateManyBookingsInput = {
+  id?: number
+  package_id?: string | null
+  pax_my_adult?: number | null
+  pax_my_kid?: number | null
+  pax_my_senior?: number | null
+  pax_my_oku?: number | null
+  pax_non_my_adult?: number | null
+  pax_non_my_kid?: string | null
+  pax_non_my_senior?: number | null
+  pax_non_my_oku?: number | null
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_packagesUpdateWithoutBookingsInput = {
+  pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_kid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_packagesUncheckedUpdateWithoutBookingsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  package_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_kid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_packagesUncheckedUpdateManyWithoutBookingsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  package_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_kid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 
@@ -573,6 +754,7 @@ export type booking_packagesSelect<ExtArgs extends runtime.Types.Extensions.Inte
   pax_non_my_senior?: boolean
   pax_non_my_oku?: boolean
   subtotal?: boolean
+  bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_packages"]>
 
 export type booking_packagesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -588,6 +770,7 @@ export type booking_packagesSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   pax_non_my_senior?: boolean
   pax_non_my_oku?: boolean
   subtotal?: boolean
+  bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_packages"]>
 
 export type booking_packagesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -603,6 +786,7 @@ export type booking_packagesSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   pax_non_my_senior?: boolean
   pax_non_my_oku?: boolean
   subtotal?: boolean
+  bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_packages"]>
 
 export type booking_packagesSelectScalar = {
@@ -621,9 +805,15 @@ export type booking_packagesSelectScalar = {
 }
 
 export type booking_packagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "booking_id" | "package_id" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "subtotal", ExtArgs["result"]["booking_packages"]>
-export type booking_packagesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type booking_packagesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type booking_packagesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type booking_packagesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
+}
+export type booking_packagesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
+}
+export type booking_packagesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
+}
 
 export type $booking_packagesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "booking_packages"
@@ -1038,6 +1228,7 @@ readonly fields: booking_packagesFieldRefs;
  */
 export interface Prisma__booking_packagesClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bookings<T extends Prisma.bookingsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookingsDefaultArgs<ExtArgs>>): Prisma.Prisma__bookingsClient<runtime.Types.Result.GetResult<Prisma.$bookingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1096,6 +1287,10 @@ export type booking_packagesFindUniqueArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
+  /**
    * Filter, which booking_packages to fetch.
    */
   where: Prisma.booking_packagesWhereUniqueInput
@@ -1114,6 +1309,10 @@ export type booking_packagesFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
+  /**
    * Filter, which booking_packages to fetch.
    */
   where: Prisma.booking_packagesWhereUniqueInput
@@ -1131,6 +1330,10 @@ export type booking_packagesFindFirstArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the booking_packages
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
   /**
    * Filter, which booking_packages to fetch.
    */
@@ -1180,6 +1383,10 @@ export type booking_packagesFindFirstOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
+  /**
    * Filter, which booking_packages to fetch.
    */
   where?: Prisma.booking_packagesWhereInput
@@ -1228,6 +1435,10 @@ export type booking_packagesFindManyArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
+  /**
    * Filter, which booking_packages to fetch.
    */
   where?: Prisma.booking_packagesWhereInput
@@ -1271,6 +1482,10 @@ export type booking_packagesCreateArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
+  /**
    * The data needed to create a booking_packages.
    */
   data: Prisma.XOR<Prisma.booking_packagesCreateInput, Prisma.booking_packagesUncheckedCreateInput>
@@ -1304,6 +1519,10 @@ export type booking_packagesCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    */
   data: Prisma.booking_packagesCreateManyInput | Prisma.booking_packagesCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1318,6 +1537,10 @@ export type booking_packagesUpdateArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the booking_packages
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
   /**
    * The data needed to update a booking_packages.
    */
@@ -1370,6 +1593,10 @@ export type booking_packagesUpdateManyAndReturnArgs<ExtArgs extends runtime.Type
    * Limit how many booking_packages to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1384,6 +1611,10 @@ export type booking_packagesUpsertArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the booking_packages
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
   /**
    * The filter to search for the booking_packages to update in case it exists.
    */
@@ -1410,6 +1641,10 @@ export type booking_packagesDeleteArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the booking_packages
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
   /**
    * Filter which booking_packages to delete.
    */
@@ -1442,4 +1677,8 @@ export type booking_packagesDefaultArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the booking_packages
    */
   omit?: Prisma.booking_packagesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_packagesInclude<ExtArgs> | null
 }

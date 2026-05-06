@@ -1,55 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
+import * as schema from "@/schemas/booking";
 import z from "zod";
 
-const bookingAddonSchema = z.object({
-  addon_id: z.coerce.number().int().positive(),
-  quantity: z.coerce.number().int().min(0),
-})
-
-const bookingFoodSchema = z.object({
-  food_id: z.coerce.number().int().positive(),
-  quantity: z.coerce.number().int().min(0),
-})
-
-const BookingSchema = z.object({
-        pax_my_adult: z.coerce.number().int().min(0),
-        pax_my_kid: z.coerce.number().int().min(0),
-        pax_my_senior: z.coerce.number().int().min(0),
-        pax_my_oku: z.coerce.number().int().min(0),
-        pax_non_my_adult: z.coerce.number().int().min(0),
-        pax_non_my_kid: z.coerce.number().int().min(0),
-        pax_non_my_senior: z.coerce.number().int().min(0),
-        pax_non_my_oku: z.coerce.number().int().min(0),
-        pic_name: z.string().trim().min(1),
-        pic_email: z.string().trim().email(),
-        pic_hp: z.string().trim().regex(/^\+?[1-9]\d{7,14}$/),
-        org_address: z.string().trim().min(1),
-        org_name: z.string().trim().min(1),
-        org_state: z.string().trim().min(1),
-        org_type: z.string().trim().min(1).max(20),
-        booking_date: z.coerce.date(),
-        slot_id: z.string().min(1),
-        package_id: z.string().min(1),
-        addons: z.array(bookingAddonSchema).default([]),
-        foods: z.array(bookingFoodSchema).default([]),
-})
-
-const AvailabilitySchema = z.object({
-  month: z.string().regex(/^\d{4}-\d{2}$/),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-})
-
-const BookingIdSchema = z.object({
-  booking_id: z.uuid(),
-})
-
-const secretBookingSchema = BookingSchema.extend({
-  booking_id: z.uuid(),
-  booking_status: z.string()
-})
-
-export type BookingInput = z.infer<typeof BookingSchema>
+export type BookingInput = z.infer<typeof schema.bookingPackagesSchema>
 
 function toHHmm(value: Date | string) {
   if (value instanceof Date) return value.toISOString().slice(11, 16)
@@ -595,11 +549,6 @@ export const createBooking = createServerFn({ method: 'POST' })
     }
     return `Updated Booking ${updated.booking_id}`
   })
-
-
-  const BookingIDSchema = z.object({
-  booking_id: z.uuid(),
-})
 
   export const deleteBooking = createServerFn({ method: "POST" })
     .inputValidator(BookingIDSchema)
