@@ -1,4 +1,4 @@
-import type { Step } from "@/lib/booking-form"
+import type { Step } from "@/lib/utils/booking/booking-form"
 
 type StepIndicatorProps = {
   step: Step

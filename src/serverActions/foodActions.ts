@@ -3,7 +3,7 @@ import z from "zod"
 
 import { prisma } from "@/db"
 
-const foodSchema = z.object({
+export const foodSchema = z.object({
   food_name: z.string().trim().min(1),
   food_price: z.coerce.number().nonnegative(),
 })

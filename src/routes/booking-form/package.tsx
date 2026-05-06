@@ -4,7 +4,7 @@ import { useState } from "react"
 
 import { getPackages, getPackagePricing } from "@/serverActions/packageActions"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
-import { formatCurrency } from "@/lib/booking-utils"
+import { formatCurrency } from "@/lib/utils/booking/booking-utils"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 
 import { Button } from "@/components/ui/button"

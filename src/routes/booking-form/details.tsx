@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
 
-import { paxFieldMeta, validateDetails } from "@/lib/booking-form"
+import { paxFieldMeta, validateDetails } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 import { Button } from "@/components/ui/button"

@@ -4,7 +4,7 @@ import {
   bookingDraftStorageKey,
   defaultFormValues,
   type FormValues,
-} from "@/lib/booking-form"
+} from "@/lib/utils/booking/booking-form"
 
 export function useBookingDraft() {
   const [values, setValues] = useState<FormValues>(defaultFormValues)

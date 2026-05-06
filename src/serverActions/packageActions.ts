@@ -27,7 +27,7 @@ export function getPackagePricing(pkg: Record<string, unknown>): PackagePricing 
   }
 }
 
-const packageSchema = z.object({
+export const packageSchema = z.object({
   package_name: z.string().trim().min(1),
   package_note: z.string().trim().optional(),
   package_features: z.array(z.string().trim().min(1)).min(1),

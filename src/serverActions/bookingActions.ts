@@ -456,11 +456,11 @@ export const createBooking = createServerFn({ method: 'POST' })
   })
 
   export const updateBooking = createServerFn({method: "POST"})
-  .inputValidator(secretBookingSchema)
+  .inputValidator(schema.bookingSchema)
   .handler(async ({data}) => {
 
     const selectedPackage = await prisma.packages.findUnique({
-      where: { package_id: data.package_id },
+      where: { package_id: data.packages },
       select: {
         package_availability: true,
         price_my_adult: true,
@@ -551,7 +551,7 @@ export const createBooking = createServerFn({ method: 'POST' })
   })
 
   export const deleteBooking = createServerFn({ method: "POST" })
-    .inputValidator(BookingIDSchema)
+    .inputValidator(schema.bookingSchema)
     .handler(async ({ data }) => {
       const deleted = await prisma.bookings.delete({
         where: {booking_id: data.booking_id },
@@ -561,7 +561,7 @@ export const createBooking = createServerFn({ method: 'POST' })
     })
 
 export const approveBooking = createServerFn({ method: "POST" })
-  .inputValidator(BookingIDSchema)
+  .inputValidator(schema.bookingSchema)
   .handler(async ({ data }) => {
     const booking = await prisma.bookings.findUnique({
       where: { booking_id: data.booking_id },
@@ -584,3 +584,4 @@ export const approveBooking = createServerFn({ method: "POST" })
     return `Approved booking ${updated.booking_id}`
   })
   
+const calculateSubtotal = 
