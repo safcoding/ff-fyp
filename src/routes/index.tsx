@@ -1,22 +1,36 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useRef, useState } from 'react'
+import EmblaCarousel from 'embla-carousel'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { getPackages } from '@/serverActions/packageActions'
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
-  const packagesQuery = useQuery({
-    queryKey: ['home-packages'],
-    queryFn: () => getPackages(),
-  })
-
-  const availablePackages = (packagesQuery.data ?? []).filter((pkg) => pkg.package_availability)
-  const packagesPreview = availablePackages.slice(0, 3)
+  const emblaRef = useRef<HTMLDivElement | null>(null)
+  const [emblaApi, setEmblaApi] = useState<ReturnType<typeof EmblaCarousel> | null>(null)
 
   const heroImageSrc = '/banner.jpg'
   const mapImageSrc = '/ff-map.png'
+  const bgImageSrc = '/ff-bg.jpg'
+  const carouselImages = [
+    { src: '/carousel/slide-1.png', alt: 'Forest highlight 1' },
+    { src: '/carousel/slide-2.png', alt: 'Forest highlight 2' },
+    { src: '/carousel/slide-3.png', alt: 'Forest highlight 3' },
+    { src: '/carousel/slide-4.png', alt: 'Forest highlight 4' },
+    { src: '/carousel/slide-5.png', alt: 'Forest highlight 5' },
+    { src: '/carousel/slide-6.png', alt: 'Forest highlight 6' },
+  ]
+
+  useEffect(() => {
+    if (!emblaRef.current) {
+      return
+    }
+    const api = EmblaCarousel(emblaRef.current, { loop: true })
+    setEmblaApi(api)
+    return () => {
+      api.destroy()
+    }
+  }, [])
 
   return (
     <main className="bg-linear-to-b from-stone-50 via-white to-emerald-50/50 text-stone-900">
@@ -24,80 +38,81 @@ function App() {
         <div className="absolute inset-0">
           <img src={heroImageSrc} alt="Nature park view" className="h-full w-full object-cover" />
         </div>
-        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0" />
 
         <div className="relative mx-auto flex min-h-[70vh] max-w-6xl items-center px-6 py-20 md:px-8">
-          <div className="max-w-2xl space-y-6 text-white">
-            <p className="inline-flex rounded-full border border-white/40 bg-white/10 px-4 py-1 text-xs tracking-[0.2em] uppercase">
-              Forest Experience
-            </p>
-            <h1 className="text-4xl leading-tight font-semibold sm:text-5xl md:text-6xl">
-              Explore trails, stories, and guided adventures in one unforgettable day.
-            </h1>
-            <p className="max-w-xl text-base text-white/90 sm:text-lg">
-              Discover our curated routes, wildlife highlights, and group-friendly activities designed for schools,
-              organizations, and families.
-            </p>
+        </div>
+      </section>
+        
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-0">
+          <img
+            src={bgImageSrc}
+            alt="Forest background"
+            className="h-full w-full object-cover blur-sm"
+          />
+          <div className="absolute inset-0 bg-slate-950/30" />
+        </div>
+
+        <section className="relative w-full pb-16 px-6 py-16">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex">
+              {carouselImages.map((image) => (
+                <div key={image.src} className="min-w-0 flex-[0_0_100%] min-h-max">
+                  <img src={image.src} alt={image.alt} className="h-auto w-full object-contain max-h-[70vh]" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mx-auto mt-4 flex max-w-6xl items-center justify-between px-6 text-white/80 md:px-8">
+            <p className="text-sm">Swipe or drag to explore the gallery.</p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="rounded-full border border-white/30 px-3 py-1 text-xs hover:bg-white/10"
+                onClick={() => emblaApi?.scrollPrev()}
+              >
+                Prev
+              </button>
+              <button
+                type="button"
+                className="rounded-full border border-white/30 px-3 py-1 text-xs hover:bg-white/10"
+                onClick={() => emblaApi?.scrollNext()}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative mx-auto max-w-6xl gap-8 px-6 py-16 text-white">
+          <div className="mb-4">
+            <h2 className="text-3xl font-semibold">Find Your Way Around</h2>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/10 shadow-sm backdrop-blur">
+            <img
+              src={mapImageSrc}
+              alt="Map of the attraction"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <p className="mt-4 text-sm text-white/80">
+            Use the map to explore trails, activity zones, and gathering points before your visit.
+          </p>
+        </section>
+
+        <section className="relative border-t border-white/10">
+          <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-6 py-12 text-white md:flex-row md:items-center md:px-8">
+            <div className="space-y-2">
+              <h3 className="text-2xl font-semibold">Ready to plan your visit?</h3>
+              <p className="text-sm text-white/80">Pick your package, date, and group details in just a few steps.</p>
+            </div>
             <Button asChild size="lg" className="bg-emerald-500 text-white hover:bg-emerald-600">
-              <Link to="/booking-form">Book Your Visit</Link>
+              <Link to="/booking-form">Go to Booking Form</Link>
             </Button>
           </div>
-        </div>
-      </section>
-
-      <section className=" bg-blue-500 align-center mx-auto max-w-6xl gap-8 px-6 py-16">
-        <div className=" overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
-          <img
-            src={mapImageSrc}
-            alt="Map of the attraction"
-            className="h-full w-full object-cover"
-          />
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl space-y-6 px-6 pb-16 md:px-8">
-        <div className="space-y-2">
-          <h2 className="text-3xl font-semibold">Available Packages</h2>
-          <p className="text-sm text-stone-600">A quick look at what group packages you can book right now.</p>
-        </div>
-
-        {packagesQuery.isPending ? <p className="text-sm text-stone-600">Loading packages...</p> : null}
-        {packagesQuery.isError ? (
-          <p className="text-sm text-red-600">Unable to load packages. Please try again later.</p>
-        ) : null}
-
-        {packagesPreview.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-3">
-            {packagesPreview.map((pkg) => (
-              <Card key={pkg.package_id} className="border-stone-200 bg-white">
-                <CardHeader>
-                  <CardTitle>{pkg.package_name}</CardTitle>
-                  <CardDescription>{pkg.package_note || 'Guided and customizable experience.'}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-stone-700">
-                    Starts from RM {pkg.price_my_adult.toFixed(2)} per MY adult.
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-stone-600">No packages are currently available.</p>
-        )}
-      </section>
-
-      <section className="border-t border-stone-200 bg-white/70">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-6 py-12 md:flex-row md:items-center md:px-8">
-          <div className="space-y-2">
-            <h3 className="text-2xl font-semibold">Ready to plan your visit?</h3>
-            <p className="text-sm text-stone-600">Pick your package, date, and group details in just a few steps.</p>
-          </div>
-          <Button asChild size="lg" className="bg-stone-900 text-white hover:bg-stone-800">
-            <Link to="/booking-form">Go to Booking Form</Link>
-          </Button>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   )
 }

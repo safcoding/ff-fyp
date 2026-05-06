@@ -212,7 +212,7 @@ export type booking_foodsWhereInput = {
   AND?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
   OR?: Prisma.booking_foodsWhereInput[]
   NOT?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
-  booking_id?: Prisma.UuidFilter<"booking_foods"> | string
+  booking_id?: Prisma.StringFilter<"booking_foods"> | string
   food_id?: Prisma.IntFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntFilter<"booking_foods"> | number
   id?: Prisma.IntFilter<"booking_foods"> | number
@@ -257,7 +257,7 @@ export type booking_foodsScalarWhereWithAggregatesInput = {
   AND?: Prisma.booking_foodsScalarWhereWithAggregatesInput | Prisma.booking_foodsScalarWhereWithAggregatesInput[]
   OR?: Prisma.booking_foodsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.booking_foodsScalarWhereWithAggregatesInput | Prisma.booking_foodsScalarWhereWithAggregatesInput[]
-  booking_id?: Prisma.UuidWithAggregatesFilter<"booking_foods"> | string
+  booking_id?: Prisma.StringWithAggregatesFilter<"booking_foods"> | string
   food_id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
   id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
@@ -508,7 +508,7 @@ export type booking_foodsScalarWhereInput = {
   AND?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
   OR?: Prisma.booking_foodsScalarWhereInput[]
   NOT?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
-  booking_id?: Prisma.UuidFilter<"booking_foods"> | string
+  booking_id?: Prisma.StringFilter<"booking_foods"> | string
   food_id?: Prisma.IntFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntFilter<"booking_foods"> | number
   id?: Prisma.IntFilter<"booking_foods"> | number

@@ -212,7 +212,7 @@ export type booking_addonsWhereInput = {
   AND?: Prisma.booking_addonsWhereInput | Prisma.booking_addonsWhereInput[]
   OR?: Prisma.booking_addonsWhereInput[]
   NOT?: Prisma.booking_addonsWhereInput | Prisma.booking_addonsWhereInput[]
-  booking_id?: Prisma.UuidFilter<"booking_addons"> | string
+  booking_id?: Prisma.StringFilter<"booking_addons"> | string
   addon_id?: Prisma.IntFilter<"booking_addons"> | number
   addon_quantity?: Prisma.IntFilter<"booking_addons"> | number
   id?: Prisma.IntFilter<"booking_addons"> | number
@@ -234,7 +234,7 @@ export type booking_addonsWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.booking_addonsWhereInput | Prisma.booking_addonsWhereInput[]
   OR?: Prisma.booking_addonsWhereInput[]
   NOT?: Prisma.booking_addonsWhereInput | Prisma.booking_addonsWhereInput[]
-  booking_id?: Prisma.UuidFilter<"booking_addons"> | string
+  booking_id?: Prisma.StringFilter<"booking_addons"> | string
   addon_id?: Prisma.IntFilter<"booking_addons"> | number
   addon_quantity?: Prisma.IntFilter<"booking_addons"> | number
   addons?: Prisma.XOR<Prisma.AddonsScalarRelationFilter, Prisma.addonsWhereInput>
@@ -257,7 +257,7 @@ export type booking_addonsScalarWhereWithAggregatesInput = {
   AND?: Prisma.booking_addonsScalarWhereWithAggregatesInput | Prisma.booking_addonsScalarWhereWithAggregatesInput[]
   OR?: Prisma.booking_addonsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.booking_addonsScalarWhereWithAggregatesInput | Prisma.booking_addonsScalarWhereWithAggregatesInput[]
-  booking_id?: Prisma.UuidWithAggregatesFilter<"booking_addons"> | string
+  booking_id?: Prisma.StringWithAggregatesFilter<"booking_addons"> | string
   addon_id?: Prisma.IntWithAggregatesFilter<"booking_addons"> | number
   addon_quantity?: Prisma.IntWithAggregatesFilter<"booking_addons"> | number
   id?: Prisma.IntWithAggregatesFilter<"booking_addons"> | number
@@ -475,7 +475,7 @@ export type booking_addonsScalarWhereInput = {
   AND?: Prisma.booking_addonsScalarWhereInput | Prisma.booking_addonsScalarWhereInput[]
   OR?: Prisma.booking_addonsScalarWhereInput[]
   NOT?: Prisma.booking_addonsScalarWhereInput | Prisma.booking_addonsScalarWhereInput[]
-  booking_id?: Prisma.UuidFilter<"booking_addons"> | string
+  booking_id?: Prisma.StringFilter<"booking_addons"> | string
   addon_id?: Prisma.IntFilter<"booking_addons"> | number
   addon_quantity?: Prisma.IntFilter<"booking_addons"> | number
   id?: Prisma.IntFilter<"booking_addons"> | number

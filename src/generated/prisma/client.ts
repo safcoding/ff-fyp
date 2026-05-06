@@ -84,3 +84,13 @@ export type booking_foods = Prisma.booking_foodsModel
  * 
  */
 export type quotations = Prisma.quotationsModel
+/**
+ * Model booking_packages
+ * 
+ */
+export type booking_packages = Prisma.booking_packagesModel
+/**
+ * Model discounts
+ * 
+ */
+export type discounts = Prisma.discountsModel

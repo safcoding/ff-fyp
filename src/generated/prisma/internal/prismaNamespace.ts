@@ -392,7 +392,9 @@ export const ModelName = {
   slots: 'slots',
   booking_addons: 'booking_addons',
   booking_foods: 'booking_foods',
-  quotations: 'quotations'
+  quotations: 'quotations',
+  booking_packages: 'booking_packages',
+  discounts: 'discounts'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1080,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    booking_packages: {
+      payload: Prisma.$booking_packagesPayload<ExtArgs>
+      fields: Prisma.booking_packagesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.booking_packagesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.booking_packagesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>
+        }
+        findFirst: {
+          args: Prisma.booking_packagesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.booking_packagesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>
+        }
+        findMany: {
+          args: Prisma.booking_packagesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>[]
+        }
+        create: {
+          args: Prisma.booking_packagesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>
+        }
+        createMany: {
+          args: Prisma.booking_packagesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.booking_packagesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>[]
+        }
+        delete: {
+          args: Prisma.booking_packagesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>
+        }
+        update: {
+          args: Prisma.booking_packagesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>
+        }
+        deleteMany: {
+          args: Prisma.booking_packagesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.booking_packagesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.booking_packagesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>[]
+        }
+        upsert: {
+          args: Prisma.booking_packagesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_packagesPayload>
+        }
+        aggregate: {
+          args: Prisma.Booking_packagesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBooking_packages>
+        }
+        groupBy: {
+          args: Prisma.booking_packagesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_packagesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.booking_packagesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_packagesCountAggregateOutputType> | number
+        }
+      }
+    }
+    discounts: {
+      payload: Prisma.$discountsPayload<ExtArgs>
+      fields: Prisma.discountsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.discountsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.discountsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>
+        }
+        findFirst: {
+          args: Prisma.discountsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.discountsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>
+        }
+        findMany: {
+          args: Prisma.discountsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>[]
+        }
+        create: {
+          args: Prisma.discountsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>
+        }
+        createMany: {
+          args: Prisma.discountsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.discountsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>[]
+        }
+        delete: {
+          args: Prisma.discountsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>
+        }
+        update: {
+          args: Prisma.discountsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>
+        }
+        deleteMany: {
+          args: Prisma.discountsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.discountsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.discountsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>[]
+        }
+        upsert: {
+          args: Prisma.discountsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$discountsPayload>
+        }
+        aggregate: {
+          args: Prisma.DiscountsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDiscounts>
+        }
+        groupBy: {
+          args: Prisma.discountsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DiscountsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.discountsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DiscountsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1143,14 +1293,7 @@ export const BookingsScalarFieldEnum = {
   booking_id: 'booking_id',
   booking_price: 'booking_price',
   created_at: 'created_at',
-  pax_my_adult: 'pax_my_adult',
-  pax_my_kid: 'pax_my_kid',
-  pax_my_senior: 'pax_my_senior',
-  pax_my_oku: 'pax_my_oku',
-  pax_non_my_adult: 'pax_non_my_adult',
-  pax_non_my_kid: 'pax_non_my_kid',
-  pax_non_my_senior: 'pax_non_my_senior',
-  pax_non_my_oku: 'pax_non_my_oku',
+  pax_total: 'pax_total',
   pic_name: 'pic_name',
   pic_email: 'pic_email',
   pic_hp: 'pic_hp',
@@ -1160,9 +1303,9 @@ export const BookingsScalarFieldEnum = {
   org_type: 'org_type',
   quotation_id: 'quotation_id',
   slot_id: 'slot_id',
-  package_id: 'package_id',
   booking_date: 'booking_date',
-  booking_status: 'booking_status'
+  booking_status: 'booking_status',
+  discount_id: 'discount_id'
 } as const
 
 export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]
@@ -1182,7 +1325,6 @@ export const PackagesScalarFieldEnum = {
   package_name: 'package_name',
   package_availability: 'package_availability',
   package_note: 'package_note',
-  package_features: 'package_features',
   price_my_adult: 'price_my_adult',
   price_my_kid: 'price_my_kid',
   price_my_senior: 'price_my_senior',
@@ -1190,7 +1332,8 @@ export const PackagesScalarFieldEnum = {
   price_non_my_adult: 'price_non_my_adult',
   price_non_my_kid: 'price_non_my_kid',
   price_non_my_senior: 'price_non_my_senior',
-  price_non_my_oku: 'price_non_my_oku'
+  price_non_my_oku: 'price_non_my_oku',
+  package_features: 'package_features'
 } as const
 
 export type PackagesScalarFieldEnum = (typeof PackagesScalarFieldEnum)[keyof typeof PackagesScalarFieldEnum]
@@ -1233,6 +1376,33 @@ export const QuotationsScalarFieldEnum = {
 } as const
 
 export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof typeof QuotationsScalarFieldEnum]
+
+
+export const Booking_packagesScalarFieldEnum = {
+  id: 'id',
+  booking_id: 'booking_id',
+  package_id: 'package_id',
+  pax_my_adult: 'pax_my_adult',
+  pax_my_kid: 'pax_my_kid',
+  pax_my_senior: 'pax_my_senior',
+  pax_my_oku: 'pax_my_oku',
+  pax_non_my_adult: 'pax_non_my_adult',
+  pax_non_my_kid: 'pax_non_my_kid',
+  pax_non_my_senior: 'pax_non_my_senior',
+  pax_non_my_oku: 'pax_non_my_oku',
+  subtotal: 'subtotal'
+} as const
+
+export type Booking_packagesScalarFieldEnum = (typeof Booking_packagesScalarFieldEnum)[keyof typeof Booking_packagesScalarFieldEnum]
+
+
+export const DiscountsScalarFieldEnum = {
+  discount_id: 'discount_id',
+  discount_type: 'discount_type',
+  discount_amount: 'discount_amount'
+} as const
+
+export type DiscountsScalarFieldEnum = (typeof DiscountsScalarFieldEnum)[keyof typeof DiscountsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1325,6 +1495,48 @@ export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'states'
+ */
+export type EnumstatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'states'>
+    
+
+
+/**
+ * Reference to a field of type 'states[]'
+ */
+export type ListEnumstatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'states[]'>
+    
+
+
+/**
+ * Reference to a field of type 'booking_status'
+ */
+export type Enumbooking_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'booking_status'>
+    
+
+
+/**
+ * Reference to a field of type 'booking_status[]'
+ */
+export type ListEnumbooking_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'booking_status[]'>
+    
+
+
+/**
+ * Reference to a field of type 'discount_types'
+ */
+export type Enumdiscount_typesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'discount_types'>
+    
+
+
+/**
+ * Reference to a field of type 'discount_types[]'
+ */
+export type ListEnumdiscount_typesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'discount_types[]'>
     
 
 
@@ -1445,6 +1657,8 @@ export type GlobalOmitConfig = {
   booking_addons?: Prisma.booking_addonsOmit
   booking_foods?: Prisma.booking_foodsOmit
   quotations?: Prisma.quotationsOmit
+  booking_packages?: Prisma.booking_packagesOmit
+  discounts?: Prisma.discountsOmit
 }
 
 /* Types for Logging */

@@ -156,14 +156,16 @@ export type quotationsWhereInput = {
   AND?: Prisma.quotationsWhereInput | Prisma.quotationsWhereInput[]
   OR?: Prisma.quotationsWhereInput[]
   NOT?: Prisma.quotationsWhereInput | Prisma.quotationsWhereInput[]
-  quotation_id?: Prisma.UuidFilter<"quotations"> | string
-  booking_id?: Prisma.UuidNullableFilter<"quotations"> | string | null
+  quotation_id?: Prisma.StringFilter<"quotations"> | string
+  booking_id?: Prisma.StringNullableFilter<"quotations"> | string | null
+  bookings_bookings_quotation_idToquotations?: Prisma.BookingsListRelationFilter
   bookings?: Prisma.XOR<Prisma.BookingsNullableScalarRelationFilter, Prisma.bookingsWhereInput> | null
 }
 
 export type quotationsOrderByWithRelationInput = {
   quotation_id?: Prisma.SortOrder
   booking_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsOrderByRelationAggregateInput
   bookings?: Prisma.bookingsOrderByWithRelationInput
 }
 
@@ -172,7 +174,8 @@ export type quotationsWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.quotationsWhereInput | Prisma.quotationsWhereInput[]
   OR?: Prisma.quotationsWhereInput[]
   NOT?: Prisma.quotationsWhereInput | Prisma.quotationsWhereInput[]
-  booking_id?: Prisma.UuidNullableFilter<"quotations"> | string | null
+  booking_id?: Prisma.StringNullableFilter<"quotations"> | string | null
+  bookings_bookings_quotation_idToquotations?: Prisma.BookingsListRelationFilter
   bookings?: Prisma.XOR<Prisma.BookingsNullableScalarRelationFilter, Prisma.bookingsWhereInput> | null
 }, "quotation_id">
 
@@ -188,32 +191,36 @@ export type quotationsScalarWhereWithAggregatesInput = {
   AND?: Prisma.quotationsScalarWhereWithAggregatesInput | Prisma.quotationsScalarWhereWithAggregatesInput[]
   OR?: Prisma.quotationsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.quotationsScalarWhereWithAggregatesInput | Prisma.quotationsScalarWhereWithAggregatesInput[]
-  quotation_id?: Prisma.UuidWithAggregatesFilter<"quotations"> | string
-  booking_id?: Prisma.UuidNullableWithAggregatesFilter<"quotations"> | string | null
+  quotation_id?: Prisma.StringWithAggregatesFilter<"quotations"> | string
+  booking_id?: Prisma.StringNullableWithAggregatesFilter<"quotations"> | string | null
 }
 
 export type quotationsCreateInput = {
-  quotation_id?: string
+  quotation_id: string
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsCreateNestedManyWithoutQuotations_bookings_quotation_idToquotationsInput
   bookings?: Prisma.bookingsCreateNestedOneWithoutQuotationsInput
 }
 
 export type quotationsUncheckedCreateInput = {
-  quotation_id?: string
+  quotation_id: string
   booking_id?: string | null
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsUncheckedCreateNestedManyWithoutQuotations_bookings_quotation_idToquotationsInput
 }
 
 export type quotationsUpdateInput = {
   quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsUpdateManyWithoutQuotations_bookings_quotation_idToquotationsNestedInput
   bookings?: Prisma.bookingsUpdateOneWithoutQuotationsNestedInput
 }
 
 export type quotationsUncheckedUpdateInput = {
   quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsUncheckedUpdateManyWithoutQuotations_bookings_quotation_idToquotationsNestedInput
 }
 
 export type quotationsCreateManyInput = {
-  quotation_id?: string
+  quotation_id: string
   booking_id?: string | null
 }
 
@@ -224,6 +231,11 @@ export type quotationsUpdateManyMutationInput = {
 export type quotationsUncheckedUpdateManyInput = {
   quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
   booking_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type QuotationsNullableScalarRelationFilter = {
+  is?: Prisma.quotationsWhereInput | null
+  isNot?: Prisma.quotationsWhereInput | null
 }
 
 export type QuotationsListRelationFilter = {
@@ -251,6 +263,12 @@ export type quotationsMinOrderByAggregateInput = {
   booking_id?: Prisma.SortOrder
 }
 
+export type quotationsCreateNestedOneWithoutBookings_bookings_quotation_idToquotationsInput = {
+  create?: Prisma.XOR<Prisma.quotationsCreateWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUncheckedCreateWithoutBookings_bookings_quotation_idToquotationsInput>
+  connectOrCreate?: Prisma.quotationsCreateOrConnectWithoutBookings_bookings_quotation_idToquotationsInput
+  connect?: Prisma.quotationsWhereUniqueInput
+}
+
 export type quotationsCreateNestedManyWithoutBookingsInput = {
   create?: Prisma.XOR<Prisma.quotationsCreateWithoutBookingsInput, Prisma.quotationsUncheckedCreateWithoutBookingsInput> | Prisma.quotationsCreateWithoutBookingsInput[] | Prisma.quotationsUncheckedCreateWithoutBookingsInput[]
   connectOrCreate?: Prisma.quotationsCreateOrConnectWithoutBookingsInput | Prisma.quotationsCreateOrConnectWithoutBookingsInput[]
@@ -263,6 +281,16 @@ export type quotationsUncheckedCreateNestedManyWithoutBookingsInput = {
   connectOrCreate?: Prisma.quotationsCreateOrConnectWithoutBookingsInput | Prisma.quotationsCreateOrConnectWithoutBookingsInput[]
   createMany?: Prisma.quotationsCreateManyBookingsInputEnvelope
   connect?: Prisma.quotationsWhereUniqueInput | Prisma.quotationsWhereUniqueInput[]
+}
+
+export type quotationsUpdateOneWithoutBookings_bookings_quotation_idToquotationsNestedInput = {
+  create?: Prisma.XOR<Prisma.quotationsCreateWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUncheckedCreateWithoutBookings_bookings_quotation_idToquotationsInput>
+  connectOrCreate?: Prisma.quotationsCreateOrConnectWithoutBookings_bookings_quotation_idToquotationsInput
+  upsert?: Prisma.quotationsUpsertWithoutBookings_bookings_quotation_idToquotationsInput
+  disconnect?: Prisma.quotationsWhereInput | boolean
+  delete?: Prisma.quotationsWhereInput | boolean
+  connect?: Prisma.quotationsWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.quotationsUpdateToOneWithWhereWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUpdateWithoutBookings_bookings_quotation_idToquotationsInput>, Prisma.quotationsUncheckedUpdateWithoutBookings_bookings_quotation_idToquotationsInput>
 }
 
 export type quotationsUpdateManyWithoutBookingsNestedInput = {
@@ -293,12 +321,29 @@ export type quotationsUncheckedUpdateManyWithoutBookingsNestedInput = {
   deleteMany?: Prisma.quotationsScalarWhereInput | Prisma.quotationsScalarWhereInput[]
 }
 
+export type quotationsCreateWithoutBookings_bookings_quotation_idToquotationsInput = {
+  quotation_id: string
+  bookings?: Prisma.bookingsCreateNestedOneWithoutQuotationsInput
+}
+
+export type quotationsUncheckedCreateWithoutBookings_bookings_quotation_idToquotationsInput = {
+  quotation_id: string
+  booking_id?: string | null
+}
+
+export type quotationsCreateOrConnectWithoutBookings_bookings_quotation_idToquotationsInput = {
+  where: Prisma.quotationsWhereUniqueInput
+  create: Prisma.XOR<Prisma.quotationsCreateWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUncheckedCreateWithoutBookings_bookings_quotation_idToquotationsInput>
+}
+
 export type quotationsCreateWithoutBookingsInput = {
-  quotation_id?: string
+  quotation_id: string
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsCreateNestedManyWithoutQuotations_bookings_quotation_idToquotationsInput
 }
 
 export type quotationsUncheckedCreateWithoutBookingsInput = {
-  quotation_id?: string
+  quotation_id: string
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsUncheckedCreateNestedManyWithoutQuotations_bookings_quotation_idToquotationsInput
 }
 
 export type quotationsCreateOrConnectWithoutBookingsInput = {
@@ -309,6 +354,27 @@ export type quotationsCreateOrConnectWithoutBookingsInput = {
 export type quotationsCreateManyBookingsInputEnvelope = {
   data: Prisma.quotationsCreateManyBookingsInput | Prisma.quotationsCreateManyBookingsInput[]
   skipDuplicates?: boolean
+}
+
+export type quotationsUpsertWithoutBookings_bookings_quotation_idToquotationsInput = {
+  update: Prisma.XOR<Prisma.quotationsUpdateWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUncheckedUpdateWithoutBookings_bookings_quotation_idToquotationsInput>
+  create: Prisma.XOR<Prisma.quotationsCreateWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUncheckedCreateWithoutBookings_bookings_quotation_idToquotationsInput>
+  where?: Prisma.quotationsWhereInput
+}
+
+export type quotationsUpdateToOneWithWhereWithoutBookings_bookings_quotation_idToquotationsInput = {
+  where?: Prisma.quotationsWhereInput
+  data: Prisma.XOR<Prisma.quotationsUpdateWithoutBookings_bookings_quotation_idToquotationsInput, Prisma.quotationsUncheckedUpdateWithoutBookings_bookings_quotation_idToquotationsInput>
+}
+
+export type quotationsUpdateWithoutBookings_bookings_quotation_idToquotationsInput = {
+  quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookings?: Prisma.bookingsUpdateOneWithoutQuotationsNestedInput
+}
+
+export type quotationsUncheckedUpdateWithoutBookings_bookings_quotation_idToquotationsInput = {
+  quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
+  booking_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type quotationsUpsertWithWhereUniqueWithoutBookingsInput = {
@@ -331,20 +397,22 @@ export type quotationsScalarWhereInput = {
   AND?: Prisma.quotationsScalarWhereInput | Prisma.quotationsScalarWhereInput[]
   OR?: Prisma.quotationsScalarWhereInput[]
   NOT?: Prisma.quotationsScalarWhereInput | Prisma.quotationsScalarWhereInput[]
-  quotation_id?: Prisma.UuidFilter<"quotations"> | string
-  booking_id?: Prisma.UuidNullableFilter<"quotations"> | string | null
+  quotation_id?: Prisma.StringFilter<"quotations"> | string
+  booking_id?: Prisma.StringNullableFilter<"quotations"> | string | null
 }
 
 export type quotationsCreateManyBookingsInput = {
-  quotation_id?: string
+  quotation_id: string
 }
 
 export type quotationsUpdateWithoutBookingsInput = {
   quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsUpdateManyWithoutQuotations_bookings_quotation_idToquotationsNestedInput
 }
 
 export type quotationsUncheckedUpdateWithoutBookingsInput = {
   quotation_id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookings_bookings_quotation_idToquotations?: Prisma.bookingsUncheckedUpdateManyWithoutQuotations_bookings_quotation_idToquotationsNestedInput
 }
 
 export type quotationsUncheckedUpdateManyWithoutBookingsInput = {
@@ -352,11 +420,42 @@ export type quotationsUncheckedUpdateManyWithoutBookingsInput = {
 }
 
 
+/**
+ * Count Type QuotationsCountOutputType
+ */
+
+export type QuotationsCountOutputType = {
+  bookings_bookings_quotation_idToquotations: number
+}
+
+export type QuotationsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings_bookings_quotation_idToquotations?: boolean | QuotationsCountOutputTypeCountBookings_bookings_quotation_idToquotationsArgs
+}
+
+/**
+ * QuotationsCountOutputType without action
+ */
+export type QuotationsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuotationsCountOutputType
+   */
+  select?: Prisma.QuotationsCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * QuotationsCountOutputType without action
+ */
+export type QuotationsCountOutputTypeCountBookings_bookings_quotation_idToquotationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.bookingsWhereInput
+}
+
 
 export type quotationsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   quotation_id?: boolean
   booking_id?: boolean
+  bookings_bookings_quotation_idToquotations?: boolean | Prisma.quotations$bookings_bookings_quotation_idToquotationsArgs<ExtArgs>
   bookings?: boolean | Prisma.quotations$bookingsArgs<ExtArgs>
+  _count?: boolean | Prisma.QuotationsCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["quotations"]>
 
 export type quotationsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -378,7 +477,9 @@ export type quotationsSelectScalar = {
 
 export type quotationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"quotation_id" | "booking_id", ExtArgs["result"]["quotations"]>
 export type quotationsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings_bookings_quotation_idToquotations?: boolean | Prisma.quotations$bookings_bookings_quotation_idToquotationsArgs<ExtArgs>
   bookings?: boolean | Prisma.quotations$bookingsArgs<ExtArgs>
+  _count?: boolean | Prisma.QuotationsCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type quotationsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookings?: boolean | Prisma.quotations$bookingsArgs<ExtArgs>
@@ -390,6 +491,7 @@ export type quotationsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $quotationsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "quotations"
   objects: {
+    bookings_bookings_quotation_idToquotations: Prisma.$bookingsPayload<ExtArgs>[]
     bookings: Prisma.$bookingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -789,6 +891,7 @@ readonly fields: quotationsFieldRefs;
  */
 export interface Prisma__quotationsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bookings_bookings_quotation_idToquotations<T extends Prisma.quotations$bookings_bookings_quotation_idToquotationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.quotations$bookings_bookings_quotation_idToquotationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$bookingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookings<T extends Prisma.quotations$bookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.quotations$bookingsArgs<ExtArgs>>): Prisma.Prisma__bookingsClient<runtime.Types.Result.GetResult<Prisma.$bookingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1039,7 +1142,7 @@ export type quotationsCreateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * The data needed to create a quotations.
    */
-  data?: Prisma.XOR<Prisma.quotationsCreateInput, Prisma.quotationsUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.quotationsCreateInput, Prisma.quotationsUncheckedCreateInput>
 }
 
 /**
@@ -1214,6 +1317,30 @@ export type quotationsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many quotations to delete.
    */
   limit?: number
+}
+
+/**
+ * quotations.bookings_bookings_quotation_idToquotations
+ */
+export type quotations$bookings_bookings_quotation_idToquotationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the bookings
+   */
+  select?: Prisma.bookingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the bookings
+   */
+  omit?: Prisma.bookingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.bookingsInclude<ExtArgs> | null
+  where?: Prisma.bookingsWhereInput
+  orderBy?: Prisma.bookingsOrderByWithRelationInput | Prisma.bookingsOrderByWithRelationInput[]
+  cursor?: Prisma.bookingsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookingsScalarFieldEnum | Prisma.BookingsScalarFieldEnum[]
 }
 
 /**
