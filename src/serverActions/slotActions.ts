@@ -1,36 +1,21 @@
 import { createServerFn } from "@tanstack/react-start"
-import z from "zod"
-
 import { prisma } from "@/db"
+import { toHHmm } from "@/lib/utils"
+import { slotSchema } from "@/schemas/slot"
+import { toIsoDateTimeForTimeColumn } from "@/lib/utils"
 
-const slotSchema = z
-  .object({
-    slot_id: z.string().trim().min(1),
-    slot_name: z.string().trim().min(1),
-    slot_start: z.iso.time(),
-    slot_end: z.iso.time(),
-    slot_capacity: z.coerce.number().int().min(1),
-  })
-  .refine((data) => data.slot_start < data.slot_end, {
-    message: "slot_end must be later than slot_start",
-    path: ["slot_end"],
-  })
-
-function toHHmm(value: Date | string) {
-  if (value instanceof Date) return value.toISOString().slice(11, 16)
-  const raw = value.trim()
-  return raw.slice(0, 5) // handles "09:00" or "09:00:00"
-}
-
-function toIsoDateTimeForTimeColumn(value: Date | string) {
-  if (value instanceof Date) return value.toISOString()
-
-  const raw = value.trim()
-  if (/^\d{2}:\d{2}$/.test(raw)) return `1970-01-01T${raw}:00.000Z`
-  if (/^\d{2}:\d{2}:\d{2}$/.test(raw)) return `1970-01-01T${raw}.000Z`
-
-  return `1970-01-01T${raw.slice(0, 8)}.000Z`
-}
+  export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
+    const slots = await prisma.slots.findMany({
+      select: {
+        slot_id: true,
+        slot_name: true,
+        slot_capacity: true,
+      },
+      orderBy: { slot_name: "asc" },
+    });
+  
+    return slots;
+  });
 
 export const getSlotsAdmin = createServerFn({ method: "GET" }).handler(async () => {
   const slots = await prisma.slots.findMany({ orderBy: { slot_name: "asc" } })
@@ -76,10 +61,11 @@ export const updateSlot = createServerFn({ method: "POST" })
   })
 
 export const deleteSlot = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ slot_id: z.string().trim().min(1) }))
+  .inputValidator(slotSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.slots.delete({
       where: { slot_id: data.slot_id },
     })
     return `Deleted slot ${deleted.slot_name}`
   })
+

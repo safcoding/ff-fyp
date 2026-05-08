@@ -25,7 +25,7 @@ model addons {
 }
 
 model bookings {
-  booking_id                                   String             @id
+  booking_id                                   String             @id @default(uuid())
   booking_price                                Decimal            @db.Decimal(10, 2)
   created_at                                   DateTime           @default(now()) @db.Timestamp(6)
   pax_total                                    Int
@@ -43,7 +43,7 @@ model bookings {
   discount_id                                  String?
   booking_addons                               booking_addons[]
   booking_foods                                booking_foods?
-  booking_packages                             booking_packages[] 
+  booking_packages                             booking_packages[]
   discounts                                    discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: NoAction, onUpdate: NoAction, map: "discount_id_fkey")
   quotations_bookings_quotation_idToquotations quotations?        @relation("bookings_quotation_idToquotations", fields: [quotation_id], references: [quotation_id], onDelete: NoAction, onUpdate: NoAction, map: "quotation_id_fkey")
   slots                                        slots              @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")
@@ -58,7 +58,7 @@ model foods {
 }
 
 model packages {
-  package_id           String             @id @default(dbgenerated("gen_random_uuid()"))
+  package_id           String             @id
   package_name         String
   package_availability Boolean
   package_note         String?
@@ -71,7 +71,7 @@ model packages {
   price_non_my_senior  Decimal            @db.Decimal(3, 0)
   price_non_my_oku     Decimal            @db.Decimal(3, 0)
   package_features     String[]           @default([])
-  booking_packages     booking_packages[] 
+  booking_packages     booking_packages[]
 }
 
 model slots {
@@ -109,7 +109,6 @@ model quotations {
 }
 
 model booking_packages {
-  id            Int      @id @default(autoincrement())
   booking_id        String
   package_id        String?
   pax_my_adult      Int?
@@ -117,10 +116,11 @@ model booking_packages {
   pax_my_senior     Int?
   pax_my_oku        Int?
   pax_non_my_adult  Int?
-  pax_non_my_kid    String?
+  pax_non_my_kid    Int?
   pax_non_my_senior Int?
   pax_non_my_oku    Int?
   subtotal          Decimal?  @db.Decimal(10, 2)
+  id                Int       @id @default(autoincrement())
   bookings          bookings  @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
   packages          packages? @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
 }

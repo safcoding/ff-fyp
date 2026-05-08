@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start"
-import z from "zod"
-
+import { packageSchema } from "@/schemas/package"
 import { prisma } from "@/db"
 
 export type PackagePricing = {
@@ -27,20 +26,7 @@ export function getPackagePricing(pkg: Record<string, unknown>): PackagePricing 
   }
 }
 
-export const packageSchema = z.object({
-  package_name: z.string().trim().min(1),
-  package_note: z.string().trim().optional(),
-  package_features: z.array(z.string().trim().min(1)).min(1),
-  package_availability: z.boolean(),
-  price_my_adult: z.coerce.number().nonnegative(),
-  price_my_kid: z.coerce.number().nonnegative(),
-  price_my_senior: z.coerce.number().nonnegative(),
-  price_my_oku: z.coerce.number().nonnegative(),
-  price_non_my_adult: z.coerce.number().nonnegative(),
-  price_non_my_kid: z.coerce.number().nonnegative(),
-  price_non_my_senior: z.coerce.number().nonnegative(),
-  price_non_my_oku: z.coerce.number().nonnegative(),
-})
+
 
 export const getPackages = createServerFn({ method: "GET" }).handler(async () => {
   const packages = await prisma.packages.findMany({
@@ -87,16 +73,8 @@ export const createPackage = createServerFn({ method: "POST" })
     return `Created package ${created.package_name}`
   })
 
-const updatePackageSchema = packageSchema.extend({
-  package_id: z.string().trim().min(1),
-})
-
-const deletePackageSchema = z.object({
-  package_id: z.string().trim().min(1),
-})
-
 export const updatePackage = createServerFn({ method: "POST" })
-  .inputValidator(updatePackageSchema)
+  .inputValidator(packageSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.packages.update({
       where: { package_id: data.package_id },
@@ -120,7 +98,7 @@ export const updatePackage = createServerFn({ method: "POST" })
   })
 
 export const deletePackage = createServerFn({ method: "POST" })
-  .inputValidator(deletePackageSchema)
+  .inputValidator(packageSchema)
   .handler(async ({ data }) => {
     try {
       const deleted = await prisma.packages.delete({

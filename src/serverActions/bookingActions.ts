@@ -1,151 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
+import { randomUUID } from "crypto";
 import { prisma } from "@/db";
-import { Prisma } from "@/generated/prisma/client";
 import * as schema from "@/schemas/booking";
-import { calculateBookingTotal, calculatePaxSubtotal } from "@/lib/utils/booking/booking-utils";
-import z from "zod";
-
-const bookingIdSchema = z.object({
-  booking_id: z.string().trim().min(1),
-})
-
-const availabilitySchema = z.object({
-  month: z.string().regex(/^\d{4}-\d{2}$/),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-})
-
-const bookingsInclude = {
-  booking_addons: {
-    select: {
-      addon_id: true,
-      addon_quantity: true,
-      addons: { select: { addon_name: true } },
-    },
-  },
-  booking_foods: {
-    select: {
-      food_id: true,
-      food_quantity: true,
-      foods: { select: { food_name: true } },
-    },
-  },
-  booking_packages: {
-    select: {
-      package_id: true,
-      pax_my_adult: true,
-      pax_my_kid: true,
-      pax_my_senior: true,
-      pax_my_oku: true,
-      pax_non_my_adult: true,
-      pax_non_my_kid: true,
-      pax_non_my_senior: true,
-      pax_non_my_oku: true,
-      subtotal: true,
-      packages: {
-        select: {
-          package_name: true,
-          package_features: true,
-        }
-      }
-    },
-  },
-
-  slots: {
-    select: {
-      slot_name: true,
-    },
-  },
-} satisfies Prisma.bookingsInclude
-
-type BookingWithRelations = Prisma.bookingsGetPayload<{
-  include: typeof bookingsInclude
-}>
-
-const mapBooking = (b: BookingWithRelations) => {
-  const packages = b.booking_packages.map((p) => ({
-    package_id: p.package_id,
-    pax_my_adult: p.pax_my_adult ?? 0,
-    pax_my_kid: p.pax_my_kid ?? 0,
-    pax_my_senior: p.pax_my_senior ?? 0,
-    pax_my_oku: p.pax_my_oku ?? 0,
-    pax_non_my_adult: p.pax_non_my_adult ?? 0,
-    pax_non_my_kid: Number(p.pax_non_my_kid ?? 0),
-    pax_non_my_senior: p.pax_non_my_senior ?? 0,
-    pax_non_my_oku: p.pax_non_my_oku ?? 0,
-    subtotal: p.subtotal,
-    package_name: p.packages?.package_name ?? null,
-    package_features: p.packages?.package_features ?? [],
-  }))
-
-  const paxTotals = packages.reduce(
-    (totals, row) => {
-      return {
-        pax_my_adult: totals.pax_my_adult + row.pax_my_adult,
-        pax_my_kid: totals.pax_my_kid + row.pax_my_kid,
-        pax_my_senior: totals.pax_my_senior + row.pax_my_senior,
-        pax_my_oku: totals.pax_my_oku + row.pax_my_oku,
-        pax_non_my_adult: totals.pax_non_my_adult + row.pax_non_my_adult,
-        pax_non_my_kid: totals.pax_non_my_kid + row.pax_non_my_kid,
-        pax_non_my_senior: totals.pax_non_my_senior + row.pax_non_my_senior,
-        pax_non_my_oku: totals.pax_non_my_oku + row.pax_non_my_oku,
-      }
-    },
-    {
-      pax_my_adult: 0,
-      pax_my_kid: 0,
-      pax_my_senior: 0,
-      pax_my_oku: 0,
-      pax_non_my_adult: 0,
-      pax_non_my_kid: 0,
-      pax_non_my_senior: 0,
-      pax_non_my_oku: 0,
-    }
-  )
-
-  const packageId = packages[0]?.package_id ?? null
-
-  return {
-    booking_id: b.booking_id,
-    booking_price: b.booking_price.toString(),
-    booking_date: b.booking_date,
-    booking_status: b.booking_status,
-    quotation_id: b.quotation_id,
-    slot_id: b.slot_id,
-    slot_name: b.slots?.slot_name ?? null,
-    package_id: packageId,
-    pax_total: b.pax_total,
-    pic_name: b.pic_name,
-    pic_email: b.pic_email,
-    pic_hp: b.pic_hp,
-    org_address: b.org_address,
-    org_name: b.org_name,
-    org_state: b.org_state,
-    org_type: b.org_type,
-    pax_my_adult: paxTotals.pax_my_adult,
-    pax_my_kid: paxTotals.pax_my_kid,
-    pax_my_senior: paxTotals.pax_my_senior,
-    pax_my_oku: paxTotals.pax_my_oku,
-    pax_non_my_adult: paxTotals.pax_non_my_adult,
-    pax_non_my_kid: paxTotals.pax_non_my_kid,
-    pax_non_my_senior: paxTotals.pax_non_my_senior,
-    pax_non_my_oku: paxTotals.pax_non_my_oku,
-    packages,
-    booking_addons: b.booking_addons.map((a) => ({
-      addon_id: a.addon_id,
-      addon_name: a.addons.addon_name,
-      addon_quantity: a.addon_quantity,
-    })),
-    booking_foods: b.booking_foods
-      ? [
-          {
-            food_id: b.booking_foods.food_id,
-            food_name: b.booking_foods.foods.food_name,
-            food_quantity: b.booking_foods.food_quantity,
-          },
-        ]
-      : [],
-  }
-}
+import { calculateBookingTotal, calculatePackageSubtotal, calculatePaxTotal } from "@/lib/utils/booking/booking-utils";
+import { toHHmm } from "@/lib/utils";
+import { bookingsInclude, mapBooking } from "@/serverActions/mappers/bookingMapper";
 
 const loadAllBookings = async () => {
   return prisma.bookings.findMany({ include: bookingsInclude })
@@ -163,204 +22,10 @@ export const getBookings = createServerFn({ method: "GET" }).handler(async () =>
   return bookings.map(mapBooking)
 })
 
-
-
-
-/*
-type Booking = z.infer<typeof schema.bookingSchema>
-
-const loadAllBookings = async () => {
-  return await prisma.bookings.findMany({
-      include: {
-        booking_addons: {
-          select: {
-            addon_quantity: true,
-            addons: {
-              select: {
-                addon_name: true,
-              }
-            }
-          }
-        },
-        booking_foods: {
-          select: {
-            food_quantity: true,
-            foods: {
-              select: {
-                food_name: true,
-              }
-            }
-          },
-        },
-        booking_packages: {
-          select: {
-            pax_my_adult: true,     
-            pax_my_kid: true,   
-            pax_my_senior: true,     
-            pax_my_oku: true,        
-            pax_non_my_adult: true,  
-            pax_non_my_kid: true,    
-            pax_non_my_senior: true, 
-            pax_non_my_oku: true,    
-            subtotal: true
-          },
-        },
-        packages: {
-          select: {
-            package_name: true,
-            package_features: true
-          }
-        },
-        slots: {
-          select: {
-            slot_name: true
-          }
-        }
-      }
-    })
-}
-
-const loadBookingID = async (data: Booking) => {
-  return await prisma.bookings.findUnique({
-      where: { booking_id: data.booking_id },
-      include: {
-        booking_addons: {
-          select: {
-            addon_quantity: true,
-            addons: {
-              select: {
-                addon_name: true,
-              }
-            }
-          }
-        },
-        booking_foods: {
-          select: {
-            food_quantity: true,
-            foods: {
-              select: {
-                food_name: true,
-              }
-            }
-          },
-        },
-        booking_packages: {
-          select: {
-            pax_my_adult: true,     
-            pax_my_kid: true,   
-            pax_my_senior: true,     
-            pax_my_oku: true,        
-            pax_non_my_adult: true,  
-            pax_non_my_kid: true,    
-            pax_non_my_senior: true, 
-            pax_non_my_oku: true,    
-            subtotal: true
-          },
-        },
-        packages: {
-          select: {
-            package_name: true,
-            package_features: true
-          }
-        },
-        slots: {
-          select: {
-            slot_name: true
-          }
-        }
-      }
-    })
-}
-
-const mapBooking = (b: Booking) => {
-  return {
-    id: b.booking_id,
-    pax_total: b.pax_total,
-    price_total: b.booking_price,
-    status: b.booking_status,
-    date: b.booking_date,
-    
-    pic_name: b.pic_name,
-    pic_email: b.pic_email,
-    pic_hp: b.pic_hp,
-
-    org_name: b.org_name,
-    org_type: b.org_type,
-    
-    
-  }
-}
-
-//old getBookings 
-export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
-    const bookings = await prisma.bookings.findMany({
-      include: {
-        booking_addons: {
-          include: {
-            addons: {
-              select: {
-                addon_name: true,
-              },
-            },
-          },
-        },
-        booking_foods: {
-          include: {
-            foods: {
-              select: {
-                food_name: true,
-              },
-            },
-          },
-        },
-      },
-    })
-
-    return bookings.map(b => ({
-    booking_id: b.booking_id,
-        booking_price: b.booking_price.toString(),
-        pax_my_adult: b.pax_my_adult,      
-        pax_my_kid: b.pax_my_kid,       
-        pax_my_senior: b.pax_my_senior,   
-        pax_my_oku: b.pax_my_oku,
-        pax_non_my_adult: b.pax_non_my_adult,
-        pax_non_my_kid: b.pax_non_my_kid,
-        pax_non_my_senior: b.pax_non_my_senior,
-        pax_non_my_oku: b.pax_non_my_oku,
-        pic_name: b.pic_name,
-        pic_email: b.pic_email,
-        pic_hp: b.pic_hp,
-        org_address: b.org_address, 
-        org_name: b.org_name,
-        org_state: b.org_state,
-        org_type: b.org_type,
-        booking_date: b.booking_date,
-        quotation_id: b.quotation_id,
-        slot_id : b.slot_id,
-        package_id : b.package_id, 
-        booking_status: b.booking_status,
-        booking_addons: b.booking_addons.map((item) => ({
-          addon_id: item.addon_id,
-          addon_name: item.addons.addon_name,
-          addon_quantity: item.addon_quantity,
-        })),
-        booking_foods: b.booking_foods
-          ? [{
-              food_id: b.booking_foods.food_id,
-              food_name: b.booking_foods.foods.food_name,
-              food_quantity: b.booking_foods.food_quantity,
-            }]
-          : [],
-    }))
-})
-*/
 export const getBookingById = createServerFn({ method: "POST" })
-  .inputValidator(bookingIdSchema)
+  .inputValidator(schema.bookingIdSchema)
   .handler(async ({ data }) => {
-    const booking = await prisma.bookings.findUnique({
-      where: { booking_id: data.booking_id },
-      include: bookingsInclude,
-    })
+    const booking = await loadBookingID(data)
 
     if (!booking) {
       throw new Error("Booking not found")
@@ -369,21 +34,8 @@ export const getBookingById = createServerFn({ method: "POST" })
     return mapBooking(booking)
   })
 
-export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
-  const slots = await prisma.slots.findMany({
-    select: {
-      slot_id: true,
-      slot_name: true,
-      slot_capacity: true,
-    },
-    orderBy: { slot_name: "asc" },
-  });
-
-  return slots;
-});
-
 export const getBookingAvailability = createServerFn({ method: "POST" })
-  .inputValidator(availabilitySchema)
+  .inputValidator(schema.availabilitySchema)
   .handler(async ({ data }) => {
     const [year, month] = data.month.split("-").map(Number)
     const monthStart = new Date(Date.UTC(year, month - 1, 1))
@@ -603,19 +255,7 @@ export const createBooking = createServerFn({ method: 'POST' })
       addonPriceMap
     )
 
-    const paxTotal = data.packages.reduce((sum, row) => {
-      return (
-        sum +
-        row.pax_my_adult +
-        row.pax_my_kid +
-        row.pax_my_senior +
-        row.pax_my_oku +
-        row.pax_non_my_adult +
-        row.pax_non_my_kid +
-        row.pax_non_my_senior +
-        row.pax_non_my_oku
-      )
-    }, 0)
+    const paxTotal = calculatePaxTotal(data.packages)
 
     const newBooking = await prisma.bookings.create({
       data: {
@@ -645,7 +285,7 @@ export const createBooking = createServerFn({ method: 'POST' })
         pax_non_my_kid: String(row.pax_non_my_kid),
         pax_non_my_senior: row.pax_non_my_senior,
         pax_non_my_oku: row.pax_non_my_oku,
-        subtotal: calculatePaxSubtotal(row, packagePriceMap[row.package_id]),
+        subtotal: calculatePackageSubtotal(row, packagePriceMap[row.package_id]),
       })),
     })
 
@@ -787,19 +427,7 @@ export const createBooking = createServerFn({ method: 'POST' })
       addonPriceMap
     )
 
-    const paxTotal = data.packages.reduce((sum, row) => {
-      return (
-        sum +
-        row.pax_my_adult +
-        row.pax_my_kid +
-        row.pax_my_senior +
-        row.pax_my_oku +
-        row.pax_non_my_adult +
-        row.pax_non_my_kid +
-        row.pax_non_my_senior +
-        row.pax_non_my_oku
-      )
-    }, 0)
+    const paxTotal = calculatePaxTotal(data.packages)
 
 
     const updated = await prisma.bookings.update({
@@ -843,7 +471,7 @@ export const createBooking = createServerFn({ method: 'POST' })
         pax_non_my_kid: String(row.pax_non_my_kid),
         pax_non_my_senior: row.pax_non_my_senior,
         pax_non_my_oku: row.pax_non_my_oku,
-        subtotal: calculatePaxSubtotal(row, packagePriceMap[row.package_id]),
+        subtotal: calculatePackageSubtotal(row, packagePriceMap[row.package_id]),
       })),
     })
 

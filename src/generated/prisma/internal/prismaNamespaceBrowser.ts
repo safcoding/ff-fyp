@@ -192,7 +192,6 @@ export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof
 
 
 export const Booking_packagesScalarFieldEnum = {
-  id: 'id',
   booking_id: 'booking_id',
   package_id: 'package_id',
   pax_my_adult: 'pax_my_adult',
@@ -203,7 +202,8 @@ export const Booking_packagesScalarFieldEnum = {
   pax_non_my_kid: 'pax_non_my_kid',
   pax_non_my_senior: 'pax_non_my_senior',
   pax_non_my_oku: 'pax_non_my_oku',
-  subtotal: 'subtotal'
+  subtotal: 'subtotal',
+  id: 'id'
 } as const
 
 export type Booking_packagesScalarFieldEnum = (typeof Booking_packagesScalarFieldEnum)[keyof typeof Booking_packagesScalarFieldEnum]

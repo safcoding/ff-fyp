@@ -17,3 +17,13 @@ export const toHHmm = (value: Date | string) => {
   if (value instanceof Date) return value.toISOString().slice(11, 16)
   return value.trim().slice(0, 5)
 }
+
+export const toIsoDateTimeForTimeColumn = (value: Date | string) => {
+  if (value instanceof Date) return value.toISOString()
+
+  const raw = value.trim()
+  if (/^\d{2}:\d{2}$/.test(raw)) return `1970-01-01T${raw}:00.000Z`
+  if (/^\d{2}:\d{2}:\d{2}$/.test(raw)) return `1970-01-01T${raw}.000Z`
+
+  return `1970-01-01T${raw.slice(0, 8)}.000Z`
+}

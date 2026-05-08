@@ -385,7 +385,7 @@ export type packagesScalarWhereWithAggregatesInput = {
 }
 
 export type packagesCreateInput = {
-  package_id?: string
+  package_id: string
   package_name: string
   package_availability: boolean
   package_note?: string | null
@@ -402,7 +402,7 @@ export type packagesCreateInput = {
 }
 
 export type packagesUncheckedCreateInput = {
-  package_id?: string
+  package_id: string
   package_name: string
   package_availability: boolean
   package_note?: string | null
@@ -453,7 +453,7 @@ export type packagesUncheckedUpdateInput = {
 }
 
 export type packagesCreateManyInput = {
-  package_id?: string
+  package_id: string
   package_name: string
   package_availability: boolean
   package_note?: string | null
@@ -607,7 +607,7 @@ export type packagesUpdateOneWithoutBooking_packagesNestedInput = {
 }
 
 export type packagesCreateWithoutBooking_packagesInput = {
-  package_id?: string
+  package_id: string
   package_name: string
   package_availability: boolean
   package_note?: string | null
@@ -623,7 +623,7 @@ export type packagesCreateWithoutBooking_packagesInput = {
 }
 
 export type packagesUncheckedCreateWithoutBooking_packagesInput = {
-  package_id?: string
+  package_id: string
   package_name: string
   package_availability: boolean
   package_note?: string | null

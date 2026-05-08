@@ -452,7 +452,7 @@ export type bookingsUncheckedCreateInput = {
   org_address: string
   org_name: string
   org_state: string
-  org_type: $Enums.states
+  org_type: $Enums.org_categories
   quotation_id?: string | null
   slot_id: string
   booking_date?: Date | string | null

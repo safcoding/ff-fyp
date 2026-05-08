@@ -55,9 +55,11 @@ export const createBookingSchema = bookingSchema.omit({
     discount_code: true,
 })
 
-/* this was used to fetch slot availability in the public calendar 
-const AvailabilitySchema = z.object({
+export const bookingIdSchema = z.object({
+  booking_id: z.string().trim().min(1),
+})
+
+export const availabilitySchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 })
-*/
