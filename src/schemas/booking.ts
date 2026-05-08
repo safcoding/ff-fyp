@@ -5,6 +5,7 @@ export const bookingAddonSchema = z.object({
   addon_id: z.coerce.number(),
   quantity: z.coerce.number().int().min(0),
 })
+
 export const bookingFoodSchema = z.object({
   food_id: z.coerce.number(),
   quantity: z.coerce.number().int().min(20),

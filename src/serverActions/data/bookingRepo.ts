@@ -11,3 +11,9 @@ export const loadBookingID = async (data: { booking_id: string }) => {
     include: bookingsInclude,
   })
 }
+
+export const loadPricing = (data: {
+  packages: Array <{package_id: string}>
+  foods: Array <{food_id: string}>
+  addons: Array <{addon_id: string}>
+}) => {}
