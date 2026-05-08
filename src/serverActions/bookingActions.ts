@@ -1,7 +1,297 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
+import { Prisma } from "@/generated/prisma/client";
 import * as schema from "@/schemas/booking";
+import { calculateBookingTotal, calculatePaxSubtotal } from "@/lib/utils/booking/booking-utils";
+import z from "zod";
 
+const bookingIdSchema = z.object({
+  booking_id: z.string().trim().min(1),
+})
+
+const availabilitySchema = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+})
+
+const bookingsInclude = {
+  booking_addons: {
+    select: {
+      addon_id: true,
+      addon_quantity: true,
+      addons: { select: { addon_name: true } },
+    },
+  },
+  booking_foods: {
+    select: {
+      food_id: true,
+      food_quantity: true,
+      foods: { select: { food_name: true } },
+    },
+  },
+  booking_packages: {
+    select: {
+      package_id: true,
+      pax_my_adult: true,
+      pax_my_kid: true,
+      pax_my_senior: true,
+      pax_my_oku: true,
+      pax_non_my_adult: true,
+      pax_non_my_kid: true,
+      pax_non_my_senior: true,
+      pax_non_my_oku: true,
+      subtotal: true,
+      packages: {
+        select: {
+          package_name: true,
+          package_features: true,
+        }
+      }
+    },
+  },
+
+  slots: {
+    select: {
+      slot_name: true,
+    },
+  },
+} satisfies Prisma.bookingsInclude
+
+type BookingWithRelations = Prisma.bookingsGetPayload<{
+  include: typeof bookingsInclude
+}>
+
+const mapBooking = (b: BookingWithRelations) => {
+  const packages = b.booking_packages.map((p) => ({
+    package_id: p.package_id,
+    pax_my_adult: p.pax_my_adult ?? 0,
+    pax_my_kid: p.pax_my_kid ?? 0,
+    pax_my_senior: p.pax_my_senior ?? 0,
+    pax_my_oku: p.pax_my_oku ?? 0,
+    pax_non_my_adult: p.pax_non_my_adult ?? 0,
+    pax_non_my_kid: Number(p.pax_non_my_kid ?? 0),
+    pax_non_my_senior: p.pax_non_my_senior ?? 0,
+    pax_non_my_oku: p.pax_non_my_oku ?? 0,
+    subtotal: p.subtotal,
+    package_name: p.packages?.package_name ?? null,
+    package_features: p.packages?.package_features ?? [],
+  }))
+
+  const paxTotals = packages.reduce(
+    (totals, row) => {
+      return {
+        pax_my_adult: totals.pax_my_adult + row.pax_my_adult,
+        pax_my_kid: totals.pax_my_kid + row.pax_my_kid,
+        pax_my_senior: totals.pax_my_senior + row.pax_my_senior,
+        pax_my_oku: totals.pax_my_oku + row.pax_my_oku,
+        pax_non_my_adult: totals.pax_non_my_adult + row.pax_non_my_adult,
+        pax_non_my_kid: totals.pax_non_my_kid + row.pax_non_my_kid,
+        pax_non_my_senior: totals.pax_non_my_senior + row.pax_non_my_senior,
+        pax_non_my_oku: totals.pax_non_my_oku + row.pax_non_my_oku,
+      }
+    },
+    {
+      pax_my_adult: 0,
+      pax_my_kid: 0,
+      pax_my_senior: 0,
+      pax_my_oku: 0,
+      pax_non_my_adult: 0,
+      pax_non_my_kid: 0,
+      pax_non_my_senior: 0,
+      pax_non_my_oku: 0,
+    }
+  )
+
+  const packageId = packages[0]?.package_id ?? null
+
+  return {
+    booking_id: b.booking_id,
+    booking_price: b.booking_price.toString(),
+    booking_date: b.booking_date,
+    booking_status: b.booking_status,
+    quotation_id: b.quotation_id,
+    slot_id: b.slot_id,
+    slot_name: b.slots?.slot_name ?? null,
+    package_id: packageId,
+    pax_total: b.pax_total,
+    pic_name: b.pic_name,
+    pic_email: b.pic_email,
+    pic_hp: b.pic_hp,
+    org_address: b.org_address,
+    org_name: b.org_name,
+    org_state: b.org_state,
+    org_type: b.org_type,
+    pax_my_adult: paxTotals.pax_my_adult,
+    pax_my_kid: paxTotals.pax_my_kid,
+    pax_my_senior: paxTotals.pax_my_senior,
+    pax_my_oku: paxTotals.pax_my_oku,
+    pax_non_my_adult: paxTotals.pax_non_my_adult,
+    pax_non_my_kid: paxTotals.pax_non_my_kid,
+    pax_non_my_senior: paxTotals.pax_non_my_senior,
+    pax_non_my_oku: paxTotals.pax_non_my_oku,
+    packages,
+    booking_addons: b.booking_addons.map((a) => ({
+      addon_id: a.addon_id,
+      addon_name: a.addons.addon_name,
+      addon_quantity: a.addon_quantity,
+    })),
+    booking_foods: b.booking_foods
+      ? [
+          {
+            food_id: b.booking_foods.food_id,
+            food_name: b.booking_foods.foods.food_name,
+            food_quantity: b.booking_foods.food_quantity,
+          },
+        ]
+      : [],
+  }
+}
+
+const loadAllBookings = async () => {
+  return prisma.bookings.findMany({ include: bookingsInclude })
+}
+
+const loadBookingID = async (data: { booking_id: string }) => {
+  return prisma.bookings.findUnique({
+    where: { booking_id: data.booking_id },
+    include: bookingsInclude,
+  })
+}
+
+export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
+  const bookings = await loadAllBookings()
+  return bookings.map(mapBooking)
+})
+
+
+
+
+/*
+type Booking = z.infer<typeof schema.bookingSchema>
+
+const loadAllBookings = async () => {
+  return await prisma.bookings.findMany({
+      include: {
+        booking_addons: {
+          select: {
+            addon_quantity: true,
+            addons: {
+              select: {
+                addon_name: true,
+              }
+            }
+          }
+        },
+        booking_foods: {
+          select: {
+            food_quantity: true,
+            foods: {
+              select: {
+                food_name: true,
+              }
+            }
+          },
+        },
+        booking_packages: {
+          select: {
+            pax_my_adult: true,     
+            pax_my_kid: true,   
+            pax_my_senior: true,     
+            pax_my_oku: true,        
+            pax_non_my_adult: true,  
+            pax_non_my_kid: true,    
+            pax_non_my_senior: true, 
+            pax_non_my_oku: true,    
+            subtotal: true
+          },
+        },
+        packages: {
+          select: {
+            package_name: true,
+            package_features: true
+          }
+        },
+        slots: {
+          select: {
+            slot_name: true
+          }
+        }
+      }
+    })
+}
+
+const loadBookingID = async (data: Booking) => {
+  return await prisma.bookings.findUnique({
+      where: { booking_id: data.booking_id },
+      include: {
+        booking_addons: {
+          select: {
+            addon_quantity: true,
+            addons: {
+              select: {
+                addon_name: true,
+              }
+            }
+          }
+        },
+        booking_foods: {
+          select: {
+            food_quantity: true,
+            foods: {
+              select: {
+                food_name: true,
+              }
+            }
+          },
+        },
+        booking_packages: {
+          select: {
+            pax_my_adult: true,     
+            pax_my_kid: true,   
+            pax_my_senior: true,     
+            pax_my_oku: true,        
+            pax_non_my_adult: true,  
+            pax_non_my_kid: true,    
+            pax_non_my_senior: true, 
+            pax_non_my_oku: true,    
+            subtotal: true
+          },
+        },
+        packages: {
+          select: {
+            package_name: true,
+            package_features: true
+          }
+        },
+        slots: {
+          select: {
+            slot_name: true
+          }
+        }
+      }
+    })
+}
+
+const mapBooking = (b: Booking) => {
+  return {
+    id: b.booking_id,
+    pax_total: b.pax_total,
+    price_total: b.booking_price,
+    status: b.booking_status,
+    date: b.booking_date,
+    
+    pic_name: b.pic_name,
+    pic_email: b.pic_email,
+    pic_hp: b.pic_hp,
+
+    org_name: b.org_name,
+    org_type: b.org_type,
+    
+    
+  }
+}
+
+//old getBookings 
 export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
     const bookings = await prisma.bookings.findMany({
       include: {
@@ -63,74 +353,20 @@ export const getBookings = createServerFn({method: 'GET'}).handler(async () => {
           : [],
     }))
 })
-
+*/
 export const getBookingById = createServerFn({ method: "POST" })
-  .inputValidator(BookingIdSchema)
+  .inputValidator(bookingIdSchema)
   .handler(async ({ data }) => {
     const booking = await prisma.bookings.findUnique({
       where: { booking_id: data.booking_id },
-      include: {
-        booking_addons: {
-          include: {
-            addons: {
-              select: {
-                addon_name: true,
-              },
-            },
-          },
-        },
-        booking_foods: {
-          include: {
-            foods: {
-              select: {
-                food_name: true,
-              },
-            },
-          },
-        },
-      },
+      include: bookingsInclude,
     })
 
     if (!booking) {
       throw new Error("Booking not found")
     }
 
-    return {
-      booking_id: booking.booking_id,
-      booking_price: booking.booking_price.toString(),
-      booking_date: booking.booking_date,
-      slot_id: booking.slot_id,
-      package_id: booking.package_id,
-      pic_name: booking.pic_name,
-      pic_email: booking.pic_email,
-      pic_hp: booking.pic_hp,
-      org_address: booking.org_address,
-      org_name: booking.org_name,
-      org_state: booking.org_state,
-      org_type: booking.org_type,
-      pax_my_adult: booking.pax_my_adult,
-      pax_my_kid: booking.pax_my_kid,
-      pax_my_senior: booking.pax_my_senior,
-      pax_my_oku: booking.pax_my_oku,
-      pax_non_my_adult: booking.pax_non_my_adult,
-      pax_non_my_kid: booking.pax_non_my_kid,
-      pax_non_my_senior: booking.pax_non_my_senior,
-      pax_non_my_oku: booking.pax_non_my_oku,
-      booking_addons: booking.booking_addons.map((item) => ({
-        addon_id: item.addon_id,
-        addon_name: item.addons.addon_name,
-        addon_quantity: item.addon_quantity,
-      })),
-      booking_foods: booking.booking_foods
-        ? [
-            {
-              food_id: booking.booking_foods.food_id,
-              food_name: booking.booking_foods.foods.food_name,
-              food_quantity: booking.booking_foods.food_quantity,
-            },
-          ]
-        : [],
-    }
+    return mapBooking(booking)
   })
 
 export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
@@ -147,7 +383,7 @@ export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export const getBookingAvailability = createServerFn({ method: "POST" })
-  .inputValidator(AvailabilitySchema)
+  .inputValidator(availabilitySchema)
   .handler(async ({ data }) => {
     const [year, month] = data.month.split("-").map(Number)
     const monthStart = new Date(Date.UTC(year, month - 1, 1))
@@ -175,14 +411,7 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
           booking_date: true,
           booking_status: true,
           slot_id: true,
-          pax_my_adult: true,
-          pax_my_kid: true,
-          pax_my_senior: true,
-          pax_my_oku: true,
-          pax_non_my_adult: true,
-          pax_non_my_kid: true,
-          pax_non_my_senior: true,
-          pax_non_my_oku: true,
+          pax_total: true,
         },
       }),
     ])
@@ -200,7 +429,7 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
       }
 
       const dateKey = booking.booking_date.toISOString().slice(0, 10)
-      const visitors = getBookingVisitorCount(booking)
+      const visitors = booking.pax_total ?? 0
 
       const slotMap = bookedByDateAndSlot.get(dateKey) ?? new Map<string, number>()
       slotMap.set(booking.slot_id, (slotMap.get(booking.slot_id) ?? 0) + visitors)
@@ -259,29 +488,62 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
   })
 
 export const createBooking = createServerFn({ method: 'POST' })
-  .inputValidator(BookingSchema)
+  .inputValidator(schema.createBookingSchema)
   .handler(async ({ data }) => {
-    const selectedPackage = await prisma.packages.findUnique({
-      where: { package_id: data.package_id },
-      select: {
-        package_availability: true,
-        price_my_adult: true,
-        price_my_kid: true,
-        price_my_senior: true,
-        price_my_oku: true,
-        price_non_my_adult: true,
-        price_non_my_kid: true,
-        price_non_my_senior: true,
-        price_non_my_oku: true,
-      },
-    });
-
-    if (!selectedPackage) {
-      throw new Error("Invalid package_id: package not found");
+    if (data.packages.length === 0) {
+      throw new Error("At least one package is required")
     }
 
-    if (!selectedPackage.package_availability) {
-      throw new Error("Selected package is not available");
+    const packageIds = Array.from(new Set(data.packages.map((pkg) => pkg.package_id)))
+    const foodIds = Array.from(new Set(data.foods.map((food) => food.food_id)))
+    const addonIds = Array.from(new Set(data.addons.map((addon) => addon.addon_id)))
+
+    const [packages, foods, addons] = await Promise.all([
+      prisma.packages.findMany({
+        where: { package_id: { in: packageIds } },
+        select: {
+          package_id: true,
+          package_name: true,
+          package_note: true,
+          package_features: true,
+          package_availability: true,
+          price_my_adult: true,
+          price_my_kid: true,
+          price_my_senior: true,
+          price_my_oku: true,
+          price_non_my_adult: true,
+          price_non_my_kid: true,
+          price_non_my_senior: true,
+          price_non_my_oku: true,
+        },
+      }),
+      foodIds.length
+        ? prisma.foods.findMany({
+            where: { food_id: { in: foodIds } },
+            select: { food_id: true, food_name: true, food_price: true },
+          })
+        : Promise.resolve([]),
+      addonIds.length
+        ? prisma.addons.findMany({
+            where: { addon_id: { in: addonIds } },
+            select: {
+              addon_id: true,
+              addon_name: true,
+              addon_desc: true,
+              addon_price: true,
+              addon_avail: true,
+            },
+          })
+        : Promise.resolve([]),
+    ])
+
+    if (packages.length !== packageIds.length) {
+      throw new Error("Invalid package selection")
+    }
+
+    const unavailablePackage = packages.find((pkg) => !pkg.package_availability)
+    if (unavailablePackage) {
+      throw new Error(`Selected package is not available: ${unavailablePackage.package_name}`)
     }
 
     const slot = await prisma.slots.findUnique({
@@ -293,20 +555,72 @@ export const createBooking = createServerFn({ method: 'POST' })
       throw new Error("Invalid slot_id: slot not found");
     }
 
-    const { addonSelections, foodSelections, addonsTotal, foodsTotal } = await getExtrasTotals(data)
-    const bookingPrice = calculateBookingPrice(data, selectedPackage, addonsTotal, foodsTotal);
+    const packagePriceMap = Object.fromEntries(
+      packages.map((pkg) => [
+        pkg.package_id,
+        {
+          package_name: pkg.package_name,
+          package_note: pkg.package_note ?? undefined,
+          package_features: pkg.package_features,
+          package_availability: pkg.package_availability,
+          price_my_adult: Number(pkg.price_my_adult),
+          price_my_kid: Number(pkg.price_my_kid),
+          price_my_senior: Number(pkg.price_my_senior),
+          price_my_oku: Number(pkg.price_my_oku),
+          price_non_my_adult: Number(pkg.price_non_my_adult),
+          price_non_my_kid: Number(pkg.price_non_my_kid),
+          price_non_my_senior: Number(pkg.price_non_my_senior),
+          price_non_my_oku: Number(pkg.price_non_my_oku),
+        },
+      ])
+    )
+
+    const foodPriceMap = Object.fromEntries(
+      foods.map((food) => [
+        food.food_id,
+        { food_name: food.food_name, food_price: Number(food.food_price) },
+      ])
+    )
+
+    const addonPriceMap = Object.fromEntries(
+      addons.map((addon) => [
+        addon.addon_id,
+        {
+          addon_name: addon.addon_name,
+          addon_desc: addon.addon_desc,
+          addon_price: Number(addon.addon_price),
+          addon_avail: addon.addon_avail,
+        },
+      ])
+    )
+
+    const bookingPrice = calculateBookingTotal(
+      data.packages,
+      data.foods,
+      data.addons,
+      packagePriceMap,
+      foodPriceMap,
+      addonPriceMap
+    )
+
+    const paxTotal = data.packages.reduce((sum, row) => {
+      return (
+        sum +
+        row.pax_my_adult +
+        row.pax_my_kid +
+        row.pax_my_senior +
+        row.pax_my_oku +
+        row.pax_non_my_adult +
+        row.pax_non_my_kid +
+        row.pax_non_my_senior +
+        row.pax_non_my_oku
+      )
+    }, 0)
 
     const newBooking = await prisma.bookings.create({
       data: {
         booking_price: bookingPrice,
-        pax_my_adult: data.pax_my_adult,
-        pax_my_kid: data.pax_my_kid,
-        pax_my_senior: data.pax_my_senior,
-        pax_my_oku: data.pax_my_oku,
-        pax_non_my_adult: data.pax_non_my_adult,
-        pax_non_my_kid: data.pax_non_my_kid,
-        pax_non_my_senior: data.pax_non_my_senior,
-        pax_non_my_oku: data.pax_non_my_oku,
+        pax_total: paxTotal,
         pic_name: data.pic_name,
         pic_email: data.pic_email,
         pic_hp: data.pic_hp,
@@ -316,13 +630,28 @@ export const createBooking = createServerFn({ method: 'POST' })
         org_type: data.org_type,
         booking_date: data.booking_date,
         slot_id: data.slot_id,
-        package_id: data.package_id,
       }
     });
 
-    if (addonSelections.length > 0) {
+    await prisma.booking_packages.createMany({
+      data: data.packages.map((row) => ({
+        booking_id: newBooking.booking_id,
+        package_id: row.package_id,
+        pax_my_adult: row.pax_my_adult,
+        pax_my_kid: row.pax_my_kid,
+        pax_my_senior: row.pax_my_senior,
+        pax_my_oku: row.pax_my_oku,
+        pax_non_my_adult: row.pax_non_my_adult,
+        pax_non_my_kid: String(row.pax_non_my_kid),
+        pax_non_my_senior: row.pax_non_my_senior,
+        pax_non_my_oku: row.pax_non_my_oku,
+        subtotal: calculatePaxSubtotal(row, packagePriceMap[row.package_id]),
+      })),
+    })
+
+    if (data.addons.length > 0) {
       await prisma.booking_addons.createMany({
-        data: addonSelections.map((item) => ({
+        data: data.addons.map((item) => ({
           booking_id: newBooking.booking_id,
           addon_id: item.addon_id,
           addon_quantity: item.quantity,
@@ -330,9 +659,9 @@ export const createBooking = createServerFn({ method: 'POST' })
       })
     }
 
-    if (foodSelections.length > 0) {
+    if (data.foods.length > 0) {
       await prisma.booking_foods.createMany({
-        data: foodSelections.map((item) => ({
+        data: data.foods.map((item) => ({
           booking_id: newBooking.booking_id,
           food_id: item.food_id,
           food_quantity: item.quantity,
@@ -345,28 +674,60 @@ export const createBooking = createServerFn({ method: 'POST' })
   export const updateBooking = createServerFn({method: "POST"})
   .inputValidator(schema.bookingSchema)
   .handler(async ({data}) => {
-
-    const selectedPackage = await prisma.packages.findUnique({
-      where: { package_id: data.packages },
-      select: {
-        package_availability: true,
-        price_my_adult: true,
-        price_my_kid: true,
-        price_my_senior: true,
-        price_my_oku: true,
-        price_non_my_adult: true,
-        price_non_my_kid: true,
-        price_non_my_senior: true,
-        price_non_my_oku: true,
-      },
-    });
-
-    if (!selectedPackage) {
-      throw new Error("Invalid package_id: package not found");
+    if (data.packages.length === 0) {
+      throw new Error("At least one package is required")
     }
 
-    if (!selectedPackage.package_availability) {
-      throw new Error("Selected package is not available");
+    const packageIds = Array.from(new Set(data.packages.map((pkg) => pkg.package_id)))
+    const foodIds = Array.from(new Set(data.foods.map((food) => food.food_id)))
+    const addonIds = Array.from(new Set(data.addons.map((addon) => addon.addon_id)))
+
+    const [packages, foods, addons] = await Promise.all([
+      prisma.packages.findMany({
+        where: { package_id: { in: packageIds } },
+        select: {
+          package_id: true,
+          package_name: true,
+          package_note: true,
+          package_features: true,
+          package_availability: true,
+          price_my_adult: true,
+          price_my_kid: true,
+          price_my_senior: true,
+          price_my_oku: true,
+          price_non_my_adult: true,
+          price_non_my_kid: true,
+          price_non_my_senior: true,
+          price_non_my_oku: true,
+        },
+      }),
+      foodIds.length
+        ? prisma.foods.findMany({
+            where: { food_id: { in: foodIds } },
+            select: { food_id: true, food_name: true, food_price: true },
+          })
+        : Promise.resolve([]),
+      addonIds.length
+        ? prisma.addons.findMany({
+            where: { addon_id: { in: addonIds } },
+            select: {
+              addon_id: true,
+              addon_name: true,
+              addon_desc: true,
+              addon_price: true,
+              addon_avail: true,
+            },
+          })
+        : Promise.resolve([]),
+    ])
+
+    if (packages.length !== packageIds.length) {
+      throw new Error("Invalid package selection")
+    }
+
+    const unavailablePackage = packages.find((pkg) => !pkg.package_availability)
+    if (unavailablePackage) {
+      throw new Error(`Selected package is not available: ${unavailablePackage.package_name}`)
     }
 
     const slot = await prisma.slots.findUnique({
@@ -378,22 +739,74 @@ export const createBooking = createServerFn({ method: 'POST' })
       throw new Error("Invalid slot_id: slot not found");
     }
 
-    const { addonSelections, foodSelections, addonsTotal, foodsTotal } = await getExtrasTotals(data)
-    const bookingPrice = calculateBookingPrice(data, selectedPackage, addonsTotal, foodsTotal);
+    const packagePriceMap = Object.fromEntries(
+      packages.map((pkg) => [
+        pkg.package_id,
+        {
+          package_name: pkg.package_name,
+          package_note: pkg.package_note ?? undefined,
+          package_features: pkg.package_features,
+          package_availability: pkg.package_availability,
+          price_my_adult: Number(pkg.price_my_adult),
+          price_my_kid: Number(pkg.price_my_kid),
+          price_my_senior: Number(pkg.price_my_senior),
+          price_my_oku: Number(pkg.price_my_oku),
+          price_non_my_adult: Number(pkg.price_non_my_adult),
+          price_non_my_kid: Number(pkg.price_non_my_kid),
+          price_non_my_senior: Number(pkg.price_non_my_senior),
+          price_non_my_oku: Number(pkg.price_non_my_oku),
+        },
+      ])
+    )
+
+    const foodPriceMap = Object.fromEntries(
+      foods.map((food) => [
+        food.food_id,
+        { food_name: food.food_name, food_price: Number(food.food_price) },
+      ])
+    )
+
+    const addonPriceMap = Object.fromEntries(
+      addons.map((addon) => [
+        addon.addon_id,
+        {
+          addon_name: addon.addon_name,
+          addon_desc: addon.addon_desc,
+          addon_price: Number(addon.addon_price),
+          addon_avail: addon.addon_avail,
+        },
+      ])
+    )
+
+    const bookingPrice = calculateBookingTotal(
+      data.packages,
+      data.foods,
+      data.addons,
+      packagePriceMap,
+      foodPriceMap,
+      addonPriceMap
+    )
+
+    const paxTotal = data.packages.reduce((sum, row) => {
+      return (
+        sum +
+        row.pax_my_adult +
+        row.pax_my_kid +
+        row.pax_my_senior +
+        row.pax_my_oku +
+        row.pax_non_my_adult +
+        row.pax_non_my_kid +
+        row.pax_non_my_senior +
+        row.pax_non_my_oku
+      )
+    }, 0)
 
 
     const updated = await prisma.bookings.update({
       where: {booking_id: data.booking_id},
       data: {
         booking_price: bookingPrice,
-        pax_my_adult: data.pax_my_adult,
-        pax_my_kid: data.pax_my_kid,
-        pax_my_senior: data.pax_my_senior,
-        pax_my_oku: data.pax_my_oku,
-        pax_non_my_adult: data.pax_non_my_adult,
-        pax_non_my_kid: data.pax_non_my_kid,
-        pax_non_my_senior: data.pax_non_my_senior,
-        pax_non_my_oku: data.pax_non_my_oku,
+        pax_total: paxTotal,
         pic_name: data.pic_name,
         pic_email: data.pic_email,
         pic_hp: data.pic_hp,
@@ -403,8 +816,11 @@ export const createBooking = createServerFn({ method: 'POST' })
         org_type: data.org_type,
         booking_date: data.booking_date,
         slot_id: data.slot_id,
-        package_id: data.package_id,
       }
+    })
+
+    await prisma.booking_packages.deleteMany({
+      where: { booking_id: data.booking_id },
     })
 
     await prisma.booking_addons.deleteMany({
@@ -415,9 +831,25 @@ export const createBooking = createServerFn({ method: 'POST' })
       where: { booking_id: data.booking_id },
     })
 
-    if (addonSelections.length > 0) {
+    await prisma.booking_packages.createMany({
+      data: data.packages.map((row) => ({
+        booking_id: data.booking_id,
+        package_id: row.package_id,
+        pax_my_adult: row.pax_my_adult,
+        pax_my_kid: row.pax_my_kid,
+        pax_my_senior: row.pax_my_senior,
+        pax_my_oku: row.pax_my_oku,
+        pax_non_my_adult: row.pax_non_my_adult,
+        pax_non_my_kid: String(row.pax_non_my_kid),
+        pax_non_my_senior: row.pax_non_my_senior,
+        pax_non_my_oku: row.pax_non_my_oku,
+        subtotal: calculatePaxSubtotal(row, packagePriceMap[row.package_id]),
+      })),
+    })
+
+    if (data.addons.length > 0) {
       await prisma.booking_addons.createMany({
-        data: addonSelections.map((item) => ({
+        data: data.addons.map((item) => ({
           booking_id: data.booking_id,
           addon_id: item.addon_id,
           addon_quantity: item.quantity,
@@ -425,9 +857,9 @@ export const createBooking = createServerFn({ method: 'POST' })
       })
     }
 
-    if (foodSelections.length > 0) {
+    if (data.foods.length > 0) {
       await prisma.booking_foods.createMany({
-        data: foodSelections.map((item) => ({
+        data: data.foods.map((item) => ({
           booking_id: data.booking_id,
           food_id: item.food_id,
           food_quantity: item.quantity,
