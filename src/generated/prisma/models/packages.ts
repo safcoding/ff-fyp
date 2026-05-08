@@ -576,9 +576,9 @@ export type packagesSumOrderByAggregateInput = {
   price_non_my_oku?: Prisma.SortOrder
 }
 
-export type PackagesNullableScalarRelationFilter = {
-  is?: Prisma.packagesWhereInput | null
-  isNot?: Prisma.packagesWhereInput | null
+export type PackagesScalarRelationFilter = {
+  is?: Prisma.packagesWhereInput
+  isNot?: Prisma.packagesWhereInput
 }
 
 export type packagesCreatepackage_featuresInput = {
@@ -596,12 +596,10 @@ export type packagesCreateNestedOneWithoutBooking_packagesInput = {
   connect?: Prisma.packagesWhereUniqueInput
 }
 
-export type packagesUpdateOneWithoutBooking_packagesNestedInput = {
+export type packagesUpdateOneRequiredWithoutBooking_packagesNestedInput = {
   create?: Prisma.XOR<Prisma.packagesCreateWithoutBooking_packagesInput, Prisma.packagesUncheckedCreateWithoutBooking_packagesInput>
   connectOrCreate?: Prisma.packagesCreateOrConnectWithoutBooking_packagesInput
   upsert?: Prisma.packagesUpsertWithoutBooking_packagesInput
-  disconnect?: Prisma.packagesWhereInput | boolean
-  delete?: Prisma.packagesWhereInput | boolean
   connect?: Prisma.packagesWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.packagesUpdateToOneWithWhereWithoutBooking_packagesInput, Prisma.packagesUpdateWithoutBooking_packagesInput>, Prisma.packagesUncheckedUpdateWithoutBooking_packagesInput>
 }

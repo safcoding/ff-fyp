@@ -419,7 +419,7 @@ export type bookingsScalarWhereWithAggregatesInput = {
 }
 
 export type bookingsCreateInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -442,7 +442,7 @@ export type bookingsCreateInput = {
 }
 
 export type bookingsUncheckedCreateInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -452,7 +452,7 @@ export type bookingsUncheckedCreateInput = {
   org_address: string
   org_name: string
   org_state: string
-  org_type: $Enums.org_categories
+  org_type: $Enums.states
   quotation_id?: string | null
   slot_id: string
   booking_date?: Date | string | null
@@ -511,7 +511,7 @@ export type bookingsUncheckedUpdateInput = {
 }
 
 export type bookingsCreateManyInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -848,7 +848,7 @@ export type bookingsUncheckedUpdateManyWithoutDiscountsNestedInput = {
 }
 
 export type bookingsCreateWithoutSlotsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -870,7 +870,7 @@ export type bookingsCreateWithoutSlotsInput = {
 }
 
 export type bookingsUncheckedCreateWithoutSlotsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -940,7 +940,7 @@ export type bookingsScalarWhereInput = {
 }
 
 export type bookingsCreateWithoutBooking_addonsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -962,7 +962,7 @@ export type bookingsCreateWithoutBooking_addonsInput = {
 }
 
 export type bookingsUncheckedCreateWithoutBooking_addonsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1044,7 +1044,7 @@ export type bookingsUncheckedUpdateWithoutBooking_addonsInput = {
 }
 
 export type bookingsCreateWithoutBooking_foodsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1066,7 +1066,7 @@ export type bookingsCreateWithoutBooking_foodsInput = {
 }
 
 export type bookingsUncheckedCreateWithoutBooking_foodsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1148,7 +1148,7 @@ export type bookingsUncheckedUpdateWithoutBooking_foodsInput = {
 }
 
 export type bookingsCreateWithoutQuotations_bookings_quotation_idToquotationsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1170,7 +1170,7 @@ export type bookingsCreateWithoutQuotations_bookings_quotation_idToquotationsInp
 }
 
 export type bookingsUncheckedCreateWithoutQuotations_bookings_quotation_idToquotationsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1202,7 +1202,7 @@ export type bookingsCreateManyQuotations_bookings_quotation_idToquotationsInputE
 }
 
 export type bookingsCreateWithoutQuotationsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1224,7 +1224,7 @@ export type bookingsCreateWithoutQuotationsInput = {
 }
 
 export type bookingsUncheckedCreateWithoutQuotationsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1322,7 +1322,7 @@ export type bookingsUncheckedUpdateWithoutQuotationsInput = {
 }
 
 export type bookingsCreateWithoutBooking_packagesInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1344,7 +1344,7 @@ export type bookingsCreateWithoutBooking_packagesInput = {
 }
 
 export type bookingsUncheckedCreateWithoutBooking_packagesInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1426,7 +1426,7 @@ export type bookingsUncheckedUpdateWithoutBooking_packagesInput = {
 }
 
 export type bookingsCreateWithoutDiscountsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1448,7 +1448,7 @@ export type bookingsCreateWithoutDiscountsInput = {
 }
 
 export type bookingsUncheckedCreateWithoutDiscountsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1496,7 +1496,7 @@ export type bookingsUpdateManyWithWhereWithoutDiscountsInput = {
 }
 
 export type bookingsCreateManySlotsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1576,7 +1576,7 @@ export type bookingsUncheckedUpdateManyWithoutSlotsInput = {
 }
 
 export type bookingsCreateManyQuotations_bookings_quotation_idToquotationsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number
@@ -1656,7 +1656,7 @@ export type bookingsUncheckedUpdateManyWithoutQuotations_bookings_quotation_idTo
 }
 
 export type bookingsCreateManyDiscountsInput = {
-  booking_id: string
+  booking_id?: string
   booking_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   pax_total: number

@@ -1,21 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
-import { randomUUID } from "crypto";
 import { prisma } from "@/db";
+
+import { toHHmm } from "@/lib/utils";
 import * as schema from "@/schemas/booking";
 import { calculateBookingTotal, calculatePackageSubtotal, calculatePaxTotal } from "@/lib/utils/booking/booking-utils";
-import { toHHmm } from "@/lib/utils";
-import { bookingsInclude, mapBooking } from "@/serverActions/mappers/bookingMapper";
-
-const loadAllBookings = async () => {
-  return prisma.bookings.findMany({ include: bookingsInclude })
-}
-
-const loadBookingID = async (data: { booking_id: string }) => {
-  return prisma.bookings.findUnique({
-    where: { booking_id: data.booking_id },
-    include: bookingsInclude,
-  })
-}
+import { mapBooking } from "@/serverActions/mappers/bookingMapper";
+import { loadAllBookings, loadBookingID } from "./data/bookingRepo";
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()
@@ -34,6 +24,8 @@ export const getBookingById = createServerFn({ method: "POST" })
     return mapBooking(booking)
   })
 
+
+  //The refactor zone
 export const getBookingAvailability = createServerFn({ method: "POST" })
   .inputValidator(schema.availabilitySchema)
   .handler(async ({ data }) => {

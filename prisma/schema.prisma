@@ -110,7 +110,7 @@ model quotations {
 
 model booking_packages {
   booking_id        String
-  package_id        String?
+  package_id        String
   pax_my_adult      Int?
   pax_my_kid        Int?
   pax_my_senior     Int?
@@ -119,10 +119,10 @@ model booking_packages {
   pax_non_my_kid    Int?
   pax_non_my_senior Int?
   pax_non_my_oku    Int?
-  subtotal          Decimal?  @db.Decimal(10, 2)
-  id                Int       @id @default(autoincrement())
-  bookings          bookings  @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
-  packages          packages? @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
+  subtotal          Decimal? @db.Decimal(10, 2)
+  id                Int      @id @default(autoincrement())
+  bookings          bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
+  packages          packages @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
 }
 
 model discounts {

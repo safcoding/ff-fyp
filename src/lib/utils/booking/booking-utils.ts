@@ -1,8 +1,8 @@
 import z from "zod"
 import { bookingPackagesSchema, bookingFoodSchema, bookingAddonSchema} from "@/schemas/booking"
-import { packageSchema } from "@/serverActions/packageActions"
-import { foodSchema } from "@/serverActions/foodActions"
-import { addonSchema } from "@/serverActions/addonActions"
+import { packageSchema } from "@/schemas/package"
+import { foodSchema } from "@/schemas/food"
+import { addonSchema } from "@/schemas/addon"
 
 type PackageRow = z.infer<typeof bookingPackagesSchema>
 type FoodRow = z.infer<typeof bookingFoodSchema>
