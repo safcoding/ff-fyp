@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
-import { foodSchema } from "@/schemas/food"
+import { foodSchema } from "@/schemas/foodSchemas"
 
 
 export const getFoods = createServerFn({ method: "GET" }).handler(async () => {

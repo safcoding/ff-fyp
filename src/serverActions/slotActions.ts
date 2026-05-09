@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
 import { toHHmm } from "@/lib/utils"
-import { slotSchema } from "@/schemas/slot"
+import { slotSchema } from "@/schemas/slotSchemas"
 import { toIsoDateTimeForTimeColumn } from "@/lib/utils"
 
   export const getSlots = createServerFn({ method: "GET" }).handler(async () => {

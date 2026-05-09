@@ -16,10 +16,10 @@ const fetchOptional = async <T>(ids: any[], query: () => Promise<T[]>): Promise<
   return ids.length > 0? query():[];
 }
 
-export const loadPricing = async (data: {
+export const loadRelated = async (data: {
   packages: Array <{package_id: string}>
-  foods: Array <{food_id: string}>
-  addons: Array <{addon_id: string}>
+  foods: Array <{food_id: number}>
+  addons: Array <{addon_id: number}>
 }) => {
   const packageIds = Array.from(new Set(data.packages.map((pkg) => pkg.package_id)))
   const foodIds = Array.from(new Set(data.foods.map((food) => Number(food.food_id))))

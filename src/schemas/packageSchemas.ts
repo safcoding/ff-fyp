@@ -14,4 +14,5 @@ export const packageSchema = z.object({
   price_non_my_kid: z.coerce.number().nonnegative(),
   price_non_my_senior: z.coerce.number().nonnegative(),
   price_non_my_oku: z.coerce.number().nonnegative(),
+  minimum_pax: z.coerce.number().nonnegative()
 })

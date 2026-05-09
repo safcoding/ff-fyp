@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 
 import { toHHmm } from "@/lib/utils";
-import * as schema from "@/schemas/booking";
+import * as schema from "@/schemas/bookingSchemas";
 import { calculateBookingTotal, calculatePackageSubtotal, calculatePaxTotal } from "@/features/booking/server/utils/price-calculation";
 import { mapBooking } from "@/features/booking/server/bookingMapper";
 import { loadAllBookings, loadBookingID } from "../features/booking/server/bookingRepo";

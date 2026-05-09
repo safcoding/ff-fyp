@@ -1,19 +1,20 @@
-import { calculatePaxTotal } from "./price-calculation";
+import { calculatePackagePaxTotal, calculatePaxTotal } from "./price-calculation";
+import type { BookingFormInput } from "@/schemas/bookingSchemas";
+import type { ExtraBookingData } from "../bookingTypes";
 
 const unique = <T>(items: T[]) => Array.from(new Set(items))
 
-export const validateBooking = (userInput: any, dbData: any) => {
+export const validateBooking = (userInput: BookingFormInput, dbData: ExtraBookingData) => {
     validatePackage(userInput,dbData);
-    validatePax(userInput);
-    validateFood(userInput);
-    validateAddon(userInput);
-    validateSlot(userInput);
+    validatePax(userInput, dbData);
+    validateFood(userInput, dbData);
+    validateAddon(userInput, dbData);
 }
 
-const validatePackage = (selected: any, dbPackage: any) => {
+const validatePackage = (selected: BookingFormInput,dbData: ExtraBookingData) => {
 
-  const packageIds = unique(selected.packages.map((pkg: any) => pkg.package_id))
-  const unavailablePackage = selected.packages.find((pkg: any) => !pkg.package_availability)
+  const packageIds = unique(selected.packages.map((pkg) => pkg.package_id))
+  const unavailablePackage = dbData.packages.find((pkg) => !pkg.package_availability)
 
     if (selected.packages.length === 0){
         throw new Error("At least one package required")
@@ -28,8 +29,9 @@ const validatePackage = (selected: any, dbPackage: any) => {
     }
 }
 
-const validatePax = (selected:any) => {
+const validatePax = (selected:BookingFormInput, dbData: ExtraBookingData) => {
     const totalPax = calculatePaxTotal(selected.packages);
+    const packageById = new Map(dbData.packages.map((pax) => [pax.package_id, pax]))
 
     if (totalPax < 20){
         throw new Error("At least 20 pax needed")
@@ -39,33 +41,40 @@ const validatePax = (selected:any) => {
         return
     }
     
-    if (selected.packages.length > 1) {
-    const hasPackageWithMinimumPax = packagePaxTotals.some((total: number) => total >= 20)
+  for (const selectedPackage of selected.packages) {
+    const packageRecord = packageById.get(selectedPackage.package_id)
 
-    if (!hasPackageWithMinimumPax) {
-      throw new Error("At least one package must have at least 20 pax")
+    if (!packageRecord?.minimum_pax) {
+      continue
+    }
+
+    const packagePaxTotal = calculatePackagePaxTotal(selectedPackage)
+
+    if (packagePaxTotal < packageRecord.minimum_pax) {
+      throw new Error(
+        `${packageRecord.package_name} requires at least ${packageRecord.minimum_pax} pax`
+      )
     }
   }
 }
 
-const validateFood = (selected: any) => {
-    const foodIds = unique(selected.foods.map((pkg: any) => pkg.food_id))
+const validateFood = (selected:BookingFormInput, dbData: ExtraBookingData) => {
+    const foodIds = unique(selected.foods.map((food) => food.food_id))
 
-    if (foodIds.length !== foodIds.length){
+    if (dbData.foods.length !== foodIds.length){
         throw new Error("Invalid food selection")
     }
 }
 
-const validateAddon = (selected: any) => {
-    const addonIds = unique(selected.foods.map((pkg: any) => pkg.addon_id))
+const validateAddon = (selected: BookingFormInput, dbData: ExtraBookingData) => {
+    const addonIds = unique(selected.addons.map((addon) => addon.addon_id))
+    const unavailableAddon = dbData.addons.find((addon) => !addon.addon_avail)
 
-    if (addonIds.length !== addonIds.length){
+    if (dbData.addons.length !== addonIds.length){
         throw new Error("Invalid Addon")
     }
-    const unavailableAddon = selected.addons.find((addon: any) => !addon.addon_avail)
+
         if (unavailableAddon) {
         throw new Error(`Selected addon is not available: ${unavailableAddon.addon_name}`)
     }
 }
-
-con

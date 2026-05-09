@@ -146,7 +146,8 @@ export const PackagesScalarFieldEnum = {
   price_non_my_kid: 'price_non_my_kid',
   price_non_my_senior: 'price_non_my_senior',
   price_non_my_oku: 'price_non_my_oku',
-  package_features: 'package_features'
+  package_features: 'package_features',
+  minimum_pax: 'minimum_pax'
 } as const
 
 export type PackagesScalarFieldEnum = (typeof PackagesScalarFieldEnum)[keyof typeof PackagesScalarFieldEnum]

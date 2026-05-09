@@ -1,8 +1,8 @@
 import z from "zod"
-import { bookingPackagesSchema, bookingFoodSchema, bookingAddonSchema} from "@/schemas/booking"
-import { packageSchema } from "@/schemas/package"
-import { foodSchema } from "@/schemas/food"
-import { addonSchema } from "@/schemas/addon"
+import { bookingPackagesSchema, bookingFoodSchema, bookingAddonSchema} from "@/schemas/bookingSchemas"
+import { packageSchema } from "@/schemas/packageSchemas"
+import { foodSchema } from "@/schemas/foodSchemas"
+import { addonSchema } from "@/schemas/addonSchemas"
 
 type PackageRow = z.infer<typeof bookingPackagesSchema>
 type FoodRow = z.infer<typeof bookingFoodSchema>
@@ -27,7 +27,18 @@ type PaxTotals = {
   pax_non_my_oku: number
 }
 
-
+export const calculatePackagePaxTotal = (pkg: PackageRow): number => {
+  return (
+    pkg.pax_my_adult +
+    pkg.pax_my_kid +
+    pkg.pax_my_senior +
+    pkg.pax_my_oku +
+    pkg.pax_non_my_adult +
+    pkg.pax_non_my_kid +
+    pkg.pax_non_my_senior +
+    pkg.pax_non_my_oku
+  )
+}
 
 export const calculatePackageSubtotal = (
   pax: PackageRow,

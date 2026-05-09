@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
-import { addonSchema } from "@/schemas/addon"
+import { addonSchema } from "@/schemas/addonSchemas"
 
 export const getAddons = createServerFn({ method: "GET" }).handler(async () => {
   const addons = await prisma.addons.findMany({ orderBy: { addon_name: "asc" } })

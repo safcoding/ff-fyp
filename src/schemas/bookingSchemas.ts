@@ -13,8 +13,6 @@ export const bookingFoodSchema = z.object({
 
 export const bookingPackagesSchema = z.object({
         package_id: z.string(),
-        subtotal: z.number().min(1).positive(),
-
         pax_my_adult: z.coerce.number().int().min(0),
         pax_my_kid: z.coerce.number().int().min(0),
         pax_my_senior: z.coerce.number().int().min(0),
@@ -54,6 +52,8 @@ export const createBookingSchema = bookingSchema.omit({
     booking_id: true,
     booking_status: true,
     discount_code: true,
+    booking_price: true,
+    pax_total: true,
 })
 
 export const bookingIdSchema = z.object({
@@ -64,3 +64,10 @@ export const availabilitySchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 })
+
+export type BookingPackageInput = z.infer<typeof bookingPackagesSchema>
+export type BookingFoodInput = z.infer<typeof bookingFoodSchema>
+export type BookingAddonInput = z.infer<typeof bookingAddonSchema>
+export type BookingInput = z.infer<typeof bookingSchema>
+export type CreateBookingInput = z.infer<typeof createBookingSchema>
+export type BookingFormInput = CreateBookingInput | BookingInput

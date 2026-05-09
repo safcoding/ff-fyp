@@ -2,10 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 
 import { toHHmm } from "@/lib/utils";
-import * as schema from "@/schemas/booking";
+import * as schema from "@/schemas/bookingSchemas";
 import { calculateBookingTotal, calculatePackageSubtotal, calculatePaxTotal } from "@/features/booking/server/utils/price-calculation";
 import { mapBooking } from "@/features/booking/server/bookingMapper";
-import { loadBookingID, loadAllBookings } from "./bookingRepo";
+import { loadBookingID, loadAllBookings, loadRelated } from "./bookingRepo";
+import { validateBooking } from "./utils/validation";
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()
@@ -30,62 +31,12 @@ export const getBookingById = createServerFn({ method: "POST" })
 export const createBooking = createServerFn({ method: 'POST' })
   .inputValidator(schema.createBookingSchema)
   .handler(async ({ data }) => {
-    if (data.packages.length === 0) {
-      throw new Error("At least one package is required")
-    }
 
-    const packageIds = Array.from(new Set(data.packages.map((pkg) => pkg.package_id)))
-    const foodIds = Array.from(new Set(data.foods.map((food) => food.food_id)))
-    const addonIds = Array.from(new Set(data.addons.map((addon) => addon.addon_id)))
+    const related = await loadRelated(data);
+    validateBooking(data, related)
 
-    const [packages, foods, addons] = await Promise.all([
-      prisma.packages.findMany({
-        where: { package_id: { in: packageIds } },
-        select: {
-          package_id: true,
-          package_name: true,
-          package_note: true,
-          package_features: true,
-          package_availability: true,
-          price_my_adult: true,
-          price_my_kid: true,
-          price_my_senior: true,
-          price_my_oku: true,
-          price_non_my_adult: true,
-          price_non_my_kid: true,
-          price_non_my_senior: true,
-          price_non_my_oku: true,
-        },
-      }),
-      foodIds.length
-        ? prisma.foods.findMany({
-            where: { food_id: { in: foodIds } },
-            select: { food_id: true, food_name: true, food_price: true },
-          })
-        : Promise.resolve([]),
-      addonIds.length
-        ? prisma.addons.findMany({
-            where: { addon_id: { in: addonIds } },
-            select: {
-              addon_id: true,
-              addon_name: true,
-              addon_desc: true,
-              addon_price: true,
-              addon_avail: true,
-            },
-          })
-        : Promise.resolve([]),
-    ])
-
-    if (packages.length !== packageIds.length) {
-      throw new Error("Invalid package selection")
-    }
-
-    const unavailablePackage = packages.find((pkg) => !pkg.package_availability)
-    if (unavailablePackage) {
-      throw new Error(`Selected package is not available: ${unavailablePackage.package_name}`)
-    }
-
+    const {packages, foods, addons } = related
+    
     const slot = await prisma.slots.findUnique({
       where: { slot_id: data.slot_id },
       select: { slot_id: true },

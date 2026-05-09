@@ -71,6 +71,7 @@ model packages {
   price_non_my_senior  Decimal            @db.Decimal(3, 0)
   price_non_my_oku     Decimal            @db.Decimal(3, 0)
   package_features     String[]           @default([])
+  minimum_pax          Int?
   booking_packages     booking_packages[]
 }
 

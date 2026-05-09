@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start"
-import { packageSchema } from "@/schemas/package"
+import { packageSchema } from "@/schemas/packageSchemas"
 import { prisma } from "@/db"
 
 export type PackagePricing = {
