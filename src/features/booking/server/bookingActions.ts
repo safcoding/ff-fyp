@@ -5,7 +5,7 @@ import { toHHmm } from "@/lib/utils";
 import * as schema from "@/schemas/booking";
 import { calculateBookingTotal, calculatePackageSubtotal, calculatePaxTotal } from "@/features/booking/server/utils/price-calculation";
 import { mapBooking } from "@/features/booking/server/bookingMapper";
-import { loadAllBookings, loadBookingID } from "../features/booking/server/bookingRepo";
+import { loadBookingID, loadAllBookings } from "./bookingRepo";
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()

@@ -1,5 +1,5 @@
 import { Prisma } from "@/generated/prisma/client"
-import { calculatePaxBreakdown } from "@/lib/utils/booking/booking-utils"
+import { calculatePaxBreakdown } from "@/features/booking/server/utils/price-calculation"
 
 export const bookingsInclude = {
   booking_addons: {

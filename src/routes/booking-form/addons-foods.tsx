@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 
-import { formatCurrency } from "@/lib/utils/booking/booking-utils"
+import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
 import { computeTotal } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { getAddons } from "@/serverActions/addonActions"

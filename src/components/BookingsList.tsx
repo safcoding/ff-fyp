@@ -1,4 +1,4 @@
-import { getBookings } from "@/serverActions/bookingActions"
+import { getBookings } from "@/features/booking/server/bookingActions"
 
 export async function BookingsList(){
     const bookings = await getBookings();

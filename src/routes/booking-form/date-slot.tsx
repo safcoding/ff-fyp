@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { format } from "date-fns"
 import { CalendarDays, Clock, Users } from "lucide-react"
-import { getBookingAvailability } from "@/serverActions/bookingActions"
+import { getBookingAvailability } from "@/features/booking/server/bookingActions"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 

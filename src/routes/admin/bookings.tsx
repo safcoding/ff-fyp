@@ -6,7 +6,7 @@ import {
   deleteBooking as deleteBookingAction,
   getBookingById,
   getBookings,
-} from "@/serverActions/bookingActions"
+} from "@/features/booking/server/bookingActions"
 import { buildQuotationPdfBlob } from "@/components/booking/QuotationPdf"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { DeleteDialog } from "@/components/deleteDialog"
