@@ -1,5 +1,6 @@
 import { Prisma } from "@/generated/prisma/client"
-import { calculatePaxBreakdown } from "@/features/booking/server/utils/price-calculation"
+import { calculatePaxBreakdown } from "./utils/pax-calculation"
+import type { ExtraBookingData } from "./bookingTypes"
 
 export const bookingsInclude = {
   booking_addons: {
@@ -14,6 +15,7 @@ export const bookingsInclude = {
       food_id: true,
       food_quantity: true,
       foods: { select: { food_name: true } },
+      subtotal: true,
     },
   },
   booking_packages: {
@@ -47,7 +49,7 @@ export type BookingWithRelations = Prisma.bookingsGetPayload<{
   include: typeof bookingsInclude
 }>
 
-export const mapBooking = (b: BookingWithRelations) => {
+export const mapBookingToUi = (b: BookingWithRelations) => {
   const packages = b.booking_packages.map((p) => ({
     package_id: p.package_id,
     pax_my_adult: p.pax_my_adult ?? 0,
@@ -97,14 +99,64 @@ export const mapBooking = (b: BookingWithRelations) => {
       addon_name: a.addons.addon_name,
       addon_quantity: a.addon_quantity,
     })),
-    booking_foods: b.booking_foods
-      ? [
-          {
-            food_id: b.booking_foods.food_id,
-            food_name: b.booking_foods.foods.food_name,
-            food_quantity: b.booking_foods.food_quantity,
-          },
-        ]
-      : [],
+    booking_foods: b.booking_foods.map((f) => ({
+      food_id: f.food_id,
+      food_name: f.foods.food_name,
+      food_quantity: f.food_quantity,
+      subtotal: f.subtotal === null ? null : Number(f.subtotal),
+    }))
+  }
+}
+
+export const buildBookingPriceMaps = (related: ExtraBookingData) => {
+  const packagePriceMap = Object.fromEntries(
+    related.packages.map((pkg) => [
+      pkg.package_id,
+      {
+        package_name: pkg.package_name,
+        package_note: pkg.package_note ?? undefined,
+        package_features: pkg.package_features,
+        package_availability: pkg.package_availability,
+        minimum_pax: pkg.minimum_pax,
+        price_my_adult: Number(pkg.price_my_adult),
+        price_my_kid: Number(pkg.price_my_kid),
+        price_my_senior: Number(pkg.price_my_senior),
+        price_my_oku: Number(pkg.price_my_oku),
+        price_non_my_adult: Number(pkg.price_non_my_adult),
+        price_non_my_kid: Number(pkg.price_non_my_kid),
+        price_non_my_senior: Number(pkg.price_non_my_senior),
+        price_non_my_oku: Number(pkg.price_non_my_oku),
+      },
+    ])
+  )
+
+  const foodPriceMap = Object.fromEntries(
+    related.foods.map((food) => [
+      food.food_id,
+      {
+        food_id: food.food_id,
+        food_name: food.food_name,
+        food_price: Number(food.food_price),
+      },
+    ])
+  )
+
+  const addonPriceMap = Object.fromEntries(
+    related.addons.map((addon) => [
+      addon.addon_id,
+      {
+        addon_id: addon.addon_id,
+        addon_name: addon.addon_name,
+        addon_desc: addon.addon_desc,
+        addon_price: Number(addon.addon_price),
+        addon_avail: addon.addon_avail,
+      },
+    ])
+  )
+
+  return {
+    packagePriceMap,
+    foodPriceMap,
+    addonPriceMap,
   }
 }

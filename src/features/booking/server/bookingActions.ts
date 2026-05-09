@@ -1,16 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
-
 import { toHHmm } from "@/lib/utils";
 import * as schema from "@/schemas/bookingSchemas";
-import { calculateBookingTotal, calculatePackageSubtotal, calculatePaxTotal } from "@/features/booking/server/utils/price-calculation";
-import { mapBooking } from "@/features/booking/server/bookingMapper";
+import { calculateBookingTotal, calculatePackageSubtotal, calculateFoodSubtotal, calculateAddonSubtotal } from "@/features/booking/server/utils/price-calculation";
+import { calculatePaxTotal } from "./utils/pax-calculation";
+import { mapBookingToUi, buildBookingPriceMaps } from "@/features/booking/server/bookingMapper";
 import { loadBookingID, loadAllBookings, loadRelated } from "./bookingRepo";
 import { validateBooking } from "./utils/validation";
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()
-  return bookings.map(mapBooking)
+  return bookings.map(mapBookingToUi)
 })
 
 export const getBookingById = createServerFn({ method: "POST" })
@@ -22,21 +22,18 @@ export const getBookingById = createServerFn({ method: "POST" })
       throw new Error("Booking not found")
     }
 
-    return mapBooking(booking)
+    return mapBookingToUi(booking)
   })
-
-
-  //The refactor zone
 
 export const createBooking = createServerFn({ method: 'POST' })
   .inputValidator(schema.createBookingSchema)
   .handler(async ({ data }) => {
 
     const related = await loadRelated(data);
+
     validateBooking(data, related)
 
-    const {packages, foods, addons } = related
-    
+    //can be refactored out but idk lazy rn (9/5 9pm)
     const slot = await prisma.slots.findUnique({
       where: { slot_id: data.slot_id },
       select: { slot_id: true },
@@ -45,45 +42,33 @@ export const createBooking = createServerFn({ method: 'POST' })
     if (!slot) {
       throw new Error("Invalid slot_id: slot not found");
     }
+  
+    const {packagePriceMap, foodPriceMap, addonPriceMap} = buildBookingPriceMaps(related)
+    
+    const packageRows = data.packages.map((row) => ({
+      package_id: row.package_id,
+      pax_my_adult: row.pax_my_adult,
+      pax_my_kid: row.pax_my_kid,
+      pax_my_senior: row.pax_my_senior,
+      pax_my_oku: row.pax_my_oku,
+      pax_non_my_adult: row.pax_non_my_adult,
+      pax_non_my_kid: row.pax_non_my_kid,
+      pax_non_my_senior: row.pax_non_my_senior,
+      pax_non_my_oku: row.pax_non_my_oku,
+      subtotal: calculatePackageSubtotal(row, packagePriceMap[row.package_id]),
+    }))
 
-    const packagePriceMap = Object.fromEntries(
-      packages.map((pkg) => [
-        pkg.package_id,
-        {
-          package_name: pkg.package_name,
-          package_note: pkg.package_note ?? undefined,
-          package_features: pkg.package_features,
-          package_availability: pkg.package_availability,
-          price_my_adult: Number(pkg.price_my_adult),
-          price_my_kid: Number(pkg.price_my_kid),
-          price_my_senior: Number(pkg.price_my_senior),
-          price_my_oku: Number(pkg.price_my_oku),
-          price_non_my_adult: Number(pkg.price_non_my_adult),
-          price_non_my_kid: Number(pkg.price_non_my_kid),
-          price_non_my_senior: Number(pkg.price_non_my_senior),
-          price_non_my_oku: Number(pkg.price_non_my_oku),
-        },
-      ])
-    )
+    const foodRows = data.foods.map((row) => ({
+      food_id: row.food_id,
+      food_quantity: row.quantity,
+      subtotal: calculateFoodSubtotal(row, foodPriceMap[row.food_id]),
+    }))
 
-    const foodPriceMap = Object.fromEntries(
-      foods.map((food) => [
-        food.food_id,
-        { food_name: food.food_name, food_price: Number(food.food_price) },
-      ])
-    )
-
-    const addonPriceMap = Object.fromEntries(
-      addons.map((addon) => [
-        addon.addon_id,
-        {
-          addon_name: addon.addon_name,
-          addon_desc: addon.addon_desc,
-          addon_price: Number(addon.addon_price),
-          addon_avail: addon.addon_avail,
-        },
-      ])
-    )
+    const addonRows = data.addons.map((row) => ({
+      addon_id: row.addon_id,
+      addon_quantity: row.quantity,
+      subtotal: calculateAddonSubtotal(row, addonPriceMap[row.addon_id]),
+    }))
 
     const bookingPrice = calculateBookingTotal(
       data.packages,
@@ -94,7 +79,7 @@ export const createBooking = createServerFn({ method: 'POST' })
       addonPriceMap
     )
 
-    const paxTotal = calculatePaxTotal(data.packages)
+    const paxTotal = calculatePaxTotal(data.packages)  
 
     const newBooking = await prisma.bookings.create({
       data: {
@@ -109,47 +94,42 @@ export const createBooking = createServerFn({ method: 'POST' })
         org_type: data.org_type,
         booking_date: data.booking_date,
         slot_id: data.slot_id,
-      }
-    });
 
-    await prisma.booking_packages.createMany({
-      data: data.packages.map((row) => ({
-        booking_id: newBooking.booking_id,
-        package_id: row.package_id,
-        pax_my_adult: row.pax_my_adult,
-        pax_my_kid: row.pax_my_kid,
-        pax_my_senior: row.pax_my_senior,
-        pax_my_oku: row.pax_my_oku,
-        pax_non_my_adult: row.pax_non_my_adult,
-        pax_non_my_kid: String(row.pax_non_my_kid),
-        pax_non_my_senior: row.pax_non_my_senior,
-        pax_non_my_oku: row.pax_non_my_oku,
-        subtotal: calculatePackageSubtotal(row, packagePriceMap[row.package_id]),
-      })),
+        booking_packages: {
+          create: packageRows.map((row) => ({
+            package_id: row.package_id,
+            pax_my_adult: row.pax_my_adult,
+            pax_my_kid: row.pax_my_kid,
+            pax_my_senior: row.pax_my_senior,
+            pax_my_oku: row.pax_my_oku,
+            pax_non_my_adult: row.pax_non_my_adult,
+            pax_non_my_kid: row.pax_non_my_kid,
+            pax_non_my_senior: row.pax_non_my_senior,
+            pax_non_my_oku: row.pax_non_my_oku,
+            subtotal: row.subtotal,
+          })),
+        },
+
+        booking_addons: {
+          create: addonRows.map((row) => ({
+            addon_id: row.addon_id,
+            addon_quantity: row.addon_quantity,
+            subtotal: row.subtotal,
+          })),
+        },
+        booking_foods: {
+          create: foodRows.map((row) => ({
+            food_id: row.food_id,
+            food_quantity: row.food_quantity,
+            subtotal: row.subtotal,
+          })),
+        },
+      },
     })
-
-    if (data.addons.length > 0) {
-      await prisma.booking_addons.createMany({
-        data: data.addons.map((item) => ({
-          booking_id: newBooking.booking_id,
-          addon_id: item.addon_id,
-          addon_quantity: item.quantity,
-        })),
-      })
-    }
-
-    if (data.foods.length > 0) {
-      await prisma.booking_foods.createMany({
-        data: data.foods.map((item) => ({
-          booking_id: newBooking.booking_id,
-          food_id: item.food_id,
-          food_quantity: item.quantity,
-        })),
-      })
-    }
     return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}. Total price: ${newBooking.booking_price.toString()}`;
   })
 
+  //The refactor zone
   export const updateBooking = createServerFn({method: "POST"})
   .inputValidator(schema.bookingSchema)
   .handler(async ({data}) => {

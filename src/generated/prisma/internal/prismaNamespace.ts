@@ -1355,7 +1355,8 @@ export const Booking_addonsScalarFieldEnum = {
   booking_id: 'booking_id',
   addon_id: 'addon_id',
   addon_quantity: 'addon_quantity',
-  id: 'id'
+  id: 'id',
+  subtotal: 'subtotal'
 } as const
 
 export type Booking_addonsScalarFieldEnum = (typeof Booking_addonsScalarFieldEnum)[keyof typeof Booking_addonsScalarFieldEnum]
@@ -1365,7 +1366,8 @@ export const Booking_foodsScalarFieldEnum = {
   booking_id: 'booking_id',
   food_id: 'food_id',
   food_quantity: 'food_quantity',
-  id: 'id'
+  id: 'id',
+  subtotal: 'subtotal'
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
@@ -1510,6 +1512,20 @@ export type EnumstatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'states[]'
  */
 export type ListEnumstatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'states[]'>
+    
+
+
+/**
+ * Reference to a field of type 'org_categories'
+ */
+export type Enumorg_categoriesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'org_categories'>
+    
+
+
+/**
+ * Reference to a field of type 'org_categories[]'
+ */
+export type ListEnumorg_categoriesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'org_categories[]'>
     
 
 

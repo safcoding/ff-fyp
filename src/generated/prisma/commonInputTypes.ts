@@ -184,6 +184,13 @@ export type EnumstatesFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumstatesFilter<$PrismaModel> | $Enums.states
 }
 
+export type Enumorg_categoriesFilter<$PrismaModel = never> = {
+  equals?: $Enums.org_categories | Prisma.Enumorg_categoriesFieldRefInput<$PrismaModel>
+  in?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  notIn?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumorg_categoriesFilter<$PrismaModel> | $Enums.org_categories
+}
+
 export type DateTimeNullableFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null
   in?: Date[] | string[] | Prisma.ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -210,6 +217,16 @@ export type EnumstatesWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumstatesFilter<$PrismaModel>
   _max?: Prisma.NestedEnumstatesFilter<$PrismaModel>
+}
+
+export type Enumorg_categoriesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.org_categories | Prisma.Enumorg_categoriesFieldRefInput<$PrismaModel>
+  in?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  notIn?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumorg_categoriesWithAggregatesFilter<$PrismaModel> | $Enums.org_categories
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumorg_categoriesFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumorg_categoriesFilter<$PrismaModel>
 }
 
 export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -490,6 +507,13 @@ export type NestedEnumstatesFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumstatesFilter<$PrismaModel> | $Enums.states
 }
 
+export type NestedEnumorg_categoriesFilter<$PrismaModel = never> = {
+  equals?: $Enums.org_categories | Prisma.Enumorg_categoriesFieldRefInput<$PrismaModel>
+  in?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  notIn?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumorg_categoriesFilter<$PrismaModel> | $Enums.org_categories
+}
+
 export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel> | null
   in?: Date[] | string[] | Prisma.ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -516,6 +540,16 @@ export type NestedEnumstatesWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumstatesFilter<$PrismaModel>
   _max?: Prisma.NestedEnumstatesFilter<$PrismaModel>
+}
+
+export type NestedEnumorg_categoriesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.org_categories | Prisma.Enumorg_categoriesFieldRefInput<$PrismaModel>
+  in?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  notIn?: $Enums.org_categories[] | Prisma.ListEnumorg_categoriesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumorg_categoriesWithAggregatesFilter<$PrismaModel> | $Enums.org_categories
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumorg_categoriesFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumorg_categoriesFilter<$PrismaModel>
 }
 
 export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {

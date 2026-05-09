@@ -168,7 +168,8 @@ export const Booking_addonsScalarFieldEnum = {
   booking_id: 'booking_id',
   addon_id: 'addon_id',
   addon_quantity: 'addon_quantity',
-  id: 'id'
+  id: 'id',
+  subtotal: 'subtotal'
 } as const
 
 export type Booking_addonsScalarFieldEnum = (typeof Booking_addonsScalarFieldEnum)[keyof typeof Booking_addonsScalarFieldEnum]
@@ -178,7 +179,8 @@ export const Booking_foodsScalarFieldEnum = {
   booking_id: 'booking_id',
   food_id: 'food_id',
   food_quantity: 'food_quantity',
-  id: 'id'
+  id: 'id',
+  subtotal: 'subtotal'
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]

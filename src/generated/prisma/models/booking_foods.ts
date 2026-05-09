@@ -30,12 +30,14 @@ export type Booking_foodsAvgAggregateOutputType = {
   food_id: number | null
   food_quantity: number | null
   id: number | null
+  subtotal: runtime.Decimal | null
 }
 
 export type Booking_foodsSumAggregateOutputType = {
   food_id: number | null
   food_quantity: number | null
   id: number | null
+  subtotal: runtime.Decimal | null
 }
 
 export type Booking_foodsMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type Booking_foodsMinAggregateOutputType = {
   food_id: number | null
   food_quantity: number | null
   id: number | null
+  subtotal: runtime.Decimal | null
 }
 
 export type Booking_foodsMaxAggregateOutputType = {
@@ -50,6 +53,7 @@ export type Booking_foodsMaxAggregateOutputType = {
   food_id: number | null
   food_quantity: number | null
   id: number | null
+  subtotal: runtime.Decimal | null
 }
 
 export type Booking_foodsCountAggregateOutputType = {
@@ -57,6 +61,7 @@ export type Booking_foodsCountAggregateOutputType = {
   food_id: number
   food_quantity: number
   id: number
+  subtotal: number
   _all: number
 }
 
@@ -65,12 +70,14 @@ export type Booking_foodsAvgAggregateInputType = {
   food_id?: true
   food_quantity?: true
   id?: true
+  subtotal?: true
 }
 
 export type Booking_foodsSumAggregateInputType = {
   food_id?: true
   food_quantity?: true
   id?: true
+  subtotal?: true
 }
 
 export type Booking_foodsMinAggregateInputType = {
@@ -78,6 +85,7 @@ export type Booking_foodsMinAggregateInputType = {
   food_id?: true
   food_quantity?: true
   id?: true
+  subtotal?: true
 }
 
 export type Booking_foodsMaxAggregateInputType = {
@@ -85,6 +93,7 @@ export type Booking_foodsMaxAggregateInputType = {
   food_id?: true
   food_quantity?: true
   id?: true
+  subtotal?: true
 }
 
 export type Booking_foodsCountAggregateInputType = {
@@ -92,6 +101,7 @@ export type Booking_foodsCountAggregateInputType = {
   food_id?: true
   food_quantity?: true
   id?: true
+  subtotal?: true
   _all?: true
 }
 
@@ -186,6 +196,7 @@ export type Booking_foodsGroupByOutputType = {
   food_id: number
   food_quantity: number
   id: number
+  subtotal: runtime.Decimal | null
   _count: Booking_foodsCountAggregateOutputType | null
   _avg: Booking_foodsAvgAggregateOutputType | null
   _sum: Booking_foodsSumAggregateOutputType | null
@@ -216,6 +227,7 @@ export type booking_foodsWhereInput = {
   food_id?: Prisma.IntFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntFilter<"booking_foods"> | number
   id?: Prisma.IntFilter<"booking_foods"> | number
+  subtotal?: Prisma.DecimalNullableFilter<"booking_foods"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
   foods?: Prisma.XOR<Prisma.FoodsScalarRelationFilter, Prisma.foodsWhereInput>
 }
@@ -225,27 +237,30 @@ export type booking_foodsOrderByWithRelationInput = {
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrderInput | Prisma.SortOrder
   bookings?: Prisma.bookingsOrderByWithRelationInput
   foods?: Prisma.foodsOrderByWithRelationInput
 }
 
 export type booking_foodsWhereUniqueInput = Prisma.AtLeast<{
-  booking_id?: string
   id?: number
   AND?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
   OR?: Prisma.booking_foodsWhereInput[]
   NOT?: Prisma.booking_foodsWhereInput | Prisma.booking_foodsWhereInput[]
+  booking_id?: Prisma.StringFilter<"booking_foods"> | string
   food_id?: Prisma.IntFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntFilter<"booking_foods"> | number
+  subtotal?: Prisma.DecimalNullableFilter<"booking_foods"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
   foods?: Prisma.XOR<Prisma.FoodsScalarRelationFilter, Prisma.foodsWhereInput>
-}, "id" | "booking_id">
+}, "id">
 
 export type booking_foodsOrderByWithAggregationInput = {
   booking_id?: Prisma.SortOrder
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.booking_foodsCountOrderByAggregateInput
   _avg?: Prisma.booking_foodsAvgOrderByAggregateInput
   _max?: Prisma.booking_foodsMaxOrderByAggregateInput
@@ -261,10 +276,12 @@ export type booking_foodsScalarWhereWithAggregatesInput = {
   food_id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
   food_quantity?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
   id?: Prisma.IntWithAggregatesFilter<"booking_foods"> | number
+  subtotal?: Prisma.DecimalNullableWithAggregatesFilter<"booking_foods"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsCreateInput = {
   food_quantity: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bookings: Prisma.bookingsCreateNestedOneWithoutBooking_foodsInput
   foods: Prisma.foodsCreateNestedOneWithoutBooking_foodsInput
 }
@@ -274,10 +291,12 @@ export type booking_foodsUncheckedCreateInput = {
   food_id: number
   food_quantity: number
   id?: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsUpdateInput = {
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_foodsNestedInput
   foods?: Prisma.foodsUpdateOneRequiredWithoutBooking_foodsNestedInput
 }
@@ -287,6 +306,7 @@ export type booking_foodsUncheckedUpdateInput = {
   food_id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsCreateManyInput = {
@@ -294,10 +314,12 @@ export type booking_foodsCreateManyInput = {
   food_id: number
   food_quantity: number
   id?: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsUpdateManyMutationInput = {
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsUncheckedUpdateManyInput = {
@@ -305,11 +327,7 @@ export type booking_foodsUncheckedUpdateManyInput = {
   food_id?: Prisma.IntFieldUpdateOperationsInput | number
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type Booking_foodsNullableScalarRelationFilter = {
-  is?: Prisma.booking_foodsWhereInput | null
-  isNot?: Prisma.booking_foodsWhereInput | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type Booking_foodsListRelationFilter = {
@@ -327,12 +345,14 @@ export type booking_foodsCountOrderByAggregateInput = {
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrder
 }
 
 export type booking_foodsAvgOrderByAggregateInput = {
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrder
 }
 
 export type booking_foodsMaxOrderByAggregateInput = {
@@ -340,6 +360,7 @@ export type booking_foodsMaxOrderByAggregateInput = {
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrder
 }
 
 export type booking_foodsMinOrderByAggregateInput = {
@@ -347,44 +368,56 @@ export type booking_foodsMinOrderByAggregateInput = {
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrder
 }
 
 export type booking_foodsSumOrderByAggregateInput = {
   food_id?: Prisma.SortOrder
   food_quantity?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  subtotal?: Prisma.SortOrder
 }
 
-export type booking_foodsCreateNestedOneWithoutBookingsInput = {
-  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
-  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput
-  connect?: Prisma.booking_foodsWhereUniqueInput
+export type booking_foodsCreateNestedManyWithoutBookingsInput = {
+  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput> | Prisma.booking_foodsCreateWithoutBookingsInput[] | Prisma.booking_foodsUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput | Prisma.booking_foodsCreateOrConnectWithoutBookingsInput[]
+  createMany?: Prisma.booking_foodsCreateManyBookingsInputEnvelope
+  connect?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
 }
 
-export type booking_foodsUncheckedCreateNestedOneWithoutBookingsInput = {
-  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
-  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput
-  connect?: Prisma.booking_foodsWhereUniqueInput
+export type booking_foodsUncheckedCreateNestedManyWithoutBookingsInput = {
+  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput> | Prisma.booking_foodsCreateWithoutBookingsInput[] | Prisma.booking_foodsUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput | Prisma.booking_foodsCreateOrConnectWithoutBookingsInput[]
+  createMany?: Prisma.booking_foodsCreateManyBookingsInputEnvelope
+  connect?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
 }
 
-export type booking_foodsUpdateOneWithoutBookingsNestedInput = {
-  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
-  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput
-  upsert?: Prisma.booking_foodsUpsertWithoutBookingsInput
-  disconnect?: Prisma.booking_foodsWhereInput | boolean
-  delete?: Prisma.booking_foodsWhereInput | boolean
-  connect?: Prisma.booking_foodsWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.booking_foodsUpdateToOneWithWhereWithoutBookingsInput, Prisma.booking_foodsUpdateWithoutBookingsInput>, Prisma.booking_foodsUncheckedUpdateWithoutBookingsInput>
+export type booking_foodsUpdateManyWithoutBookingsNestedInput = {
+  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput> | Prisma.booking_foodsCreateWithoutBookingsInput[] | Prisma.booking_foodsUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput | Prisma.booking_foodsCreateOrConnectWithoutBookingsInput[]
+  upsert?: Prisma.booking_foodsUpsertWithWhereUniqueWithoutBookingsInput | Prisma.booking_foodsUpsertWithWhereUniqueWithoutBookingsInput[]
+  createMany?: Prisma.booking_foodsCreateManyBookingsInputEnvelope
+  set?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  disconnect?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  delete?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  connect?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  update?: Prisma.booking_foodsUpdateWithWhereUniqueWithoutBookingsInput | Prisma.booking_foodsUpdateWithWhereUniqueWithoutBookingsInput[]
+  updateMany?: Prisma.booking_foodsUpdateManyWithWhereWithoutBookingsInput | Prisma.booking_foodsUpdateManyWithWhereWithoutBookingsInput[]
+  deleteMany?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
 }
 
-export type booking_foodsUncheckedUpdateOneWithoutBookingsNestedInput = {
-  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
-  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput
-  upsert?: Prisma.booking_foodsUpsertWithoutBookingsInput
-  disconnect?: Prisma.booking_foodsWhereInput | boolean
-  delete?: Prisma.booking_foodsWhereInput | boolean
-  connect?: Prisma.booking_foodsWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.booking_foodsUpdateToOneWithWhereWithoutBookingsInput, Prisma.booking_foodsUpdateWithoutBookingsInput>, Prisma.booking_foodsUncheckedUpdateWithoutBookingsInput>
+export type booking_foodsUncheckedUpdateManyWithoutBookingsNestedInput = {
+  create?: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput> | Prisma.booking_foodsCreateWithoutBookingsInput[] | Prisma.booking_foodsUncheckedCreateWithoutBookingsInput[]
+  connectOrCreate?: Prisma.booking_foodsCreateOrConnectWithoutBookingsInput | Prisma.booking_foodsCreateOrConnectWithoutBookingsInput[]
+  upsert?: Prisma.booking_foodsUpsertWithWhereUniqueWithoutBookingsInput | Prisma.booking_foodsUpsertWithWhereUniqueWithoutBookingsInput[]
+  createMany?: Prisma.booking_foodsCreateManyBookingsInputEnvelope
+  set?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  disconnect?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  delete?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  connect?: Prisma.booking_foodsWhereUniqueInput | Prisma.booking_foodsWhereUniqueInput[]
+  update?: Prisma.booking_foodsUpdateWithWhereUniqueWithoutBookingsInput | Prisma.booking_foodsUpdateWithWhereUniqueWithoutBookingsInput[]
+  updateMany?: Prisma.booking_foodsUpdateManyWithWhereWithoutBookingsInput | Prisma.booking_foodsUpdateManyWithWhereWithoutBookingsInput[]
+  deleteMany?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
 }
 
 export type booking_foodsCreateNestedManyWithoutFoodsInput = {
@@ -431,6 +464,7 @@ export type booking_foodsUncheckedUpdateManyWithoutFoodsNestedInput = {
 
 export type booking_foodsCreateWithoutBookingsInput = {
   food_quantity: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   foods: Prisma.foodsCreateNestedOneWithoutBooking_foodsInput
 }
 
@@ -438,6 +472,7 @@ export type booking_foodsUncheckedCreateWithoutBookingsInput = {
   food_id: number
   food_quantity: number
   id?: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsCreateOrConnectWithoutBookingsInput = {
@@ -445,30 +480,41 @@ export type booking_foodsCreateOrConnectWithoutBookingsInput = {
   create: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
 }
 
-export type booking_foodsUpsertWithoutBookingsInput = {
-  update: Prisma.XOR<Prisma.booking_foodsUpdateWithoutBookingsInput, Prisma.booking_foodsUncheckedUpdateWithoutBookingsInput>
-  create: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
-  where?: Prisma.booking_foodsWhereInput
+export type booking_foodsCreateManyBookingsInputEnvelope = {
+  data: Prisma.booking_foodsCreateManyBookingsInput | Prisma.booking_foodsCreateManyBookingsInput[]
+  skipDuplicates?: boolean
 }
 
-export type booking_foodsUpdateToOneWithWhereWithoutBookingsInput = {
-  where?: Prisma.booking_foodsWhereInput
+export type booking_foodsUpsertWithWhereUniqueWithoutBookingsInput = {
+  where: Prisma.booking_foodsWhereUniqueInput
+  update: Prisma.XOR<Prisma.booking_foodsUpdateWithoutBookingsInput, Prisma.booking_foodsUncheckedUpdateWithoutBookingsInput>
+  create: Prisma.XOR<Prisma.booking_foodsCreateWithoutBookingsInput, Prisma.booking_foodsUncheckedCreateWithoutBookingsInput>
+}
+
+export type booking_foodsUpdateWithWhereUniqueWithoutBookingsInput = {
+  where: Prisma.booking_foodsWhereUniqueInput
   data: Prisma.XOR<Prisma.booking_foodsUpdateWithoutBookingsInput, Prisma.booking_foodsUncheckedUpdateWithoutBookingsInput>
 }
 
-export type booking_foodsUpdateWithoutBookingsInput = {
-  food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  foods?: Prisma.foodsUpdateOneRequiredWithoutBooking_foodsNestedInput
+export type booking_foodsUpdateManyWithWhereWithoutBookingsInput = {
+  where: Prisma.booking_foodsScalarWhereInput
+  data: Prisma.XOR<Prisma.booking_foodsUpdateManyMutationInput, Prisma.booking_foodsUncheckedUpdateManyWithoutBookingsInput>
 }
 
-export type booking_foodsUncheckedUpdateWithoutBookingsInput = {
-  food_id?: Prisma.IntFieldUpdateOperationsInput | number
-  food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+export type booking_foodsScalarWhereInput = {
+  AND?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
+  OR?: Prisma.booking_foodsScalarWhereInput[]
+  NOT?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
+  booking_id?: Prisma.StringFilter<"booking_foods"> | string
+  food_id?: Prisma.IntFilter<"booking_foods"> | number
+  food_quantity?: Prisma.IntFilter<"booking_foods"> | number
+  id?: Prisma.IntFilter<"booking_foods"> | number
+  subtotal?: Prisma.DecimalNullableFilter<"booking_foods"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsCreateWithoutFoodsInput = {
   food_quantity: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bookings: Prisma.bookingsCreateNestedOneWithoutBooking_foodsInput
 }
 
@@ -476,6 +522,7 @@ export type booking_foodsUncheckedCreateWithoutFoodsInput = {
   booking_id: string
   food_quantity: number
   id?: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsCreateOrConnectWithoutFoodsInput = {
@@ -504,24 +551,43 @@ export type booking_foodsUpdateManyWithWhereWithoutFoodsInput = {
   data: Prisma.XOR<Prisma.booking_foodsUpdateManyMutationInput, Prisma.booking_foodsUncheckedUpdateManyWithoutFoodsInput>
 }
 
-export type booking_foodsScalarWhereInput = {
-  AND?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
-  OR?: Prisma.booking_foodsScalarWhereInput[]
-  NOT?: Prisma.booking_foodsScalarWhereInput | Prisma.booking_foodsScalarWhereInput[]
-  booking_id?: Prisma.StringFilter<"booking_foods"> | string
-  food_id?: Prisma.IntFilter<"booking_foods"> | number
-  food_quantity?: Prisma.IntFilter<"booking_foods"> | number
-  id?: Prisma.IntFilter<"booking_foods"> | number
+export type booking_foodsCreateManyBookingsInput = {
+  food_id: number
+  food_quantity: number
+  id?: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_foodsUpdateWithoutBookingsInput = {
+  food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  foods?: Prisma.foodsUpdateOneRequiredWithoutBooking_foodsNestedInput
+}
+
+export type booking_foodsUncheckedUpdateWithoutBookingsInput = {
+  food_id?: Prisma.IntFieldUpdateOperationsInput | number
+  food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type booking_foodsUncheckedUpdateManyWithoutBookingsInput = {
+  food_id?: Prisma.IntFieldUpdateOperationsInput | number
+  food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsCreateManyFoodsInput = {
   booking_id: string
   food_quantity: number
   id?: number
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsUpdateWithoutFoodsInput = {
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_foodsNestedInput
 }
 
@@ -529,12 +595,14 @@ export type booking_foodsUncheckedUpdateWithoutFoodsInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type booking_foodsUncheckedUpdateManyWithoutFoodsInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
   food_quantity?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 
@@ -544,6 +612,7 @@ export type booking_foodsSelect<ExtArgs extends runtime.Types.Extensions.Interna
   food_id?: boolean
   food_quantity?: boolean
   id?: boolean
+  subtotal?: boolean
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_foods"]>
@@ -553,6 +622,7 @@ export type booking_foodsSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   food_id?: boolean
   food_quantity?: boolean
   id?: boolean
+  subtotal?: boolean
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_foods"]>
@@ -562,6 +632,7 @@ export type booking_foodsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   food_id?: boolean
   food_quantity?: boolean
   id?: boolean
+  subtotal?: boolean
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_foods"]>
@@ -571,9 +642,10 @@ export type booking_foodsSelectScalar = {
   food_id?: boolean
   food_quantity?: boolean
   id?: boolean
+  subtotal?: boolean
 }
 
-export type booking_foodsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "food_id" | "food_quantity" | "id", ExtArgs["result"]["booking_foods"]>
+export type booking_foodsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "food_id" | "food_quantity" | "id" | "subtotal", ExtArgs["result"]["booking_foods"]>
 export type booking_foodsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   foods?: boolean | Prisma.foodsDefaultArgs<ExtArgs>
@@ -598,6 +670,7 @@ export type $booking_foodsPayload<ExtArgs extends runtime.Types.Extensions.Inter
     food_id: number
     food_quantity: number
     id: number
+    subtotal: runtime.Decimal | null
   }, ExtArgs["result"]["booking_foods"]>
   composites: {}
 }
@@ -1027,6 +1100,7 @@ export interface booking_foodsFieldRefs {
   readonly food_id: Prisma.FieldRef<"booking_foods", 'Int'>
   readonly food_quantity: Prisma.FieldRef<"booking_foods", 'Int'>
   readonly id: Prisma.FieldRef<"booking_foods", 'Int'>
+  readonly subtotal: Prisma.FieldRef<"booking_foods", 'Decimal'>
 }
     
 

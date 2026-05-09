@@ -34,15 +34,15 @@ model bookings {
   pic_hp                                       String
   org_address                                  String
   org_name                                     String
-  org_state                                    String
-  org_type                                     states
+  org_state                                    states
+  org_type                                     org_categories
   quotation_id                                 String?
   slot_id                                      String
   booking_date                                 DateTime?          @db.Date
   booking_status                               booking_status?    @default(PENDING)
   discount_id                                  String?
   booking_addons                               booking_addons[]
-  booking_foods                                booking_foods?
+  booking_foods                                booking_foods[]
   booking_packages                             booking_packages[]
   discounts                                    discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: NoAction, onUpdate: NoAction, map: "discount_id_fkey")
   quotations_bookings_quotation_idToquotations quotations?        @relation("bookings_quotation_idToquotations", fields: [quotation_id], references: [quotation_id], onDelete: NoAction, onUpdate: NoAction, map: "quotation_id_fkey")
@@ -89,15 +89,17 @@ model booking_addons {
   addon_id       Int
   addon_quantity Int
   id             Int      @id @default(autoincrement())
+  subtotal       Decimal? @db.Decimal(10, 2)
   addons         addons   @relation(fields: [addon_id], references: [addon_id], onDelete: NoAction, onUpdate: NoAction, map: "addon_id_fkey")
   bookings       bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
 }
 
 model booking_foods {
-  booking_id    String   @unique
+  booking_id    String  
   food_id       Int
   food_quantity Int
   id            Int      @id @default(autoincrement())
+  subtotal      Decimal? @db.Decimal(10, 2)
   bookings      bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
   foods         foods    @relation(fields: [food_id], references: [food_id], onDelete: NoAction, onUpdate: NoAction, map: "food_id_fkey")
 }

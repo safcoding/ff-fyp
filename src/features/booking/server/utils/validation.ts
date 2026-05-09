@@ -1,4 +1,4 @@
-import { calculatePackagePaxTotal, calculatePaxTotal } from "./price-calculation";
+import { calculatePackagePaxTotal, calculatePaxTotal } from "./pax-calculation";
 import type { BookingFormInput } from "@/schemas/bookingSchemas";
 import type { ExtraBookingData } from "../bookingTypes";
 
@@ -13,14 +13,13 @@ export const validateBooking = (userInput: BookingFormInput, dbData: ExtraBookin
 
 const validatePackage = (selected: BookingFormInput,dbData: ExtraBookingData) => {
 
-  const packageIds = unique(selected.packages.map((pkg) => pkg.package_id))
   const unavailablePackage = dbData.packages.find((pkg) => !pkg.package_availability)
 
     if (selected.packages.length === 0){
         throw new Error("At least one package required")
     }
 
-    if (selected.packages.length !== packageIds.length) {
+    if (selected.packages.length !== dbData.packages.length) {
         throw new Error("Invalid package selection")
     }
 
@@ -78,3 +77,14 @@ const validateAddon = (selected: BookingFormInput, dbData: ExtraBookingData) => 
         throw new Error(`Selected addon is not available: ${unavailableAddon.addon_name}`)
     }
 }
+
+/* Slot validation to be added
+    const slot = await prisma.slots.findUnique({
+      where: { slot_id: data.slot_id },
+      select: { slot_id: true },
+    });
+
+    if (!slot) {
+      throw new Error("Invalid slot_id: slot not found");
+    }
+      */
