@@ -58,7 +58,7 @@ model foods {
 }
 
 model packages {
-  package_id           String             @id
+  package_id           String             @id @default(uuid())
   package_name         String
   package_availability Boolean
   package_note         String?

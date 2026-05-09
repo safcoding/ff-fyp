@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 
-import { getPackages } from "@/serverActions/packageActions"
+import { getPackages } from "@/features/package/server/packageActions"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const Route = createFileRoute("/packages")({ component: PackagesShowcasePage })

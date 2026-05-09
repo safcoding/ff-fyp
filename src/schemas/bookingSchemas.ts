@@ -21,7 +21,6 @@ export const bookingPackagesSchema = z.object({
         pax_non_my_kid: z.coerce.number().int().min(0),
         pax_non_my_senior: z.coerce.number().int().min(0),
         pax_non_my_oku: z.coerce.number().int().min(0),
-
 })
 
 export const bookingSchema = z.object({
@@ -56,8 +55,8 @@ export const createBookingSchema = bookingSchema.omit({
     pax_total: true,
 })
 
-export const bookingIdSchema = z.object({
-  booking_id: z.string().trim().min(1),
+export const bookingIdSchema = bookingSchema.pick({
+  booking_id: true,
 })
 
 export const availabilitySchema = z.object({
@@ -71,3 +70,4 @@ export type BookingAddonInput = z.infer<typeof bookingAddonSchema>
 export type BookingInput = z.infer<typeof bookingSchema>
 export type CreateBookingInput = z.infer<typeof createBookingSchema>
 export type BookingFormInput = CreateBookingInput | BookingInput
+export type BookingIdOnly = Pick<z.infer<typeof bookingSchema>, "booking_id">

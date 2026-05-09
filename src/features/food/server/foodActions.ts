@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
-import { foodSchema } from "@/schemas/foodSchemas"
+import { foodSchema, createFoodSchema, deleteFoodSchema } from "@/schemas/foodSchemas"
 
 
 export const getFoods = createServerFn({ method: "GET" }).handler(async () => {
@@ -14,7 +14,7 @@ export const getFoods = createServerFn({ method: "GET" }).handler(async () => {
 })
 
 export const createFood = createServerFn({ method: "POST" })
-  .inputValidator(foodSchema)
+  .inputValidator(createFoodSchema)
   .handler(async ({ data }) => {
     const created = await prisma.foods.create({
       data: {
@@ -41,7 +41,7 @@ export const updateFood = createServerFn({ method: "POST" })
   })
 
 export const deleteFood = createServerFn({ method: "POST" })
-  .inputValidator(foodSchema)
+  .inputValidator(deleteFoodSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.foods.delete({
       where: { food_id: data.food_id },

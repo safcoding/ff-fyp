@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
-import { addonSchema } from "@/schemas/addonSchemas"
+import { addonSchema,createAddonSchema, deleteAddonSchema } from "@/schemas/addonSchemas"
 
 export const getAddons = createServerFn({ method: "GET" }).handler(async () => {
   const addons = await prisma.addons.findMany({ orderBy: { addon_name: "asc" } })
@@ -15,7 +15,7 @@ export const getAddons = createServerFn({ method: "GET" }).handler(async () => {
 })
 
 export const createAddon = createServerFn({ method: "POST" })
-  .inputValidator(addonSchema)
+  .inputValidator(createAddonSchema)
   .handler(async ({ data }) => {
     const created = await prisma.addons.create({
       data: {
@@ -48,7 +48,7 @@ export const updateAddon = createServerFn({ method: "POST" })
   })
 
 export const deleteAddon = createServerFn({ method: "POST" })
-  .inputValidator(addonSchema)
+  .inputValidator(deleteAddonSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.addons.delete({
       where: { addon_id: data.addon_id },

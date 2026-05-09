@@ -1,12 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 import { toHHmm } from "@/lib/utils";
-import * as schema from "@/schemas/bookingSchemas";
 import { mapBookingToUi } from "@/features/booking/server/bookingMapper";
-import { loadBookingID, loadAllBookings, loadRelated } from "./bookingRepo";
-import { validateBooking } from "./utils/validation";
+import { loadBookingID, loadAllBookings } from "./bookingRepo";
 import { replaceBookingWithItems } from "./bookingRepo";
 import { prepareBookingWriteData } from "./utils/prepData";
+import * as schema from "@/schemas/bookingSchemas";
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()
@@ -23,25 +22,11 @@ export const getBookingById = createServerFn({ method: "POST" })
     }
 
     return mapBookingToUi(booking)
-  })
+})
 
 export const createBooking = createServerFn({ method: 'POST' })
   .inputValidator(schema.createBookingSchema)
   .handler(async ({ data }) => {
-
-    const related = await loadRelated(data);
-
-    validateBooking(data, related)
-
-    //can be refactored out but idk lazy rn (9/5 9pm)
-    const slot = await prisma.slots.findUnique({
-      where: { slot_id: data.slot_id },
-      select: { slot_id: true },
-    });
-
-    if (!slot) {
-      throw new Error("Invalid slot_id: slot not found");
-    }    
     const {
       bookingPrice,
       paxTotal,
@@ -97,7 +82,7 @@ export const createBooking = createServerFn({ method: 'POST' })
       },
     })
     return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}. Total price: ${newBooking.booking_price.toString()}`;
-  })
+})
 
 export const updateBooking = createServerFn({method: "POST"})
   .inputValidator(schema.bookingSchema)
@@ -105,12 +90,12 @@ export const updateBooking = createServerFn({method: "POST"})
 
     const writeData = await prepareBookingWriteData(data)
     const updated = await replaceBookingWithItems({
-      bookingId: data.booking_id,
+      booking_id: data.booking_id,
       data,
       ...writeData,
     })
     return `Updated Booking ${updated.booking_id}`
-  })
+})
 
 export const deleteBooking = createServerFn({ method: "POST" })
     .inputValidator(schema.bookingSchema)
@@ -120,7 +105,7 @@ export const deleteBooking = createServerFn({ method: "POST" })
       })
 
       return `Deleted booking ${deleted.booking_id}`
-    })
+})
 
 export const approveBooking = createServerFn({ method: "POST" })
   .inputValidator(schema.bookingSchema)
@@ -144,7 +129,7 @@ export const approveBooking = createServerFn({ method: "POST" })
     })
 
     return `Approved booking ${updated.booking_id}`
-  })
+})
   
 export const getBookingAvailability = createServerFn({ method: "POST" })
   .inputValidator(schema.availabilitySchema)
@@ -182,7 +167,7 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
 
     const activeBookings = monthBookings.filter((booking) => {
       const status = (booking.booking_status ?? "").toUpperCase()
-      return status !== "REJECTED" && status !== "CANCELLED"
+      return status !== "CANCELLED"
     })
 
     const bookedByDateAndSlot = new Map<string, Map<string, number>>()
@@ -249,4 +234,4 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
       date_statuses: dateStatuses,
       slots_for_date: slotsForDate,
     }
-  })
+})

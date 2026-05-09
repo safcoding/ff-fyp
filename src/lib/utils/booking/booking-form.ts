@@ -1,4 +1,4 @@
-import type { PackagePricing } from "@/serverActions/packageActions"
+import type { PackagePricing } from "@/features/package/server/packageActions"
 
 export type Step = 1 | 2 | 3 | 4 | 5
 

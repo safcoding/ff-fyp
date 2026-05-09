@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 
-import { getPackages, getPackagePricing } from "@/serverActions/packageActions"
+import { getPackages, getPackagePricing } from "@/features/package/server/packageActions"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
 import { StepIndicator } from "@/components/booking/StepIndicator"

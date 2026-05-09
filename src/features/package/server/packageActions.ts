@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start"
-import { packageSchema } from "@/schemas/packageSchemas"
+import { packageSchema, createPackageSchema, deletePackageSchema } from "@/schemas/packageSchemas"
 import { prisma } from "@/db"
 
 export type PackagePricing = {
@@ -51,7 +51,7 @@ export const getPackages = createServerFn({ method: "GET" }).handler(async () =>
 })
 
 export const createPackage = createServerFn({ method: "POST" })
-  .inputValidator(packageSchema)
+  .inputValidator(createPackageSchema)
   .handler(async ({ data }) => {
     const created = await prisma.packages.create({
       data: {
@@ -59,6 +59,7 @@ export const createPackage = createServerFn({ method: "POST" })
         package_note: data.package_note || null,
         package_features: data.package_features,
         package_availability: data.package_availability,
+
         price_my_adult: data.price_my_adult,
         price_my_kid: data.price_my_kid,
         price_my_senior: data.price_my_senior,
@@ -67,6 +68,8 @@ export const createPackage = createServerFn({ method: "POST" })
         price_non_my_kid: data.price_non_my_kid,
         price_non_my_senior: data.price_non_my_senior,
         price_non_my_oku: data.price_non_my_oku,
+
+        minimum_pax: data.minimum_pax
       },
     })
 
@@ -91,6 +94,7 @@ export const updatePackage = createServerFn({ method: "POST" })
         price_non_my_kid: data.price_non_my_kid,
         price_non_my_senior: data.price_non_my_senior,
         price_non_my_oku: data.price_non_my_oku,
+        minimum_pax: data.minimum_pax
       },
     })
 
@@ -98,7 +102,7 @@ export const updatePackage = createServerFn({ method: "POST" })
   })
 
 export const deletePackage = createServerFn({ method: "POST" })
-  .inputValidator(packageSchema)
+  .inputValidator(deletePackageSchema)
   .handler(async ({ data }) => {
     try {
       const deleted = await prisma.packages.delete({

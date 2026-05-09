@@ -6,7 +6,7 @@ import type { prepareBookingWriteData } from "./utils/prepData"
 type BookingWriteData = Awaited<ReturnType<typeof prepareBookingWriteData>>
 
 type ReplaceBookingWithItemsInput = BookingWriteData & {
-  bookingId: string
+  booking_id: string
   data: BookingInput
 }
 

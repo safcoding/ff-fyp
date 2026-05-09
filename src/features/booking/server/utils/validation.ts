@@ -77,7 +77,3 @@ const validateAddon = (selected: BookingFormInput, dbData: ExtraBookingData) => 
         throw new Error(`Selected addon is not available: ${unavailableAddon.addon_name}`)
     }
 }
-
-/* Slot validation to be added
-
-      */

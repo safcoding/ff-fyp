@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
-import { createSlot, deleteSlot, getSlotsAdmin, updateSlot } from "@/serverActions/slotActions"
+import { createSlot, deleteSlot, getSlotsAdmin, updateSlot } from "@/features/slot/server/slotActions"
 
 export const Route = createFileRoute("/admin/slots")({ component: SlotsPage })
 

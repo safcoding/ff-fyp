@@ -1,3 +1,4 @@
+import { prisma } from "@/db"
 import type { BookingFormInput } from "@/schemas/bookingSchemas"
 import { buildBookingPriceMaps } from "../bookingMapper"
 import { loadRelated } from "../bookingRepo"
@@ -14,6 +15,15 @@ export const prepareBookingWriteData = async (data: BookingFormInput) => {
   const related = await loadRelated(data)
 
   validateBooking(data, related)
+
+    const slot = await prisma.slots.findUnique({
+      where: { slot_id: data.slot_id },
+      select: { slot_id: true },
+    });
+
+    if (!slot) {
+      throw new Error("Invalid slot_id: slot not found");
+    }    
 
   const { packagePriceMap, foodPriceMap, addonPriceMap } =
     buildBookingPriceMaps(related)

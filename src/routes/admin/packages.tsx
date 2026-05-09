@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createPackage, deletePackage, getPackages, updatePackage } from "@/serverActions/packageActions"
+import { createPackage, deletePackage, getPackages, updatePackage } from "@/features/package/server/packageActions"
 
 export const Route = createFileRoute("/admin/packages")({ component: PackagesPage })
 
