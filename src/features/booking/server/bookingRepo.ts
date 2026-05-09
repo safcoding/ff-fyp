@@ -1,5 +1,14 @@
 import { prisma } from "@/db"
 import { bookingsInclude } from "./bookingMapper"
+import type { BookingInput } from "@/schemas/bookingSchemas"
+import type { prepareBookingWriteData } from "./utils/prepData"
+
+type BookingWriteData = Awaited<ReturnType<typeof prepareBookingWriteData>>
+
+type ReplaceBookingWithItemsInput = BookingWriteData & {
+  bookingId: string
+  data: BookingInput
+}
 
 export const loadAllBookings = async () => {
   return prisma.bookings.findMany({ include: bookingsInclude })
@@ -32,4 +41,71 @@ export const loadRelated = async (data: {
     ])
 
   return {packages, foods, addons}
+}
+
+export const replaceBookingWithItems = async ({
+  data,
+  bookingPrice,
+  paxTotal,
+  packageRows,
+  foodRows,
+  addonRows,
+}: ReplaceBookingWithItemsInput) => {
+  return prisma.$transaction(async (tx) => {
+      const booking = await tx.bookings.update({
+        where: { booking_id: data.booking_id },
+        data: {
+          booking_price: bookingPrice,
+          pax_total: paxTotal,
+          pic_name: data.pic_name,
+          pic_email: data.pic_email,
+          pic_hp: data.pic_hp,
+          org_address: data.org_address,
+          org_name: data.org_name,
+          org_state: data.org_state,
+          org_type: data.org_type,
+          booking_date: data.booking_date,
+          slot_id: data.slot_id,
+        },
+      })
+
+      await tx.booking_packages.deleteMany({
+        where: { booking_id: data.booking_id },
+      })
+
+      await tx.booking_addons.deleteMany({
+        where: { booking_id: data.booking_id },
+      })
+
+      await tx.booking_foods.deleteMany({
+        where: { booking_id: data.booking_id },
+      })
+
+      await tx.booking_packages.createMany({
+        data: packageRows.map((row) => ({
+          booking_id: data.booking_id,
+          ...row,
+        })),
+      })
+
+      if (addonRows.length > 0) {
+        await tx.booking_addons.createMany({
+          data: addonRows.map((row) => ({
+            booking_id: data.booking_id,
+            ...row,
+          })),
+        })
+      }
+
+      if (foodRows.length > 0) {
+        await tx.booking_foods.createMany({
+          data: foodRows.map((row) => ({
+            booking_id: data.booking_id,
+            ...row,
+          })),
+        })
+      }
+
+      return booking
+  })
 }

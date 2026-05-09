@@ -79,12 +79,5 @@ const validateAddon = (selected: BookingFormInput, dbData: ExtraBookingData) => 
 }
 
 /* Slot validation to be added
-    const slot = await prisma.slots.findUnique({
-      where: { slot_id: data.slot_id },
-      select: { slot_id: true },
-    });
 
-    if (!slot) {
-      throw new Error("Invalid slot_id: slot not found");
-    }
       */
