@@ -4,7 +4,8 @@ import { useState } from "react"
 
 import { getPackages, getPackagePricing } from "@/features/package/server/packageActions"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
-import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
+import { formatCurrency } from "@/lib/utils"
+import { createEmptyPackageSelection } from "@/lib/utils/booking/booking-form"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,8 @@ function BookingPackagePage() {
     queryKey: ["packages"],
     queryFn: () => getPackages(),
   })
+
+  const selectedPackageId = values.packages.length > 0 ? values.packages[0].package_id : ""
 
   if (!isHydrated) {
     return (
@@ -45,7 +48,7 @@ function BookingPackagePage() {
             onSubmit={(e) => {
               e.preventDefault()
 
-              if (!values.package_id) {
+              if (!selectedPackageId) {
                 setError("Please select a package to continue.")
                 return
               }
@@ -68,7 +71,7 @@ function BookingPackagePage() {
               <div className="grid gap-4 md:grid-cols-2">
                 {packagesQuery.data.map((pkg) => {
                   const pricing = getPackagePricing(pkg as unknown as Record<string, unknown>)
-                  const isSelected = values.package_id === pkg.package_id
+                  const isSelected = selectedPackageId === pkg.package_id
 
                   return (
                     <button
@@ -78,7 +81,12 @@ function BookingPackagePage() {
                         isSelected ? "border-black bg-slate-100" : "hover:bg-slate-50"
                       }`}
                       onClick={() => {
-                        updateField("package_id", pkg.package_id)
+                        const current = values.packages.length > 0 ? values.packages[0] : null
+                        const next =
+                          current && current.package_id === pkg.package_id
+                            ? current
+                            : createEmptyPackageSelection(pkg.package_id)
+                        updateField("packages", [next])
                       }}
                     >
                       <p className="font-medium">{pkg.package_name}</p>

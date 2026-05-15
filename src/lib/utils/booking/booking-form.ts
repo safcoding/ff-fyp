@@ -1,4 +1,5 @@
 import type { PackagePricing } from "@/features/package/server/packageActions"
+import { org_categories, states } from "@/generated/prisma/enums"
 
 export type Step = 1 | 2 | 3 | 4 | 5
 
@@ -12,7 +13,8 @@ export type FoodSelection = {
   quantity: number
 }
 
-export type FormValues = {
+export type PackageSelection = {
+  package_id: string
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -21,6 +23,9 @@ export type FormValues = {
   pax_non_my_kid: number
   pax_non_my_senior: number
   pax_non_my_oku: number
+}
+
+export type FormValues = {
   pic_name: string
   pic_email: string
   pic_hp: string
@@ -29,8 +34,8 @@ export type FormValues = {
   org_state: string
   org_type: string
   slot_id: string
-  package_id: string
   booking_date: string
+  packages: PackageSelection[]
   addons: AddonSelection[]
   foods: FoodSelection[]
 }
@@ -38,14 +43,6 @@ export type FormValues = {
 export const bookingDraftStorageKey = "booking-form-draft-v1"
 
 export const defaultFormValues: FormValues = {
-  pax_my_adult: 0,
-  pax_my_kid: 0,
-  pax_my_senior: 0,
-  pax_my_oku: 0,
-  pax_non_my_adult: 0,
-  pax_non_my_kid: 0,
-  pax_non_my_senior: 0,
-  pax_non_my_oku: 0,
   booking_date: "",
   pic_name: "",
   pic_email: "",
@@ -55,12 +52,12 @@ export const defaultFormValues: FormValues = {
   org_state: "",
   org_type: "",
   slot_id: "",
-  package_id: "",
+  packages: [],
   addons: [],
   foods: [],
 }
 
-export const paxFieldMeta: ReadonlyArray<{ name: keyof FormValues; label: string }> = [
+export const paxFieldMeta: ReadonlyArray<{ name: keyof PackageSelection; label: string }> = [
   { name: "pax_my_adult", label: "MY Adult" },
   { name: "pax_my_kid", label: "MY Kid" },
   { name: "pax_my_senior", label: "MY Senior" },
@@ -71,23 +68,53 @@ export const paxFieldMeta: ReadonlyArray<{ name: keyof FormValues; label: string
   { name: "pax_non_my_oku", label: "Non-MY OKU" },
 ]
 
+export type PaxTotals = Omit<PackageSelection, "package_id">
+
+export const createEmptyPackageSelection = (packageId: string): PackageSelection => ({
+  package_id: packageId,
+  pax_my_adult: 0,
+  pax_my_kid: 0,
+  pax_my_senior: 0,
+  pax_my_oku: 0,
+  pax_non_my_adult: 0,
+  pax_non_my_kid: 0,
+  pax_non_my_senior: 0,
+  pax_non_my_oku: 0,
+})
+
+const emptyPaxTotals: PaxTotals = {
+  pax_my_adult: 0,
+  pax_my_kid: 0,
+  pax_my_senior: 0,
+  pax_my_oku: 0,
+  pax_non_my_adult: 0,
+  pax_non_my_kid: 0,
+  pax_non_my_senior: 0,
+  pax_non_my_oku: 0,
+}
+
 export function computeTotal(
   values: FormValues,
-  pricing: PackagePricing | null,
+  packagePricingMap: Record<string, PackagePricing | undefined>,
   addons: Array<{ addon_id: number; addon_price: number }> = [],
   foods: Array<{ food_id: number; food_price: number }> = [],
 ): number {
-  if (!pricing) return 0
+  const packageTotal = values.packages.reduce((sum, pkg) => {
+    const pricing = packagePricingMap[pkg.package_id]
+    if (!pricing) return sum
 
-  const packageTotal =
-    values.pax_my_adult * pricing.price_my_adult +
-    values.pax_my_kid * pricing.price_my_kid +
-    values.pax_my_senior * pricing.price_my_senior +
-    values.pax_my_oku * pricing.price_my_oku +
-    values.pax_non_my_adult * pricing.price_non_my_adult +
-    values.pax_non_my_kid * pricing.price_non_my_kid +
-    values.pax_non_my_senior * pricing.price_non_my_senior +
-    values.pax_non_my_oku * pricing.price_non_my_oku
+    return (
+      sum +
+      pkg.pax_my_adult * pricing.price_my_adult +
+      pkg.pax_my_kid * pricing.price_my_kid +
+      pkg.pax_my_senior * pricing.price_my_senior +
+      pkg.pax_my_oku * pricing.price_my_oku +
+      pkg.pax_non_my_adult * pricing.price_non_my_adult +
+      pkg.pax_non_my_kid * pricing.price_non_my_kid +
+      pkg.pax_non_my_senior * pricing.price_non_my_senior +
+      pkg.pax_non_my_oku * pricing.price_non_my_oku
+    )
+  }, 0)
 
   const addonPriceMap = new Map(addons.map((addon) => [addon.addon_id, addon.addon_price]))
   const foodPriceMap = new Map(foods.map((food) => [food.food_id, food.food_price]))
@@ -105,23 +132,42 @@ export function computeTotal(
   return packageTotal + addonTotal + foodTotal
 }
 
+export function getPaxTotals(values: FormValues): PaxTotals {
+  return values.packages.reduce((sum, pkg) => {
+    return {
+      pax_my_adult: sum.pax_my_adult + pkg.pax_my_adult,
+      pax_my_kid: sum.pax_my_kid + pkg.pax_my_kid,
+      pax_my_senior: sum.pax_my_senior + pkg.pax_my_senior,
+      pax_my_oku: sum.pax_my_oku + pkg.pax_my_oku,
+      pax_non_my_adult: sum.pax_non_my_adult + pkg.pax_non_my_adult,
+      pax_non_my_kid: sum.pax_non_my_kid + pkg.pax_non_my_kid,
+      pax_non_my_senior: sum.pax_non_my_senior + pkg.pax_non_my_senior,
+      pax_non_my_oku: sum.pax_non_my_oku + pkg.pax_non_my_oku,
+    }
+  }, emptyPaxTotals)
+}
+
 export function getTotalVisitors(values: FormValues) {
+  const totals = getPaxTotals(values)
   return (
-    values.pax_my_adult +
-    values.pax_my_kid +
-    values.pax_my_senior +
-    values.pax_my_oku +
-    values.pax_non_my_adult +
-    values.pax_non_my_kid +
-    values.pax_non_my_senior +
-    values.pax_non_my_oku
+    totals.pax_my_adult +
+    totals.pax_my_kid +
+    totals.pax_my_senior +
+    totals.pax_my_oku +
+    totals.pax_non_my_adult +
+    totals.pax_non_my_kid +
+    totals.pax_non_my_senior +
+    totals.pax_non_my_oku
   )
 }
 
 export function validateDetails(values: FormValues): string | null {
-  if (getTotalVisitors(values) < 1) {
-    return "At least one visitor is required."
+  if (getTotalVisitors(values) < 20) {
+    return "At least 20 visitors are required."
   }
+
+  const allowedStates = new Set(Object.values(states))
+  const allowedOrgTypes = new Set(Object.values(org_categories))
 
   const requiredTextFields: Array<{ key: keyof FormValues; label: string }> = [
     { key: "pic_name", label: "Person in Charge Name" },
@@ -134,10 +180,18 @@ export function validateDetails(values: FormValues): string | null {
   ]
 
   for (const field of requiredTextFields) {
-    const value = String(values[field.key] ?? "").trim()
+    const value = String(values[field.key]).trim()
     if (!value) {
       return `${field.label} is required.`
     }
+  }
+
+  if (!allowedStates.has(values.org_state)) {
+    return "Please select a valid organization state."
+  }
+
+  if (!allowedOrgTypes.has(values.org_type)) {
+    return "Please select a valid organization type."
   }
 
   const email = values.pic_email.trim()

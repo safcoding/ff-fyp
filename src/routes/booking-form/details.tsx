@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 import { paxFieldMeta, validateDetails } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
@@ -8,6 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { org_categories, states } from "@/generated/prisma/enums"
 
 export const Route = createFileRoute("/booking-form/details")({ component: BookingDetailsPage })
 
@@ -15,6 +23,16 @@ function BookingDetailsPage() {
   const navigate = Route.useNavigate()
   const { values, updateField, isHydrated } = useBookingDraft()
   const [error, setError] = useState<string | null>(null)
+  const selectedPackage = values.packages.length > 0 ? values.packages[0] : null
+
+  const stateOptions = useMemo(() => Object.values(states), [])
+  const orgTypeOptions = useMemo(() => Object.values(org_categories), [])
+
+  const formatEnumLabel = (value: string) =>
+    value
+      .replace(/_/g, " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase())
 
   if (!isHydrated) {
     return (
@@ -38,6 +56,12 @@ function BookingDetailsPage() {
             className="space-y-6"
             onSubmit={(e) => {
               e.preventDefault()
+
+              if (!selectedPackage) {
+                setError("Please select a package before entering visitor details.")
+                return
+              }
+
               const message = validateDetails(values)
               if (message) {
                 setError(message)
@@ -63,8 +87,17 @@ function BookingDetailsPage() {
                     type="number"
                     min={0}
                     step={1}
-                    value={Number(values[fieldMeta.name])}
-                    onChange={(e) => updateField(fieldMeta.name, Number(e.target.value || 0))}
+                    value={Number(selectedPackage ? selectedPackage[fieldMeta.name] : 0)}
+                    onChange={(e) => {
+                      if (!selectedPackage) return
+                      const nextValue = Math.max(0, Math.floor(Number(e.target.value || 0)))
+                      updateField("packages", [
+                        {
+                          ...selectedPackage,
+                          [fieldMeta.name]: nextValue,
+                        },
+                      ])
+                    }}
                   />
                 </div>
               ))}
@@ -116,17 +149,34 @@ function BookingDetailsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="org_state">Organization State</Label>
-                <Input id="org_state" value={values.org_state} onChange={(e) => updateField("org_state", e.target.value)} />
+                <Select value={values.org_state} onValueChange={(value) => updateField("org_state", value)}>
+                  <SelectTrigger className="w-full" id="org_state">
+                    <SelectValue placeholder="Select a state" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stateOptions.map((state) => (
+                      <SelectItem key={state} value={state}>
+                        {formatEnumLabel(state)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="org_type">Organization Type</Label>
-                <Input
-                  id="org_type"
-                  maxLength={20}
-                  value={values.org_type}
-                  onChange={(e) => updateField("org_type", e.target.value.toUpperCase())}
-                />
+                <Select value={values.org_type} onValueChange={(value) => updateField("org_type", value)}>
+                  <SelectTrigger className="w-full" id="org_type">
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {orgTypeOptions.map((orgType) => (
+                      <SelectItem key={orgType} value={orgType}>
+                        {formatEnumLabel(orgType)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
