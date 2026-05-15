@@ -66,7 +66,6 @@ export const calculateBookingTotal =(
 ):number => {
   const packagesTotal = packageRows.reduce((sum, row) => {
     const price = packagePrices[row.package_id]
-    if (!price) return sum
     return sum + calculatePackageSubtotal(row, price)
   }, 0)
 
