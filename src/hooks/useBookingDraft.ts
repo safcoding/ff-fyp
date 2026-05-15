@@ -6,6 +6,7 @@ import {
   defaultFormValues,
 } from "@/lib/utils/booking/booking-form"
 import type { FormValues } from "@/lib/utils/booking/booking-form"
+import { org_categories, states } from "@/generated/prisma/enums"
 
 const paxKeys = [
   "pax_my_adult",
@@ -19,6 +20,31 @@ const paxKeys = [
 ] as const
 
 type LegacyDraft = Partial<FormValues> & Record<string, unknown>
+
+const stateValues = new Set(Object.values(states))
+const orgTypeValues = new Set(Object.values(org_categories))
+
+function normalizeEnumValue(value: unknown, allowed: Set<string>): string {
+  if (typeof value !== "string") {
+    return ""
+  }
+
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return ""
+  }
+
+  if (allowed.has(trimmed)) {
+    return trimmed
+  }
+
+  const cleaned = trimmed
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+
+  return allowed.has(cleaned) ? cleaned : ""
+}
 
 function normalizeDraft(raw: unknown): Partial<FormValues> | null {
   if (!raw || typeof raw !== "object") {
@@ -44,12 +70,18 @@ function normalizeDraft(raw: unknown): Partial<FormValues> | null {
 
       return {
         ...draft,
+        org_state: normalizeEnumValue(draft.org_state, stateValues),
+        org_type: normalizeEnumValue(draft.org_type, orgTypeValues),
         packages: [selection],
       }
     }
   }
 
-  return draft
+  return {
+    ...draft,
+    org_state: normalizeEnumValue(draft.org_state, stateValues),
+    org_type: normalizeEnumValue(draft.org_type, orgTypeValues),
+  }
 }
 
 export function useBookingDraft() {

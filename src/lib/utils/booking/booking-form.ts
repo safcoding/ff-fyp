@@ -1,4 +1,5 @@
 import type { PackagePricing } from "@/features/package/server/packageActions"
+import { org_categories, states } from "@/generated/prisma/enums"
 
 export type Step = 1 | 2 | 3 | 4 | 5
 
@@ -165,6 +166,9 @@ export function validateDetails(values: FormValues): string | null {
     return "At least 20 visitors are required."
   }
 
+  const allowedStates = new Set(Object.values(states))
+  const allowedOrgTypes = new Set(Object.values(org_categories))
+
   const requiredTextFields: Array<{ key: keyof FormValues; label: string }> = [
     { key: "pic_name", label: "Person in Charge Name" },
     { key: "pic_email", label: "Person in Charge Email" },
@@ -180,6 +184,14 @@ export function validateDetails(values: FormValues): string | null {
     if (!value) {
       return `${field.label} is required.`
     }
+  }
+
+  if (!allowedStates.has(values.org_state)) {
+    return "Please select a valid organization state."
+  }
+
+  if (!allowedOrgTypes.has(values.org_type)) {
+    return "Please select a valid organization type."
   }
 
   const email = values.pic_email.trim()

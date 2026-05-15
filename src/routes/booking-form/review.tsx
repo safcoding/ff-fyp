@@ -78,6 +78,10 @@ function BookingReviewPage() {
     [values, packagePricingMap, addonsQuery.data, foodsQuery.data],
   )
 
+  const addonById = useMemo(() => {
+    return new Map((addonsQuery.data ?? []).map((addon) => [addon.addon_id, addon]))
+  }, [addonsQuery.data])
+
   const foodById = useMemo(() => {
     return new Map((foodsQuery.data ?? []).map((food) => [food.food_id, food]))
   }, [foodsQuery.data])
