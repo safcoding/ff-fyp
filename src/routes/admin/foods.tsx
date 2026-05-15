@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
-import { createFood, deleteFood, getFoods, updateFood } from "@/serverActions/foodActions"
+import { createFood, deleteFood, getFoods, updateFood } from "@/features/food/server/foodActions"
 
 export const Route = createFileRoute("/admin/foods")({ component: FoodsPage })
 

@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 
-import { getPackages, getPackagePricing } from "@/serverActions/packageActions"
+import { getPackages, getPackagePricing } from "@/features/package/server/packageActions"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
-import { formatCurrency } from "@/lib/booking-utils"
+import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 
 import { Button } from "@/components/ui/button"
@@ -35,7 +35,7 @@ function BookingPackagePage() {
       <Card>
         <CardHeader>
           <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 2 of 4: Select a package.</CardDescription>
+          <CardDescription>Step 2 of 5: Select a package.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={2} />

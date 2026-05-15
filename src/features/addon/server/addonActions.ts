@@ -1,18 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
-import z from "zod"
-
 import { prisma } from "@/db"
-
-const addonSchema = z.object({
-  addon_name: z.string().trim().min(1),
-  addon_desc: z.string().trim().min(1),
-  addon_price: z.coerce.number().nonnegative(),
-  addon_avail: z.boolean(),
-})
-
-const secretAddonSchema = addonSchema.extend({
-  addon_id: z.coerce.number(),
-})
+import { addonSchema,createAddonSchema, deleteAddonSchema } from "@/schemas/addonSchemas"
 
 export const getAddons = createServerFn({ method: "GET" }).handler(async () => {
   const addons = await prisma.addons.findMany({ orderBy: { addon_name: "asc" } })
@@ -27,7 +15,7 @@ export const getAddons = createServerFn({ method: "GET" }).handler(async () => {
 })
 
 export const createAddon = createServerFn({ method: "POST" })
-  .inputValidator(addonSchema)
+  .inputValidator(createAddonSchema)
   .handler(async ({ data }) => {
     const created = await prisma.addons.create({
       data: {
@@ -44,7 +32,7 @@ export const createAddon = createServerFn({ method: "POST" })
 
 
 export const updateAddon = createServerFn({ method: "POST" })
-  .inputValidator(secretAddonSchema)
+  .inputValidator(addonSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.addons.update({
       where: { addon_id: data.addon_id },
@@ -60,7 +48,7 @@ export const updateAddon = createServerFn({ method: "POST" })
   })
 
 export const deleteAddon = createServerFn({ method: "POST" })
-  .inputValidator(secretAddonSchema)
+  .inputValidator(deleteAddonSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.addons.delete({
       where: { addon_id: data.addon_id },

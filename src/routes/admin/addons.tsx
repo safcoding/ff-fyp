@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createAddon, deleteAddon, getAddons, updateAddon } from "@/serverActions/addonActions"
+import { createAddon, deleteAddon, getAddons, updateAddon } from "@/features/addon/server/addonActions"
 
 export const Route = createFileRoute("/admin/addons")({ component: AddonsPage })
   const queryClient = new QueryClient()

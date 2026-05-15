@@ -56,7 +56,12 @@ export const ModelName = {
   bookings: 'bookings',
   foods: 'foods',
   packages: 'packages',
-  slots: 'slots'
+  slots: 'slots',
+  booking_addons: 'booking_addons',
+  booking_foods: 'booking_foods',
+  quotations: 'quotations',
+  booking_packages: 'booking_packages',
+  discounts: 'discounts'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -101,14 +106,7 @@ export const BookingsScalarFieldEnum = {
   booking_id: 'booking_id',
   booking_price: 'booking_price',
   created_at: 'created_at',
-  pax_my_adult: 'pax_my_adult',
-  pax_my_kid: 'pax_my_kid',
-  pax_my_senior: 'pax_my_senior',
-  pax_my_oku: 'pax_my_oku',
-  pax_non_my_adult: 'pax_non_my_adult',
-  pax_non_my_kid: 'pax_non_my_kid',
-  pax_non_my_senior: 'pax_non_my_senior',
-  pax_non_my_oku: 'pax_non_my_oku',
+  pax_total: 'pax_total',
   pic_name: 'pic_name',
   pic_email: 'pic_email',
   pic_hp: 'pic_hp',
@@ -118,9 +116,9 @@ export const BookingsScalarFieldEnum = {
   org_type: 'org_type',
   quotation_id: 'quotation_id',
   slot_id: 'slot_id',
-  package_id: 'package_id',
   booking_date: 'booking_date',
-  booking_status: 'booking_status'
+  booking_status: 'booking_status',
+  discount_id: 'discount_id'
 } as const
 
 export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]
@@ -147,7 +145,9 @@ export const PackagesScalarFieldEnum = {
   price_non_my_adult: 'price_non_my_adult',
   price_non_my_kid: 'price_non_my_kid',
   price_non_my_senior: 'price_non_my_senior',
-  price_non_my_oku: 'price_non_my_oku'
+  price_non_my_oku: 'price_non_my_oku',
+  package_features: 'package_features',
+  minimum_pax: 'minimum_pax'
 } as const
 
 export type PackagesScalarFieldEnum = (typeof PackagesScalarFieldEnum)[keyof typeof PackagesScalarFieldEnum]
@@ -162,6 +162,63 @@ export const SlotsScalarFieldEnum = {
 } as const
 
 export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof SlotsScalarFieldEnum]
+
+
+export const Booking_addonsScalarFieldEnum = {
+  booking_id: 'booking_id',
+  addon_id: 'addon_id',
+  addon_quantity: 'addon_quantity',
+  id: 'id',
+  subtotal: 'subtotal'
+} as const
+
+export type Booking_addonsScalarFieldEnum = (typeof Booking_addonsScalarFieldEnum)[keyof typeof Booking_addonsScalarFieldEnum]
+
+
+export const Booking_foodsScalarFieldEnum = {
+  booking_id: 'booking_id',
+  food_id: 'food_id',
+  food_quantity: 'food_quantity',
+  id: 'id',
+  subtotal: 'subtotal'
+} as const
+
+export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
+
+
+export const QuotationsScalarFieldEnum = {
+  quotation_id: 'quotation_id',
+  booking_id: 'booking_id'
+} as const
+
+export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof typeof QuotationsScalarFieldEnum]
+
+
+export const Booking_packagesScalarFieldEnum = {
+  booking_id: 'booking_id',
+  package_id: 'package_id',
+  pax_my_adult: 'pax_my_adult',
+  pax_my_kid: 'pax_my_kid',
+  pax_my_senior: 'pax_my_senior',
+  pax_my_oku: 'pax_my_oku',
+  pax_non_my_adult: 'pax_non_my_adult',
+  pax_non_my_kid: 'pax_non_my_kid',
+  pax_non_my_senior: 'pax_non_my_senior',
+  pax_non_my_oku: 'pax_non_my_oku',
+  subtotal: 'subtotal',
+  id: 'id'
+} as const
+
+export type Booking_packagesScalarFieldEnum = (typeof Booking_packagesScalarFieldEnum)[keyof typeof Booking_packagesScalarFieldEnum]
+
+
+export const DiscountsScalarFieldEnum = {
+  discount_id: 'discount_id',
+  discount_type: 'discount_type',
+  discount_amount: 'discount_amount'
+} as const
+
+export type DiscountsScalarFieldEnum = (typeof DiscountsScalarFieldEnum)[keyof typeof DiscountsScalarFieldEnum]
 
 
 export const SortOrder = {

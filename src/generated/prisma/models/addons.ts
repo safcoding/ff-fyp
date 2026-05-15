@@ -220,6 +220,7 @@ export type addonsWhereInput = {
   addon_desc?: Prisma.StringFilter<"addons"> | string
   addon_price?: Prisma.DecimalFilter<"addons"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   addon_avail?: Prisma.BoolFilter<"addons"> | boolean
+  booking_addons?: Prisma.Booking_addonsListRelationFilter
 }
 
 export type addonsOrderByWithRelationInput = {
@@ -228,6 +229,7 @@ export type addonsOrderByWithRelationInput = {
   addon_desc?: Prisma.SortOrder
   addon_price?: Prisma.SortOrder
   addon_avail?: Prisma.SortOrder
+  booking_addons?: Prisma.booking_addonsOrderByRelationAggregateInput
 }
 
 export type addonsWhereUniqueInput = Prisma.AtLeast<{
@@ -239,6 +241,7 @@ export type addonsWhereUniqueInput = Prisma.AtLeast<{
   addon_desc?: Prisma.StringFilter<"addons"> | string
   addon_price?: Prisma.DecimalFilter<"addons"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   addon_avail?: Prisma.BoolFilter<"addons"> | boolean
+  booking_addons?: Prisma.Booking_addonsListRelationFilter
 }, "addon_id">
 
 export type addonsOrderByWithAggregationInput = {
@@ -270,6 +273,7 @@ export type addonsCreateInput = {
   addon_desc: string
   addon_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   addon_avail: boolean
+  booking_addons?: Prisma.booking_addonsCreateNestedManyWithoutAddonsInput
 }
 
 export type addonsUncheckedCreateInput = {
@@ -278,6 +282,7 @@ export type addonsUncheckedCreateInput = {
   addon_desc: string
   addon_price: runtime.Decimal | runtime.DecimalJsLike | number | string
   addon_avail: boolean
+  booking_addons?: Prisma.booking_addonsUncheckedCreateNestedManyWithoutAddonsInput
 }
 
 export type addonsUpdateInput = {
@@ -285,6 +290,7 @@ export type addonsUpdateInput = {
   addon_desc?: Prisma.StringFieldUpdateOperationsInput | string
   addon_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   addon_avail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  booking_addons?: Prisma.booking_addonsUpdateManyWithoutAddonsNestedInput
 }
 
 export type addonsUncheckedUpdateInput = {
@@ -293,6 +299,7 @@ export type addonsUncheckedUpdateInput = {
   addon_desc?: Prisma.StringFieldUpdateOperationsInput | string
   addon_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   addon_avail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  booking_addons?: Prisma.booking_addonsUncheckedUpdateManyWithoutAddonsNestedInput
 }
 
 export type addonsCreateManyInput = {
@@ -352,6 +359,11 @@ export type addonsSumOrderByAggregateInput = {
   addon_price?: Prisma.SortOrder
 }
 
+export type AddonsScalarRelationFilter = {
+  is?: Prisma.addonsWhereInput
+  isNot?: Prisma.addonsWhereInput
+}
+
 export type DecimalFieldUpdateOperationsInput = {
   set?: runtime.Decimal | runtime.DecimalJsLike | number | string
   increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -364,6 +376,95 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type addonsCreateNestedOneWithoutBooking_addonsInput = {
+  create?: Prisma.XOR<Prisma.addonsCreateWithoutBooking_addonsInput, Prisma.addonsUncheckedCreateWithoutBooking_addonsInput>
+  connectOrCreate?: Prisma.addonsCreateOrConnectWithoutBooking_addonsInput
+  connect?: Prisma.addonsWhereUniqueInput
+}
+
+export type addonsUpdateOneRequiredWithoutBooking_addonsNestedInput = {
+  create?: Prisma.XOR<Prisma.addonsCreateWithoutBooking_addonsInput, Prisma.addonsUncheckedCreateWithoutBooking_addonsInput>
+  connectOrCreate?: Prisma.addonsCreateOrConnectWithoutBooking_addonsInput
+  upsert?: Prisma.addonsUpsertWithoutBooking_addonsInput
+  connect?: Prisma.addonsWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.addonsUpdateToOneWithWhereWithoutBooking_addonsInput, Prisma.addonsUpdateWithoutBooking_addonsInput>, Prisma.addonsUncheckedUpdateWithoutBooking_addonsInput>
+}
+
+export type addonsCreateWithoutBooking_addonsInput = {
+  addon_name: string
+  addon_desc: string
+  addon_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  addon_avail: boolean
+}
+
+export type addonsUncheckedCreateWithoutBooking_addonsInput = {
+  addon_id?: number
+  addon_name: string
+  addon_desc: string
+  addon_price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  addon_avail: boolean
+}
+
+export type addonsCreateOrConnectWithoutBooking_addonsInput = {
+  where: Prisma.addonsWhereUniqueInput
+  create: Prisma.XOR<Prisma.addonsCreateWithoutBooking_addonsInput, Prisma.addonsUncheckedCreateWithoutBooking_addonsInput>
+}
+
+export type addonsUpsertWithoutBooking_addonsInput = {
+  update: Prisma.XOR<Prisma.addonsUpdateWithoutBooking_addonsInput, Prisma.addonsUncheckedUpdateWithoutBooking_addonsInput>
+  create: Prisma.XOR<Prisma.addonsCreateWithoutBooking_addonsInput, Prisma.addonsUncheckedCreateWithoutBooking_addonsInput>
+  where?: Prisma.addonsWhereInput
+}
+
+export type addonsUpdateToOneWithWhereWithoutBooking_addonsInput = {
+  where?: Prisma.addonsWhereInput
+  data: Prisma.XOR<Prisma.addonsUpdateWithoutBooking_addonsInput, Prisma.addonsUncheckedUpdateWithoutBooking_addonsInput>
+}
+
+export type addonsUpdateWithoutBooking_addonsInput = {
+  addon_name?: Prisma.StringFieldUpdateOperationsInput | string
+  addon_desc?: Prisma.StringFieldUpdateOperationsInput | string
+  addon_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  addon_avail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type addonsUncheckedUpdateWithoutBooking_addonsInput = {
+  addon_id?: Prisma.IntFieldUpdateOperationsInput | number
+  addon_name?: Prisma.StringFieldUpdateOperationsInput | string
+  addon_desc?: Prisma.StringFieldUpdateOperationsInput | string
+  addon_price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  addon_avail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+
+/**
+ * Count Type AddonsCountOutputType
+ */
+
+export type AddonsCountOutputType = {
+  booking_addons: number
+}
+
+export type AddonsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  booking_addons?: boolean | AddonsCountOutputTypeCountBooking_addonsArgs
+}
+
+/**
+ * AddonsCountOutputType without action
+ */
+export type AddonsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AddonsCountOutputType
+   */
+  select?: Prisma.AddonsCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AddonsCountOutputType without action
+ */
+export type AddonsCountOutputTypeCountBooking_addonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.booking_addonsWhereInput
+}
 
 
 export type addonsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -372,6 +473,8 @@ export type addonsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   addon_desc?: boolean
   addon_price?: boolean
   addon_avail?: boolean
+  booking_addons?: boolean | Prisma.addons$booking_addonsArgs<ExtArgs>
+  _count?: boolean | Prisma.AddonsCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["addons"]>
 
 export type addonsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -399,10 +502,18 @@ export type addonsSelectScalar = {
 }
 
 export type addonsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"addon_id" | "addon_name" | "addon_desc" | "addon_price" | "addon_avail", ExtArgs["result"]["addons"]>
+export type addonsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  booking_addons?: boolean | Prisma.addons$booking_addonsArgs<ExtArgs>
+  _count?: boolean | Prisma.AddonsCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type addonsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type addonsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $addonsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "addons"
-  objects: {}
+  objects: {
+    booking_addons: Prisma.$booking_addonsPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     addon_id: number
     addon_name: string
@@ -803,6 +914,7 @@ readonly fields: addonsFieldRefs;
  */
 export interface Prisma__addonsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  booking_addons<T extends Prisma.addons$booking_addonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.addons$booking_addonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$booking_addonsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -854,6 +966,10 @@ export type addonsFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
+  /**
    * Filter, which addons to fetch.
    */
   where: Prisma.addonsWhereUniqueInput
@@ -872,6 +988,10 @@ export type addonsFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
+  /**
    * Filter, which addons to fetch.
    */
   where: Prisma.addonsWhereUniqueInput
@@ -889,6 +1009,10 @@ export type addonsFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the addons
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
   /**
    * Filter, which addons to fetch.
    */
@@ -938,6 +1062,10 @@ export type addonsFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
+  /**
    * Filter, which addons to fetch.
    */
   where?: Prisma.addonsWhereInput
@@ -986,6 +1114,10 @@ export type addonsFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
+  /**
    * Filter, which addons to fetch.
    */
   where?: Prisma.addonsWhereInput
@@ -1028,6 +1160,10 @@ export type addonsCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the addons
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
   /**
    * The data needed to create a addons.
    */
@@ -1076,6 +1212,10 @@ export type addonsUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the addons
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
   /**
    * The data needed to update a addons.
    */
@@ -1143,6 +1283,10 @@ export type addonsUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
+  /**
    * The filter to search for the addons to update in case it exists.
    */
   where: Prisma.addonsWhereUniqueInput
@@ -1169,6 +1313,10 @@ export type addonsDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
+  /**
    * Filter which addons to delete.
    */
   where: Prisma.addonsWhereUniqueInput
@@ -1189,6 +1337,30 @@ export type addonsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * addons.booking_addons
+ */
+export type addons$booking_addonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the booking_addons
+   */
+  select?: Prisma.booking_addonsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the booking_addons
+   */
+  omit?: Prisma.booking_addonsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.booking_addonsInclude<ExtArgs> | null
+  where?: Prisma.booking_addonsWhereInput
+  orderBy?: Prisma.booking_addonsOrderByWithRelationInput | Prisma.booking_addonsOrderByWithRelationInput[]
+  cursor?: Prisma.booking_addonsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Booking_addonsScalarFieldEnum | Prisma.Booking_addonsScalarFieldEnum[]
+}
+
+/**
  * addons without action
  */
 export type addonsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1200,4 +1372,8 @@ export type addonsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the addons
    */
   omit?: Prisma.addonsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.addonsInclude<ExtArgs> | null
 }

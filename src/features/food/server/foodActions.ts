@@ -1,12 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
-import z from "zod"
-
 import { prisma } from "@/db"
+import { foodSchema, createFoodSchema, deleteFoodSchema } from "@/schemas/foodSchemas"
 
-const foodSchema = z.object({
-  food_name: z.string().trim().min(1),
-  food_price: z.coerce.number().nonnegative(),
-})
 
 export const getFoods = createServerFn({ method: "GET" }).handler(async () => {
   const foods = await prisma.foods.findMany({ orderBy: { food_name: "asc" } })
@@ -19,7 +14,7 @@ export const getFoods = createServerFn({ method: "GET" }).handler(async () => {
 })
 
 export const createFood = createServerFn({ method: "POST" })
-  .inputValidator(foodSchema)
+  .inputValidator(createFoodSchema)
   .handler(async ({ data }) => {
     const created = await prisma.foods.create({
       data: {
@@ -31,16 +26,8 @@ export const createFood = createServerFn({ method: "POST" })
     return `Created food ${created.food_name}`
   })
 
-const updateFoodSchema = foodSchema.extend({
-  food_id: z.coerce.number().int().positive(),
-})
-
-const deleteFoodSchema = z.object({
-  food_id: z.coerce.number().int().positive(),
-})
-
 export const updateFood = createServerFn({ method: "POST" })
-  .inputValidator(updateFoodSchema)
+  .inputValidator(foodSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.foods.update({
       where: { food_id: data.food_id },

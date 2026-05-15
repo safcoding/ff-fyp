@@ -9,7 +9,55 @@
 * 🟢 You can import this file directly.
 */
 
+export const booking_status = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  POSTPONED: 'POSTPONED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type booking_status = (typeof booking_status)[keyof typeof booking_status]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const discount_types = {
+  PERCENTAGE: 'PERCENTAGE',
+  FLAT: 'FLAT'
+} as const
+
+export type discount_types = (typeof discount_types)[keyof typeof discount_types]
+
+
+export const org_categories = {
+  CORPORATE: 'CORPORATE',
+  GOVERNMENT: 'GOVERNMENT',
+  UNIVERSITY_COLLEGE: 'UNIVERSITY_COLLEGE',
+  INTERNATIONAL_SCHOOL: 'INTERNATIONAL_SCHOOL',
+  SECONDARY_SCHOOL: 'SECONDARY_SCHOOL',
+  PRIMARY_SCHOOL: 'PRIMARY_SCHOOL',
+  KINDERGARTEN: 'KINDERGARTEN',
+  TRAVEL_AGENCY: 'TRAVEL_AGENCY',
+  PERSONAL_GROUP: 'PERSONAL_GROUP'
+} as const
+
+export type org_categories = (typeof org_categories)[keyof typeof org_categories]
+
+
+export const states = {
+  JOHOR: 'JOHOR',
+  MELAKA: 'MELAKA',
+  NEGERI_SEMBILAN: 'NEGERI_SEMBILAN',
+  SELANGOR: 'SELANGOR',
+  KUALA_LUMPUR: 'KUALA_LUMPUR',
+  PUTRAJAYA: 'PUTRAJAYA',
+  PERAK: 'PERAK',
+  KEDAH: 'KEDAH',
+  PERLIS: 'PERLIS',
+  PULAU_PINANG: 'PULAU_PINANG',
+  TERENGGANU: 'TERENGGANU',
+  PAHANG: 'PAHANG',
+  SABAH: 'SABAH',
+  SARAWAK: 'SARAWAK',
+  LABUAN: 'LABUAN'
+} as const
+
+export type states = (typeof states)[keyof typeof states]

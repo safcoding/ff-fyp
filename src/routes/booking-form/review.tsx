@@ -2,11 +2,13 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useMemo } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
-import { formatCurrency } from "@/lib/booking-utils"
-import { computeTotal, getTotalVisitors, paxFieldMeta } from "@/lib/booking-form"
+import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
+import { computeTotal, getTotalVisitors, paxFieldMeta } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
-import { getPackagePricing, getPackages } from "@/serverActions/packageActions"
-import { createBooking, getBookings, getSlots } from "@/serverActions/bookingActions"
+import { getAddons } from "@/features/addon/server/addonActions"
+import { getFoods } from "@/features/food/server/foodActions"
+import { getPackagePricing, getPackages } from "@/features/package/server/packageActions"
+import { createBooking, getBookings, getSlots } from "@/features/booking/server/bookingActions"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 
 import { Button } from "@/components/ui/button"
@@ -34,6 +36,16 @@ function BookingReviewPage() {
     queryFn: () => getSlots(),
   })
 
+  const addonsQuery = useQuery({
+    queryKey: ["addons"],
+    queryFn: () => getAddons(),
+  })
+
+  const foodsQuery = useQuery({
+    queryKey: ["foods"],
+    queryFn: () => getFoods(),
+  })
+
   const createBookingMutation = useMutation({
     mutationFn: createBooking,
     onSuccess: async () => {
@@ -59,7 +71,18 @@ function BookingReviewPage() {
   )
 
   const totalVisitors = getTotalVisitors(values)
-  const estimatedTotal = useMemo(() => computeTotal(values, selectedPackagePricing), [values, selectedPackagePricing])
+  const estimatedTotal = useMemo(
+    () => computeTotal(values, selectedPackagePricing, addonsQuery.data ?? [], foodsQuery.data ?? []),
+    [values, selectedPackagePricing, addonsQuery.data, foodsQuery.data],
+  )
+
+  const addonById = useMemo(() => {
+    return new Map((addonsQuery.data ?? []).map((addon) => [addon.addon_id, addon]))
+  }, [addonsQuery.data])
+
+  const foodById = useMemo(() => {
+    return new Map((foodsQuery.data ?? []).map((food) => [food.food_id, food]))
+  }, [foodsQuery.data])
 
   if (!isHydrated) {
     return (
@@ -74,10 +97,10 @@ function BookingReviewPage() {
       <Card>
         <CardHeader>
           <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 4 of 4: Review and submit.</CardDescription>
+          <CardDescription>Step 5 of 5: Review and submit.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <StepIndicator step={4} />
+          <StepIndicator step={5} />
 
           <form
             className="space-y-6"
@@ -89,8 +112,8 @@ function BookingReviewPage() {
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-slate-600">Review your booking before submission.</p>
-              <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/details" })}>
-                Back to details
+              <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/addons-foods" })}>
+                Back to add-ons
               </Button>
             </div>
 
@@ -126,6 +149,57 @@ function BookingReviewPage() {
                     </p>
                   ))}
                   <p className="pt-2 font-medium">Total Visitors: {totalVisitors}</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Add-ons and Foods</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  {values.addons.length === 0 && values.foods.length === 0 ? (
+                    <p className="text-slate-600">No add-ons or foods selected.</p>
+                  ) : (
+                    <>
+                      {values.addons.length > 0 ? (
+                        <div>
+                          <p className="font-medium">Add-ons</p>
+                          <div className="mt-1 space-y-1">
+                            {values.addons.map((item) => {
+                              const addon = addonById.get(item.addon_id)
+                              if (!addon) {
+                                return null
+                              }
+                              return (
+                                <p key={`addon-${item.addon_id}`}>
+                                  {addon.addon_name} x {item.quantity}
+                                </p>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {values.foods.length > 0 ? (
+                        <div>
+                          <p className="font-medium">Foods</p>
+                          <div className="mt-1 space-y-1">
+                            {values.foods.map((item) => {
+                              const food = foodById.get(item.food_id)
+                              if (!food) {
+                                return null
+                              }
+                              return (
+                                <p key={`food-${item.food_id}`}>
+                                  {food.food_name} x {item.quantity}
+                                </p>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      ) : null}
+                    </>
+                  )}
                 </CardContent>
               </Card>
 

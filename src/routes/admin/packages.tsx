@@ -11,13 +11,14 @@ import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createPackage, deletePackage, getPackages, updatePackage } from "@/serverActions/packageActions"
+import { createPackage, deletePackage, getPackages, updatePackage } from "@/features/package/server/packageActions"
 
 export const Route = createFileRoute("/admin/packages")({ component: PackagesPage })
 
 type PackageForm = {
   package_name: string
   package_note: string
+  package_features: string
   package_availability: boolean
   price_my_adult: number
   price_my_kid: number
@@ -32,6 +33,7 @@ type PackageForm = {
 const defaultValues: PackageForm = {
   package_name: "",
   package_note: "",
+  package_features: "",
   package_availability: true,
   price_my_adult: 0,
   price_my_kid: 0,
@@ -54,9 +56,32 @@ const priceFields: ReadonlyArray<{ name: keyof PackageForm; label: string }> = [
   { name: "price_non_my_oku", label: "Non-MY OKU" },
 ]
 
+type PackageData = {
+  package_id: string
+  package_name: string
+  package_note: string | null
+  package_features: string[]
+  package_availability: boolean
+  price_my_adult: number
+  price_my_kid: number
+  price_my_senior: number
+  price_my_oku: number
+  price_non_my_adult: number
+  price_non_my_kid: number
+  price_non_my_senior: number
+  price_non_my_oku: number
+}
+
+function normalizeFeatures(value: string) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
 function PackagesPage() {
   const queryClient = useQueryClient()
-  const [editingPackage, setEditingPackage] = useState<(PackageForm & { package_id: string }) | null>(null)
+  const [editingPackage, setEditingPackage] = useState<PackageData | null>(null)
   const [editValues, setEditValues] = useState<PackageForm>(defaultValues)
   const [deletingPackage, setDeletingPackage] = useState<{ package_id: string; package_name: string } | null>(null)
   
@@ -91,16 +116,23 @@ function PackagesPage() {
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
-      await createPackageMutation.mutateAsync({ data: value })
+      const package_features = normalizeFeatures(value.package_features)
+      await createPackageMutation.mutateAsync({
+        data: {
+          ...value,
+          package_features,
+        },
+      })
       form.reset()
     },
   })
 
-  function openEditModal(pkg: { package_id: string } & PackageForm) {
+  function openEditModal(pkg: PackageData) {
     setEditingPackage(pkg)
     setEditValues({
       package_name: pkg.package_name,
-      package_note: pkg.package_note,
+      package_note: pkg.package_note ?? "",
+      package_features: pkg.package_features.join("\n"),
       package_availability: pkg.package_availability,
       price_my_adult: pkg.price_my_adult,
       price_my_kid: pkg.price_my_kid,
@@ -174,6 +206,30 @@ function PackagesPage() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field
+                name="package_features"
+                validators={{
+                  onBlur: ({ value }) =>
+                    normalizeFeatures(value).length < 1 ? "Add at least one feature." : undefined,
+                }}
+              >
+                {(field) => (
+                  <div className="space-y-2 md:col-span-2">
+                    <Label htmlFor={field.name}>Package Features (one per line)</Label>
+                    <Textarea
+                      id={field.name}
+                      rows={4}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    {!field.state.meta.isValid ? (
+                      <em role="alert">{field.state.meta.errors.join(", ")}</em>
+                    ) : null}
                   </div>
                 )}
               </form.Field>
@@ -266,10 +322,15 @@ function PackagesPage() {
             if (!editingPackage) {
               return
             }
+            const package_features = normalizeFeatures(editValues.package_features)
+            if (package_features.length < 1) {
+              return
+            }
             void updatePackageMutation.mutateAsync({
               data: {
                 package_id: editingPackage.package_id,
                 ...editValues,
+                package_features,
               },
             })
           }}
@@ -302,6 +363,16 @@ function PackagesPage() {
                 id="edit-package-note"
                 value={editValues.package_note}
                 onChange={(e) => setEditValues((prev) => ({ ...prev, package_note: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="edit-package-features">Package Features (one per line)</Label>
+              <Textarea
+                id="edit-package-features"
+                rows={4}
+                value={editValues.package_features}
+                onChange={(e) => setEditValues((prev) => ({ ...prev, package_features: e.target.value }))}
               />
             </div>
           </div>
