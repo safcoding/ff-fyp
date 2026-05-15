@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 
-import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
+import { formatCurrency } from "@/lib/utils"
 import { computeTotal } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { getAddons } from "@/features/addon/server/addonActions"
@@ -37,19 +37,18 @@ function BookingAddonsFoodsPage() {
     queryFn: () => getPackages(),
   })
 
-  const selectedPackage = useMemo(
-    () => (packagesQuery.data ?? []).find((pkg) => pkg.package_id === values.package_id),
-    [packagesQuery.data, values.package_id],
-  )
-
-  const selectedPackagePricing = useMemo(
-    () => (selectedPackage ? getPackagePricing(selectedPackage as unknown as Record<string, unknown>) : null),
-    [selectedPackage],
-  )
+  const packagePricingMap = useMemo(() => {
+    return Object.fromEntries(
+      (packagesQuery.data ?? []).map((pkg) => [
+        pkg.package_id,
+        getPackagePricing(pkg as unknown as Record<string, unknown>),
+      ])
+    )
+  }, [packagesQuery.data])
 
   const estimatedTotal = useMemo(
-    () => computeTotal(values, selectedPackagePricing, addonsQuery.data ?? [], foodsQuery.data ?? []),
-    [values, selectedPackagePricing, addonsQuery.data, foodsQuery.data],
+    () => computeTotal(values, packagePricingMap, addonsQuery.data ?? [], foodsQuery.data ?? []),
+    [values, packagePricingMap, addonsQuery.data, foodsQuery.data],
   )
 
   if (!isHydrated) {
@@ -72,7 +71,8 @@ function BookingAddonsFoodsPage() {
   }
 
   function updateFoodQuantity(foodId: number, quantity: number) {
-    const nextQty = Math.max(0, Math.floor(Number(quantity) || 0))
+    const parsed = Math.floor(Number(quantity) || 0)
+    const nextQty = parsed > 0 ? Math.max(parsed, 20) : 0
     const next = values.foods.filter((item) => item.food_id !== foodId)
 
     if (nextQty > 0) {
@@ -196,6 +196,7 @@ function BookingAddonsFoodsPage() {
                                   value={quantity}
                                   onChange={(e) => updateFoodQuantity(food.food_id, Number(e.target.value || 0))}
                                 />
+                                <p className="text-xs text-slate-500">Minimum 20 per food selection.</p>
                               </div>
                             </div>
                           </div>

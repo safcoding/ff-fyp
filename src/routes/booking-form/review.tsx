@@ -2,13 +2,14 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useMemo } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
-import { formatCurrency } from "@/features/booking/server/utils/price-calculation"
-import { computeTotal, getTotalVisitors, paxFieldMeta } from "@/lib/utils/booking/booking-form"
+import { formatCurrency } from "@/lib/utils"
+import { computeTotal, getPaxTotals, getTotalVisitors, paxFieldMeta } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { getAddons } from "@/features/addon/server/addonActions"
 import { getFoods } from "@/features/food/server/foodActions"
 import { getPackagePricing, getPackages } from "@/features/package/server/packageActions"
-import { createBooking, getBookings, getSlots } from "@/features/booking/server/bookingActions"
+import { createBooking, getBookings } from "@/features/booking/server/bookingActions"
+import { getSlots } from "@/features/slot/server/slotActions"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 
 import { Button } from "@/components/ui/button"
@@ -60,29 +61,30 @@ function BookingReviewPage() {
     [slotsQuery.data, values.slot_id],
   )
 
-  const selectedPackage = useMemo(
-    () => (packagesQuery.data ?? []).find((pkg) => pkg.package_id === values.package_id),
-    [packagesQuery.data, values.package_id],
-  )
-
-  const selectedPackagePricing = useMemo(
-    () => (selectedPackage ? getPackagePricing(selectedPackage as unknown as Record<string, unknown>) : null),
-    [selectedPackage],
-  )
+  const packagePricingMap = useMemo(() => {
+    return Object.fromEntries(
+      (packagesQuery.data ?? []).map((pkg) => [
+        pkg.package_id,
+        getPackagePricing(pkg as unknown as Record<string, unknown>),
+      ])
+    )
+  }, [packagesQuery.data])
 
   const totalVisitors = getTotalVisitors(values)
-  const estimatedTotal = useMemo(
-    () => computeTotal(values, selectedPackagePricing, addonsQuery.data ?? [], foodsQuery.data ?? []),
-    [values, selectedPackagePricing, addonsQuery.data, foodsQuery.data],
-  )
+  const paxTotals = getPaxTotals(values)
 
-  const addonById = useMemo(() => {
-    return new Map((addonsQuery.data ?? []).map((addon) => [addon.addon_id, addon]))
-  }, [addonsQuery.data])
+  const estimatedTotal = useMemo(
+    () => computeTotal(values, packagePricingMap, addonsQuery.data ?? [], foodsQuery.data ?? []),
+    [values, packagePricingMap, addonsQuery.data, foodsQuery.data],
+  )
 
   const foodById = useMemo(() => {
     return new Map((foodsQuery.data ?? []).map((food) => [food.food_id, food]))
   }, [foodsQuery.data])
+
+  const packageById = useMemo(() => {
+    return new Map((packagesQuery.data ?? []).map((pkg) => [pkg.package_id, pkg]))
+  }, [packagesQuery.data])
 
   if (!isHydrated) {
     return (
@@ -133,8 +135,19 @@ function BookingReviewPage() {
                   <CardTitle className="text-base">Package</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1 text-sm">
-                  <p>{selectedPackage?.package_name ?? "-"}</p>
-                  {selectedPackage?.package_note ? <p className="text-slate-600">{selectedPackage.package_note}</p> : null}
+                  {values.packages.length === 0 ? (
+                    <p className="text-slate-600">No package selected.</p>
+                  ) : (
+                    values.packages.map((pkg) => {
+                      const info = packageById.get(pkg.package_id)
+                      return (
+                        <div key={pkg.package_id} className="space-y-1">
+                          <p>{info?.package_name ?? pkg.package_id}</p>
+                          {info?.package_note ? <p className="text-slate-600">{info.package_note}</p> : null}
+                        </div>
+                      )
+                    })
+                  )}
                 </CardContent>
               </Card>
 
@@ -145,7 +158,7 @@ function BookingReviewPage() {
                 <CardContent className="space-y-1 text-sm">
                   {paxFieldMeta.map((meta) => (
                     <p key={meta.name}>
-                      {meta.label}: {Number(values[meta.name])}
+                      {meta.label}: {Number(paxTotals[meta.name])}
                     </p>
                   ))}
                   <p className="pt-2 font-medium">Total Visitors: {totalVisitors}</p>

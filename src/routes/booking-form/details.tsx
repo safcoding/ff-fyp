@@ -15,6 +15,7 @@ function BookingDetailsPage() {
   const navigate = Route.useNavigate()
   const { values, updateField, isHydrated } = useBookingDraft()
   const [error, setError] = useState<string | null>(null)
+  const selectedPackage = values.packages.length > 0 ? values.packages[0] : null
 
   if (!isHydrated) {
     return (
@@ -38,6 +39,12 @@ function BookingDetailsPage() {
             className="space-y-6"
             onSubmit={(e) => {
               e.preventDefault()
+
+              if (!selectedPackage) {
+                setError("Please select a package before entering visitor details.")
+                return
+              }
+
               const message = validateDetails(values)
               if (message) {
                 setError(message)
@@ -63,8 +70,17 @@ function BookingDetailsPage() {
                     type="number"
                     min={0}
                     step={1}
-                    value={Number(values[fieldMeta.name])}
-                    onChange={(e) => updateField(fieldMeta.name, Number(e.target.value || 0))}
+                    value={Number(selectedPackage ? selectedPackage[fieldMeta.name] : 0)}
+                    onChange={(e) => {
+                      if (!selectedPackage) return
+                      const nextValue = Math.max(0, Math.floor(Number(e.target.value || 0)))
+                      updateField("packages", [
+                        {
+                          ...selectedPackage,
+                          [fieldMeta.name]: nextValue,
+                        },
+                      ])
+                    }}
                   />
                 </div>
               ))}
