@@ -1,12 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/db";
 import { toHHmm } from "@/lib/utils";
-import { mapBookingToUi } from "@/features/booking/server/bookingMapper";
-import { loadBookingID, loadAllBookings } from "./bookingRepo";
-import { replaceBookingWithItems } from "./bookingRepo";
+import { bookingsInclude, mapBookingToUi } from "@/features/booking/server/bookingMapper";
+import { loadBookingID, loadAllBookings, replaceBookingWithItems } from "./bookingRepo";
 import { prepareBookingWriteData } from "./utils/prepData";
 import * as schema from "@/schemas/bookingSchemas";
 import { approveBookingSchema } from "@/schemas/discountSchemas";
+import { sendBookingApprovedEmail } from "./utils/bookingEmail";
 
 function applyDiscount(total: number, discount: { discount_type: "PERCENTAGE" | "FLAT"; discount_amount: unknown } | null) {
   if (!discount) {
@@ -159,6 +159,17 @@ export const approveBooking = createServerFn({ method: "POST" })
         discount_id: discount?.discount_id ?? null,
       },
     })
+
+    const fullBooking = await prisma.bookings.findUnique({
+      where: { booking_id: updated.booking_id },
+      include: bookingsInclude,
+    })
+
+    if (!fullBooking) {
+      throw new Error("Booking not found after approval")
+    }
+
+    await sendBookingApprovedEmail(fullBooking, discount, data.staff_comment ?? null)
 
     return discount
       ? `Approved booking ${updated.booking_id} with discount ${discount.discount_id}`

@@ -26,4 +26,5 @@ export const approveBookingSchema = z.object({
     .trim()
     .transform((value) => value.toUpperCase())
     .optional(),
+  staff_comment: z.string().trim().min(1).max(1000).optional(),
 })
