@@ -43,6 +43,13 @@ export const bookingsInclude = {
       slot_name: true,
     },
   },
+  discounts: {
+    select: {
+      discount_id: true,
+      discount_type: true,
+      discount_amount: true,
+    },
+  },
 } satisfies Prisma.bookingsInclude
 
 export type BookingWithRelations = Prisma.bookingsGetPayload<{
@@ -73,6 +80,9 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
     booking_price: b.booking_price.toString(),
     booking_date: b.booking_date,
     booking_status: b.booking_status,
+    discount_id: b.discount_id,
+    discount_type: b.discounts?.discount_type ?? null,
+    discount_amount: b.discounts ? Number(b.discounts.discount_amount) : null,
     quotation_id: b.quotation_id,
     slot_id: b.slot_id,
     slot_name: b.slots?.slot_name ?? null,

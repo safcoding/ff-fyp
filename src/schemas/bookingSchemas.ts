@@ -59,6 +59,8 @@ export const bookingIdSchema = bookingSchema.pick({
   booking_id: true,
 })
 
+export const deleteBookingSchema = bookingIdSchema
+
 export const availabilitySchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),

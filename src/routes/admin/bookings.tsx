@@ -7,6 +7,7 @@ import {
   getBookingById,
   getBookings,
 } from "@/features/booking/server/bookingActions"
+import { getDiscounts } from "@/features/discount/server/discountActions"
 import { buildQuotationPdfBlob } from "@/components/booking/QuotationPdf"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { DeleteDialog } from "@/components/deleteDialog"
@@ -21,10 +22,16 @@ function BookingPage() {
   const [expandedBookingId, setExpandedBookingId] = useState<string | null>(null)
   const [deletingBooking, setDeletingBooking] = useState<{ booking_id: string; pic_name: string } | null>(null)
   const [approvingBooking, setApprovingBooking] = useState<{ booking_id: string; pic_name: string } | null>(null)
+  const [approvalDiscountId, setApprovalDiscountId] = useState("")
 
   const bookingQuery = useQuery({
     queryKey: ["admin-bookings"],
     queryFn: getBookings,
+  })
+
+  const discountsQuery = useQuery({
+    queryKey: ["admin-discounts"],
+    queryFn: () => getDiscounts(),
   })
 
   const deleteBookingMutation = useMutation({
@@ -76,7 +83,10 @@ function BookingPage() {
     }
 
     approveBookingMutation.mutate({
-      data: { booking_id: approvingBooking.booking_id },
+      data: {
+        booking_id: approvingBooking.booking_id,
+        discount_id: approvalDiscountId || undefined,
+      },
     })
   }
 
@@ -161,6 +171,7 @@ function BookingPage() {
                             <p><span className="font-medium">Package:</span> {booking.package_id}</p>
                             <p><span className="font-medium">Quotation:</span> {booking.quotation_id ?? "-"}</p>
                             <p><span className="font-medium">Price:</span> {booking.booking_price}</p>
+                            <p><span className="font-medium">Discount:</span> {booking.discount_id ?? "-"}</p>
                           </div>
 
                           <div className="rounded-md bg-muted/30 p-3 space-y-1">
@@ -233,6 +244,7 @@ function BookingPage() {
                                   booking_id: booking.booking_id,
                                   pic_name: booking.pic_name,
                                 })
+                                setApprovalDiscountId(booking.discount_id ?? "")
                               }}
                             >
                               Approve Booking
@@ -268,6 +280,7 @@ function BookingPage() {
         onOpenChange={(open) => {
           if (!open) {
             setApprovingBooking(null)
+            setApprovalDiscountId("")
           }
         }}
         onConfirm={confirmApprove}
@@ -277,7 +290,33 @@ function BookingPage() {
         title="Approve booking?"
         description={`Please confirm all details are correct for ${approvingBooking?.pic_name ?? "this booking"}. This will update status to APPROVED.`}
         confirmLabel="Confirm approval"
-      />
+      >
+        <div className="space-y-2">
+          <label htmlFor="approval-discount" className="text-sm font-medium">
+            Discount Code
+          </label>
+          <select
+            id="approval-discount"
+            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            value={approvalDiscountId}
+            disabled={approveBookingMutation.isPending || discountsQuery.isPending}
+            onChange={(e) => setApprovalDiscountId(e.target.value)}
+          >
+            <option value="">No discount</option>
+            {discountsQuery.data?.map((discount) => (
+              <option key={discount.discount_id} value={discount.discount_id}>
+                {discount.discount_id} -{" "}
+                {discount.discount_type === "PERCENTAGE"
+                  ? `${discount.discount_amount}%`
+                  : `RM ${discount.discount_amount.toFixed(2)}`}
+              </option>
+            ))}
+          </select>
+          {discountsQuery.isError ? (
+            <p className="text-sm text-red-600">{discountsQuery.error.message}</p>
+          ) : null}
+        </div>
+      </DeleteDialog>
 
       {approveBookingMutation.isError ? (
         <p className="text-sm text-red-600">{approveBookingMutation.error.message}</p>

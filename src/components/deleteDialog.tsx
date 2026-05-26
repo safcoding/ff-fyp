@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Modal } from "@/components/ui/modal"
+import type { ReactNode } from "react"
 
 type DeleteDialogProps = {
   open: boolean
@@ -12,6 +13,7 @@ type DeleteDialogProps = {
   cancelLabel?: string
   pendingLabel?: string
   confirmVariant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  children?: ReactNode
 }
 
 export function DeleteDialog({
@@ -25,10 +27,12 @@ export function DeleteDialog({
   cancelLabel = "Cancel",
   pendingLabel = "Deleting...",
   confirmVariant = "destructive",
+  children,
 }: DeleteDialogProps) {
   return (
     <Modal open={open} title={title} description={description} onClose={() => onOpenChange(false)}>
       <div className="space-y-4">
+        {children}
         <div className="flex gap-2">
           <Button
             type="button"

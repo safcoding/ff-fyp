@@ -6,6 +6,21 @@ import { loadBookingID, loadAllBookings } from "./bookingRepo";
 import { replaceBookingWithItems } from "./bookingRepo";
 import { prepareBookingWriteData } from "./utils/prepData";
 import * as schema from "@/schemas/bookingSchemas";
+import { approveBookingSchema } from "@/schemas/discountSchemas";
+
+function applyDiscount(total: number, discount: { discount_type: "PERCENTAGE" | "FLAT"; discount_amount: unknown } | null) {
+  if (!discount) {
+    return total
+  }
+
+  const amount = Number(discount.discount_amount)
+  const discounted =
+    discount.discount_type === "PERCENTAGE"
+      ? total - total * (amount / 100)
+      : total - amount
+
+  return Math.max(0, Number(discounted.toFixed(2)))
+}
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()
@@ -98,7 +113,7 @@ export const updateBooking = createServerFn({method: "POST"})
 })
 
 export const deleteBooking = createServerFn({ method: "POST" })
-    .inputValidator(schema.bookingSchema)
+    .inputValidator(schema.deleteBookingSchema)
     .handler(async ({ data }) => {
       const deleted = await prisma.bookings.delete({
         where: {booking_id: data.booking_id },
@@ -108,11 +123,11 @@ export const deleteBooking = createServerFn({ method: "POST" })
 })
 
 export const approveBooking = createServerFn({ method: "POST" })
-  .inputValidator(schema.bookingSchema)
+  .inputValidator(approveBookingSchema)
   .handler(async ({ data }) => {
     const booking = await prisma.bookings.findUnique({
       where: { booking_id: data.booking_id },
-      select: { booking_status: true },
+      select: { booking_status: true, booking_price: true },
     })
 
     if (!booking) {
@@ -123,12 +138,31 @@ export const approveBooking = createServerFn({ method: "POST" })
       throw new Error("Only PENDING bookings can be approved")
     }
 
+    const discount = data.discount_id
+      ? await prisma.discounts.findUnique({
+          where: { discount_id: data.discount_id },
+          select: { discount_id: true, discount_type: true, discount_amount: true },
+        })
+      : null
+
+    if (data.discount_id && !discount) {
+      throw new Error("Discount code not found")
+    }
+
+    const bookingPrice = applyDiscount(Number(booking.booking_price), discount)
+
     const updated = await prisma.bookings.update({
       where: { booking_id: data.booking_id },
-      data: { booking_status: "APPROVED" },
+      data: {
+        booking_status: "APPROVED",
+        booking_price: bookingPrice,
+        discount_id: discount?.discount_id ?? null,
+      },
     })
 
-    return `Approved booking ${updated.booking_id}`
+    return discount
+      ? `Approved booking ${updated.booking_id} with discount ${discount.discount_id}`
+      : `Approved booking ${updated.booking_id}`
 })
   
 export const getBookingAvailability = createServerFn({ method: "POST" })
