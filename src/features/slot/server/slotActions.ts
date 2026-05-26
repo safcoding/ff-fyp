@@ -1,15 +1,15 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
 import { toHHmm } from "@/lib/utils"
-import { slotSchema } from "@/schemas/slotSchemas"
+import { deleteSlotSchema, slotSchema } from "@/schemas/slotSchemas"
 import { toIsoDateTimeForTimeColumn } from "@/lib/utils"
-
   export const getSlots = createServerFn({ method: "GET" }).handler(async () => {
     const slots = await prisma.slots.findMany({
       select: {
         slot_id: true,
         slot_name: true,
         slot_capacity: true,
+        slot_type: true
       },
       orderBy: { slot_name: "asc" },
     });
@@ -26,6 +26,7 @@ export const getSlotsAdmin = createServerFn({ method: "GET" }).handler(async () 
     slot_start: toHHmm(slot.slot_start),
     slot_end: toHHmm(slot.slot_end),
     slot_capacity: slot.slot_capacity,
+    slot_type: slot.slot_type
   }))
 })
 
@@ -39,6 +40,7 @@ export const createSlot = createServerFn({ method: "POST" })
         slot_start: toIsoDateTimeForTimeColumn(data.slot_start),
         slot_end: toIsoDateTimeForTimeColumn(data.slot_end),
         slot_capacity: data.slot_capacity,
+        slot_type: data.slot_type
       },
     })
 
@@ -55,13 +57,14 @@ export const updateSlot = createServerFn({ method: "POST" })
         slot_start: toIsoDateTimeForTimeColumn(data.slot_start),
         slot_end: toIsoDateTimeForTimeColumn(data.slot_end),
         slot_capacity: data.slot_capacity,
+        slot_type: data.slot_type
       },
     })
     return `Updated slot ${updated.slot_name}`
   })
 
 export const deleteSlot = createServerFn({ method: "POST" })
-  .inputValidator(slotSchema)
+  .inputValidator(deleteSlotSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.slots.delete({
       where: { slot_id: data.slot_id },

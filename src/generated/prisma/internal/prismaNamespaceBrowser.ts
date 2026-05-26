@@ -159,7 +159,8 @@ export const SlotsScalarFieldEnum = {
   slot_name: 'slot_name',
   slot_start: 'slot_start',
   slot_end: 'slot_end',
-  slot_capacity: 'slot_capacity'
+  slot_capacity: 'slot_capacity',
+  slot_type: 'slot_type'
 } as const
 
 export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof SlotsScalarFieldEnum]

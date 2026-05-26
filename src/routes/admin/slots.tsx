@@ -9,7 +9,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { createSlot, deleteSlot, getSlotsAdmin, updateSlot } from "@/features/slot/server/slotActions"
+import { slot_types } from "@/generated/prisma/enums"
 
 export const Route = createFileRoute("/admin/slots")({ component: SlotsPage })
 
@@ -19,6 +27,7 @@ type SlotForm = {
   slot_start: string
   slot_end: string
   slot_capacity: number
+  slot_type: slot_types | ""
 }
 
 const defaultValues: SlotForm = {
@@ -27,7 +36,10 @@ const defaultValues: SlotForm = {
   slot_start: "09:00",
   slot_end: "10:00",
   slot_capacity: 1,
+  slot_type: ""
 }
+
+const slotTypeOptions = Object.values(slot_types)
 
 function SlotsPage() {
   const queryClient = useQueryClient()
@@ -67,19 +79,39 @@ function SlotsPage() {
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
+      if (!value.slot_type) {
+        return
+      }
       await createSlotMutation.mutateAsync({ data: value })
       form.reset()
     },
   })
 
-  function openEditModal(pkg: { slot_id: string } & SlotForm) {
-    setEditingSlot(pkg)
-    setEditValues({
+  function openEditModal(pkg: {
+    slot_id: string
+    slot_name: string
+    slot_start: string
+    slot_end: string
+    slot_capacity: number
+    slot_type: slot_types | null
+  }) {
+    const normalized: SlotForm = {
       slot_id: pkg.slot_id,
       slot_name: pkg.slot_name,
       slot_start: pkg.slot_start,
       slot_end: pkg.slot_end,
       slot_capacity: pkg.slot_capacity,
+      slot_type: pkg.slot_type ?? "",
+    }
+
+    setEditingSlot(normalized)
+    setEditValues({
+      slot_id: normalized.slot_id,
+      slot_name: normalized.slot_name,
+      slot_start: normalized.slot_start,
+      slot_end: normalized.slot_end,
+      slot_capacity: normalized.slot_capacity,
+      slot_type: normalized.slot_type,
     })
   }
 
@@ -138,6 +170,38 @@ function SlotsPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {!field.state.meta.isValid && (
+                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                  )}
+                </div>
+              )}
+            </form.Field>
+
+            <form.Field 
+            name="slot_type"
+            validators={{
+              onBlur: ({ value }) =>
+                value.length < 1 ? 'Slot Type Required' : undefined,
+            }}            
+            >
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor={field.name}>Slot Type</Label>
+                  <Select
+                    value={field.state.value}
+                    onValueChange={(value) => field.handleChange(value as slot_types)}
+                  >
+                    <SelectTrigger id={field.name}>
+                      <SelectValue placeholder="Select slot type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {slotTypeOptions.map((slotType) => (
+                        <SelectItem key={slotType} value={slotType}>
+                          {slotType}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {!field.state.meta.isValid && (
                     <em role="alert">{field.state.meta.errors.join(', ')}</em>
                   )}
@@ -219,6 +283,7 @@ function SlotsPage() {
               )}
             </form.Field>
 
+
             <div className="md:col-span-2 space-y-2">
               <Button type="submit" disabled={createSlotMutation.isPending}>
                 {createSlotMutation.isPending ? "Creating slot..." : "Create slot"}
@@ -287,6 +352,9 @@ function SlotsPage() {
             if (!editingSlot) {
               return
             }
+            if (!editValues.slot_type) {
+              return
+            }
             void updateSlotMutation.mutateAsync({ data: editValues })
           }}
         >
@@ -334,6 +402,25 @@ function SlotsPage() {
               value={editValues.slot_end}
               onChange={(e) => setEditValues((prev) => ({ ...prev, slot_end: e.target.value }))}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-slot-type">Slot Type</Label>
+            <Select
+              value={editValues.slot_type}
+              onValueChange={(value) => setEditValues((prev) => ({ ...prev, slot_type: value as slot_types }))}
+            >
+              <SelectTrigger id="edit-slot-type">
+                <SelectValue placeholder="Select slot type" />
+              </SelectTrigger>
+              <SelectContent>
+                {slotTypeOptions.map((slotType) => (
+                  <SelectItem key={slotType} value={slotType}>
+                    {slotType}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="md:col-span-2 space-y-2">

@@ -20,7 +20,6 @@ function buildBookingLines(booking: BookingWithRelations) {
   lines.push(`Type: ${booking.org_type}`)
   lines.push(`State: ${booking.org_state}`)
   lines.push("")
-
   lines.push("Visitors:")
   for (const pkg of booking.booking_packages) {
     lines.push(
@@ -75,7 +74,7 @@ export function buildBookingApprovalText(
   const total = formatCurrency(Number(booking.booking_price))
 
   return [
-    "Your booking has been approved.",
+    "Your booking has been approved!",
     "",
     ...bookingLines,
     "",
@@ -120,7 +119,7 @@ export function buildBookingApprovalHtml(
             <td style="padding:8px 0; font-weight:600; color:#111827;">${escapeHtml(booking.slots?.slot_name ?? booking.slot_id)}</td>
           </tr>
           <tr>
-            <td style="padding:8px 0; color:#6b7280;">PIC Name</td>
+            <td style="padding:8px 0; color:#6b7280;">Person In Charge (PIC)</td>
             <td style="padding:8px 0; font-weight:600; color:#111827;">${escapeHtml(booking.pic_name)}</td>
           </tr>
           <tr>

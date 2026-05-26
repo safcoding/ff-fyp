@@ -77,11 +77,12 @@ model packages {
 }
 
 model slots {
-  slot_id       String     @id
+  slot_id       String      @id
   slot_name     String
-  slot_start    DateTime   @db.Time(6)
-  slot_end      DateTime   @db.Time(6)
+  slot_start    DateTime    @db.Time(6)
+  slot_end      DateTime    @db.Time(6)
   slot_capacity Int
+  slot_type     slot_types?
   bookings      bookings[]
 }
 
@@ -176,4 +177,9 @@ enum states {
   SABAH
   SARAWAK
   LABUAN
+}
+
+enum slot_types {
+  GUIDED
+  UNGUIDED
 }

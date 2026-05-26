@@ -61,3 +61,11 @@ export const states = {
 } as const
 
 export type states = (typeof states)[keyof typeof states]
+
+
+export const slot_types = {
+  GUIDED: 'GUIDED',
+  UNGUIDED: 'UNGUIDED'
+} as const
+
+export type slot_types = (typeof slot_types)[keyof typeof slot_types]

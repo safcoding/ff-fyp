@@ -1346,7 +1346,8 @@ export const SlotsScalarFieldEnum = {
   slot_name: 'slot_name',
   slot_start: 'slot_start',
   slot_end: 'slot_end',
-  slot_capacity: 'slot_capacity'
+  slot_capacity: 'slot_capacity',
+  slot_type: 'slot_type'
 } as const
 
 export type SlotsScalarFieldEnum = (typeof SlotsScalarFieldEnum)[keyof typeof SlotsScalarFieldEnum]
@@ -1541,6 +1542,20 @@ export type Enumorg_categoriesFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'org_categories[]'
  */
 export type ListEnumorg_categoriesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'org_categories[]'>
+    
+
+
+/**
+ * Reference to a field of type 'slot_types'
+ */
+export type Enumslot_typesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'slot_types'>
+    
+
+
+/**
+ * Reference to a field of type 'slot_types[]'
+ */
+export type ListEnumslot_typesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'slot_types[]'>
     
 
 

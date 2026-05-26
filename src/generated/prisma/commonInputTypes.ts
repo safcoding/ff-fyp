@@ -280,6 +280,23 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
 }
 
+export type Enumslot_typesNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.slot_types | Prisma.Enumslot_typesFieldRefInput<$PrismaModel> | null
+  in?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumslot_typesNullableFilter<$PrismaModel> | $Enums.slot_types | null
+}
+
+export type Enumslot_typesNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.slot_types | Prisma.Enumslot_typesFieldRefInput<$PrismaModel> | null
+  in?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumslot_typesNullableWithAggregatesFilter<$PrismaModel> | $Enums.slot_types | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumslot_typesNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumslot_typesNullableFilter<$PrismaModel>
+}
+
 export type DecimalNullableFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -601,6 +618,23 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumslot_typesNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.slot_types | Prisma.Enumslot_typesFieldRefInput<$PrismaModel> | null
+  in?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumslot_typesNullableFilter<$PrismaModel> | $Enums.slot_types | null
+}
+
+export type NestedEnumslot_typesNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.slot_types | Prisma.Enumslot_typesFieldRefInput<$PrismaModel> | null
+  in?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.slot_types[] | Prisma.ListEnumslot_typesFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumslot_typesNullableWithAggregatesFilter<$PrismaModel> | $Enums.slot_types | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumslot_typesNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumslot_typesNullableFilter<$PrismaModel>
 }
 
 export type NestedDecimalNullableFilter<$PrismaModel = never> = {

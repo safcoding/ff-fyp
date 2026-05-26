@@ -24,12 +24,12 @@ export function formatPaxValue(value: number | null | undefined) {
 }
 
 export const paxLabels = [
-  ["pax_my_adult", "MY Adult"],
-  ["pax_my_kid", "MY Kid"],
-  ["pax_my_senior", "MY Senior"],
-  ["pax_my_oku", "MY OKU"],
-  ["pax_non_my_adult", "Non-MY Adult"],
-  ["pax_non_my_kid", "Non-MY Kid"],
-  ["pax_non_my_senior", "Non-MY Senior"],
-  ["pax_non_my_oku", "Non-MY OKU"],
+  ["pax_my_adult", "Malaysian Adult"],
+  ["pax_my_kid", "Malaysian Kids"],
+  ["pax_my_senior", "Malaysian Senior"],
+  ["pax_my_oku", "Malaysian OKU"],
+  ["pax_non_my_adult", "Non-Malaysian Adult"],
+  ["pax_non_my_kid", "Non-Malaysian Kids"],
+  ["pax_non_my_senior", "Non-Malaysian Senior"],
+  ["pax_non_my_oku", "Non-Malaysian OKU"],
 ] as const

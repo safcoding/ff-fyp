@@ -40,6 +40,7 @@ export type SlotsMinAggregateOutputType = {
   slot_start: Date | null
   slot_end: Date | null
   slot_capacity: number | null
+  slot_type: $Enums.slot_types | null
 }
 
 export type SlotsMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type SlotsMaxAggregateOutputType = {
   slot_start: Date | null
   slot_end: Date | null
   slot_capacity: number | null
+  slot_type: $Enums.slot_types | null
 }
 
 export type SlotsCountAggregateOutputType = {
@@ -56,6 +58,7 @@ export type SlotsCountAggregateOutputType = {
   slot_start: number
   slot_end: number
   slot_capacity: number
+  slot_type: number
   _all: number
 }
 
@@ -74,6 +77,7 @@ export type SlotsMinAggregateInputType = {
   slot_start?: true
   slot_end?: true
   slot_capacity?: true
+  slot_type?: true
 }
 
 export type SlotsMaxAggregateInputType = {
@@ -82,6 +86,7 @@ export type SlotsMaxAggregateInputType = {
   slot_start?: true
   slot_end?: true
   slot_capacity?: true
+  slot_type?: true
 }
 
 export type SlotsCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type SlotsCountAggregateInputType = {
   slot_start?: true
   slot_end?: true
   slot_capacity?: true
+  slot_type?: true
   _all?: true
 }
 
@@ -185,6 +191,7 @@ export type SlotsGroupByOutputType = {
   slot_start: Date
   slot_end: Date
   slot_capacity: number
+  slot_type: $Enums.slot_types | null
   _count: SlotsCountAggregateOutputType | null
   _avg: SlotsAvgAggregateOutputType | null
   _sum: SlotsSumAggregateOutputType | null
@@ -216,6 +223,7 @@ export type slotsWhereInput = {
   slot_start?: Prisma.DateTimeFilter<"slots"> | Date | string
   slot_end?: Prisma.DateTimeFilter<"slots"> | Date | string
   slot_capacity?: Prisma.IntFilter<"slots"> | number
+  slot_type?: Prisma.Enumslot_typesNullableFilter<"slots"> | $Enums.slot_types | null
   bookings?: Prisma.BookingsListRelationFilter
 }
 
@@ -225,6 +233,7 @@ export type slotsOrderByWithRelationInput = {
   slot_start?: Prisma.SortOrder
   slot_end?: Prisma.SortOrder
   slot_capacity?: Prisma.SortOrder
+  slot_type?: Prisma.SortOrderInput | Prisma.SortOrder
   bookings?: Prisma.bookingsOrderByRelationAggregateInput
 }
 
@@ -237,6 +246,7 @@ export type slotsWhereUniqueInput = Prisma.AtLeast<{
   slot_start?: Prisma.DateTimeFilter<"slots"> | Date | string
   slot_end?: Prisma.DateTimeFilter<"slots"> | Date | string
   slot_capacity?: Prisma.IntFilter<"slots"> | number
+  slot_type?: Prisma.Enumslot_typesNullableFilter<"slots"> | $Enums.slot_types | null
   bookings?: Prisma.BookingsListRelationFilter
 }, "slot_id">
 
@@ -246,6 +256,7 @@ export type slotsOrderByWithAggregationInput = {
   slot_start?: Prisma.SortOrder
   slot_end?: Prisma.SortOrder
   slot_capacity?: Prisma.SortOrder
+  slot_type?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.slotsCountOrderByAggregateInput
   _avg?: Prisma.slotsAvgOrderByAggregateInput
   _max?: Prisma.slotsMaxOrderByAggregateInput
@@ -262,6 +273,7 @@ export type slotsScalarWhereWithAggregatesInput = {
   slot_start?: Prisma.DateTimeWithAggregatesFilter<"slots"> | Date | string
   slot_end?: Prisma.DateTimeWithAggregatesFilter<"slots"> | Date | string
   slot_capacity?: Prisma.IntWithAggregatesFilter<"slots"> | number
+  slot_type?: Prisma.Enumslot_typesNullableWithAggregatesFilter<"slots"> | $Enums.slot_types | null
 }
 
 export type slotsCreateInput = {
@@ -270,6 +282,7 @@ export type slotsCreateInput = {
   slot_start: Date | string
   slot_end: Date | string
   slot_capacity: number
+  slot_type?: $Enums.slot_types | null
   bookings?: Prisma.bookingsCreateNestedManyWithoutSlotsInput
 }
 
@@ -279,6 +292,7 @@ export type slotsUncheckedCreateInput = {
   slot_start: Date | string
   slot_end: Date | string
   slot_capacity: number
+  slot_type?: $Enums.slot_types | null
   bookings?: Prisma.bookingsUncheckedCreateNestedManyWithoutSlotsInput
 }
 
@@ -288,6 +302,7 @@ export type slotsUpdateInput = {
   slot_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  slot_type?: Prisma.NullableEnumslot_typesFieldUpdateOperationsInput | $Enums.slot_types | null
   bookings?: Prisma.bookingsUpdateManyWithoutSlotsNestedInput
 }
 
@@ -297,6 +312,7 @@ export type slotsUncheckedUpdateInput = {
   slot_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  slot_type?: Prisma.NullableEnumslot_typesFieldUpdateOperationsInput | $Enums.slot_types | null
   bookings?: Prisma.bookingsUncheckedUpdateManyWithoutSlotsNestedInput
 }
 
@@ -306,6 +322,7 @@ export type slotsCreateManyInput = {
   slot_start: Date | string
   slot_end: Date | string
   slot_capacity: number
+  slot_type?: $Enums.slot_types | null
 }
 
 export type slotsUpdateManyMutationInput = {
@@ -314,6 +331,7 @@ export type slotsUpdateManyMutationInput = {
   slot_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  slot_type?: Prisma.NullableEnumslot_typesFieldUpdateOperationsInput | $Enums.slot_types | null
 }
 
 export type slotsUncheckedUpdateManyInput = {
@@ -322,6 +340,7 @@ export type slotsUncheckedUpdateManyInput = {
   slot_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  slot_type?: Prisma.NullableEnumslot_typesFieldUpdateOperationsInput | $Enums.slot_types | null
 }
 
 export type SlotsScalarRelationFilter = {
@@ -335,6 +354,7 @@ export type slotsCountOrderByAggregateInput = {
   slot_start?: Prisma.SortOrder
   slot_end?: Prisma.SortOrder
   slot_capacity?: Prisma.SortOrder
+  slot_type?: Prisma.SortOrder
 }
 
 export type slotsAvgOrderByAggregateInput = {
@@ -347,6 +367,7 @@ export type slotsMaxOrderByAggregateInput = {
   slot_start?: Prisma.SortOrder
   slot_end?: Prisma.SortOrder
   slot_capacity?: Prisma.SortOrder
+  slot_type?: Prisma.SortOrder
 }
 
 export type slotsMinOrderByAggregateInput = {
@@ -355,6 +376,7 @@ export type slotsMinOrderByAggregateInput = {
   slot_start?: Prisma.SortOrder
   slot_end?: Prisma.SortOrder
   slot_capacity?: Prisma.SortOrder
+  slot_type?: Prisma.SortOrder
 }
 
 export type slotsSumOrderByAggregateInput = {
@@ -375,12 +397,17 @@ export type slotsUpdateOneRequiredWithoutBookingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.slotsUpdateToOneWithWhereWithoutBookingsInput, Prisma.slotsUpdateWithoutBookingsInput>, Prisma.slotsUncheckedUpdateWithoutBookingsInput>
 }
 
+export type NullableEnumslot_typesFieldUpdateOperationsInput = {
+  set?: $Enums.slot_types | null
+}
+
 export type slotsCreateWithoutBookingsInput = {
   slot_id: string
   slot_name: string
   slot_start: Date | string
   slot_end: Date | string
   slot_capacity: number
+  slot_type?: $Enums.slot_types | null
 }
 
 export type slotsUncheckedCreateWithoutBookingsInput = {
@@ -389,6 +416,7 @@ export type slotsUncheckedCreateWithoutBookingsInput = {
   slot_start: Date | string
   slot_end: Date | string
   slot_capacity: number
+  slot_type?: $Enums.slot_types | null
 }
 
 export type slotsCreateOrConnectWithoutBookingsInput = {
@@ -413,6 +441,7 @@ export type slotsUpdateWithoutBookingsInput = {
   slot_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  slot_type?: Prisma.NullableEnumslot_typesFieldUpdateOperationsInput | $Enums.slot_types | null
 }
 
 export type slotsUncheckedUpdateWithoutBookingsInput = {
@@ -421,6 +450,7 @@ export type slotsUncheckedUpdateWithoutBookingsInput = {
   slot_start?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_end?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slot_capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  slot_type?: Prisma.NullableEnumslot_typesFieldUpdateOperationsInput | $Enums.slot_types | null
 }
 
 
@@ -460,6 +490,7 @@ export type slotsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   slot_start?: boolean
   slot_end?: boolean
   slot_capacity?: boolean
+  slot_type?: boolean
   bookings?: boolean | Prisma.slots$bookingsArgs<ExtArgs>
   _count?: boolean | Prisma.SlotsCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["slots"]>
@@ -470,6 +501,7 @@ export type slotsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   slot_start?: boolean
   slot_end?: boolean
   slot_capacity?: boolean
+  slot_type?: boolean
 }, ExtArgs["result"]["slots"]>
 
 export type slotsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -478,6 +510,7 @@ export type slotsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   slot_start?: boolean
   slot_end?: boolean
   slot_capacity?: boolean
+  slot_type?: boolean
 }, ExtArgs["result"]["slots"]>
 
 export type slotsSelectScalar = {
@@ -486,9 +519,10 @@ export type slotsSelectScalar = {
   slot_start?: boolean
   slot_end?: boolean
   slot_capacity?: boolean
+  slot_type?: boolean
 }
 
-export type slotsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"slot_id" | "slot_name" | "slot_start" | "slot_end" | "slot_capacity", ExtArgs["result"]["slots"]>
+export type slotsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"slot_id" | "slot_name" | "slot_start" | "slot_end" | "slot_capacity" | "slot_type", ExtArgs["result"]["slots"]>
 export type slotsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookings?: boolean | Prisma.slots$bookingsArgs<ExtArgs>
   _count?: boolean | Prisma.SlotsCountOutputTypeDefaultArgs<ExtArgs>
@@ -507,6 +541,7 @@ export type $slotsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     slot_start: Date
     slot_end: Date
     slot_capacity: number
+    slot_type: $Enums.slot_types | null
   }, ExtArgs["result"]["slots"]>
   composites: {}
 }
@@ -936,6 +971,7 @@ export interface slotsFieldRefs {
   readonly slot_start: Prisma.FieldRef<"slots", 'DateTime'>
   readonly slot_end: Prisma.FieldRef<"slots", 'DateTime'>
   readonly slot_capacity: Prisma.FieldRef<"slots", 'Int'>
+  readonly slot_type: Prisma.FieldRef<"slots", 'slot_types'>
 }
     
 
