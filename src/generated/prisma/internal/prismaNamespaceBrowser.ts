@@ -112,13 +112,14 @@ export const BookingsScalarFieldEnum = {
   pic_hp: 'pic_hp',
   org_address: 'org_address',
   org_name: 'org_name',
-  org_state: 'org_state',
-  org_type: 'org_type',
   quotation_id: 'quotation_id',
   slot_id: 'slot_id',
   booking_date: 'booking_date',
   booking_status: 'booking_status',
-  discount_id: 'discount_id'
+  discount_id: 'discount_id',
+  org_state: 'org_state',
+  org_type: 'org_type',
+  event_name: 'event_name'
 } as const
 
 export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]

@@ -6,6 +6,7 @@ import {
   deleteBooking as deleteBookingAction,
   getBookingById,
   getBookings,
+  sendTestBookingEmail,
 } from "@/features/booking/server/bookingActions"
 import { getDiscounts } from "@/features/discount/server/discountActions"
 import { buildQuotationPdfBlob } from "@/components/booking/QuotationPdf"
@@ -48,6 +49,10 @@ function BookingPage() {
       await queryClient.invalidateQueries({ queryKey: ["admin-bookings"] })
       setApprovingBooking(null)
     },
+  })
+
+  const testEmailMutation = useMutation({
+    mutationFn: sendTestBookingEmail,
   })
 
   const quotationMutation = useMutation({
@@ -228,7 +233,30 @@ function BookingPage() {
                           >
                             {quotationMutation.isPending ? "Preparing quotation..." : "Download quotation"}
                           </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={testEmailMutation.isPending}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              testEmailMutation.mutate({
+                                data: {
+                                  booking_id: booking.booking_id,
+                                },
+                              })
+                            }}
+                          >
+                            {testEmailMutation.isPending ? "Sending test email..." : "Send test email"}
+                          </Button>
                         </div>
+
+                        {testEmailMutation.isError ? (
+                          <p className="text-sm text-red-600">{testEmailMutation.error.message}</p>
+                        ) : null}
+                        {testEmailMutation.isSuccess ? (
+                          <p className="text-sm text-emerald-700">{testEmailMutation.data}</p>
+                        ) : null}
 
                         {isPending ? (
                           <div className="flex items-center justify-between rounded-md border bg-amber-50 p-3 text-sm">

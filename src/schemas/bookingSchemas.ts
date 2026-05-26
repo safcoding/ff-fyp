@@ -40,6 +40,7 @@ export const bookingSchema = z.object({
         org_name: z.string().trim().min(1),
         org_state: z.enum(states),
         org_type: z.enum(org_categories),
+        event_name: z.string().optional(),
 
         slot_id: z.string().min(1),
         packages: z.array(bookingPackagesSchema).default([]),
@@ -60,6 +61,11 @@ export const bookingIdSchema = bookingSchema.pick({
 })
 
 export const deleteBookingSchema = bookingIdSchema
+
+export const testBookingEmailSchema = z.object({
+  booking_id: z.string().trim().min(1),
+  staff_comment: z.string().trim().max(1000).optional(),
+})
 
 export const availabilitySchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/),

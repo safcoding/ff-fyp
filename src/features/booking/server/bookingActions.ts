@@ -6,21 +6,8 @@ import { loadBookingID, loadAllBookings, replaceBookingWithItems } from "./booki
 import { prepareBookingWriteData } from "./utils/prepData";
 import * as schema from "@/schemas/bookingSchemas";
 import { approveBookingSchema } from "@/schemas/discountSchemas";
-import { sendBookingApprovedEmail } from "./utils/bookingEmail";
-
-function applyDiscount(total: number, discount: { discount_type: "PERCENTAGE" | "FLAT"; discount_amount: unknown } | null) {
-  if (!discount) {
-    return total
-  }
-
-  const amount = Number(discount.discount_amount)
-  const discounted =
-    discount.discount_type === "PERCENTAGE"
-      ? total - total * (amount / 100)
-      : total - amount
-
-  return Math.max(0, Number(discounted.toFixed(2)))
-}
+import { sendBookingApprovedEmail } from "../../email/server/bookingApprovalSender";
+import { applyDiscount } from "@/features/discount/server/discountActions";
 
 export const getBookings = createServerFn({ method: "GET" }).handler(async () => {
   const bookings = await loadAllBookings()
@@ -59,6 +46,7 @@ export const createBooking = createServerFn({ method: 'POST' })
         pic_email: data.pic_email,
         pic_hp: data.pic_hp,
         org_address: data.org_address,
+        event_name: data.event_name,
         org_name: data.org_name,
         org_state: data.org_state,
         org_type: data.org_type,
@@ -169,12 +157,34 @@ export const approveBooking = createServerFn({ method: "POST" })
       throw new Error("Booking not found after approval")
     }
 
-    await sendBookingApprovedEmail(fullBooking, discount, data.staff_comment ?? null)
+    await sendBookingApprovedEmail(fullBooking, data.staff_comment ?? null)
 
     return discount
       ? `Approved booking ${updated.booking_id} with discount ${discount.discount_id}`
       : `Approved booking ${updated.booking_id}`
 })
+
+export const sendTestBookingEmail = createServerFn({ method: "POST" })
+  .inputValidator(schema.testBookingEmailSchema)
+  .handler(async ({ data }) => {
+    const recipient = process.env.TEST_EMAIL_TO
+    if (!recipient) {
+      throw new Error("Missing TEST_EMAIL_TO env var for test emails.")
+    }
+
+    const booking = await prisma.bookings.findUnique({
+      where: { booking_id: data.booking_id },
+      include: bookingsInclude,
+    })
+
+    if (!booking) {
+      throw new Error("Booking not found")
+    }
+
+    await sendBookingApprovedEmail(booking, data.staff_comment ?? null, recipient)
+
+    return `Sent test email for booking ${booking.booking_id} to ${recipient}`
+  })
   
 export const getBookingAvailability = createServerFn({ method: "POST" })
   .inputValidator(schema.availabilitySchema)

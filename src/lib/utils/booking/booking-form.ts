@@ -31,6 +31,7 @@ export type FormValues = {
   pic_hp: string
   org_address: string
   org_name: string
+  event_name: string
   org_state: string
   org_type: string
   slot_id: string
@@ -49,6 +50,7 @@ export const defaultFormValues: FormValues = {
   pic_hp: "",
   org_address: "",
   org_name: "",
+  event_name:"",
   org_state: "",
   org_type: "",
   slot_id: "",

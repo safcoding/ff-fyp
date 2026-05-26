@@ -59,3 +59,18 @@ export const deleteDiscount = createServerFn({ method: "POST" })
       throw new Error("This discount cannot be deleted because it is referenced by existing bookings.")
     }
   })
+
+
+export function applyDiscount(total: number, discount: { discount_type: "PERCENTAGE" | "FLAT"; discount_amount: unknown } | null) {
+  if (!discount) {
+    return total
+  }
+
+  const amount = Number(discount.discount_amount)
+  const discounted =
+    discount.discount_type === "PERCENTAGE"
+      ? total - total * (amount / 100)
+      : total - amount
+
+  return Math.max(0, Number(discounted.toFixed(2)))
+}

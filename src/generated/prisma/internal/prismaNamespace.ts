@@ -1299,13 +1299,14 @@ export const BookingsScalarFieldEnum = {
   pic_hp: 'pic_hp',
   org_address: 'org_address',
   org_name: 'org_name',
-  org_state: 'org_state',
-  org_type: 'org_type',
   quotation_id: 'quotation_id',
   slot_id: 'slot_id',
   booking_date: 'booking_date',
   booking_status: 'booking_status',
-  discount_id: 'discount_id'
+  discount_id: 'discount_id',
+  org_state: 'org_state',
+  org_type: 'org_type',
+  event_name: 'event_name'
 } as const
 
 export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]
@@ -1502,6 +1503,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'booking_status'
+ */
+export type Enumbooking_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'booking_status'>
+    
+
+
+/**
+ * Reference to a field of type 'booking_status[]'
+ */
+export type ListEnumbooking_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'booking_status[]'>
+    
+
+
+/**
  * Reference to a field of type 'states'
  */
 export type EnumstatesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'states'>
@@ -1526,20 +1541,6 @@ export type Enumorg_categoriesFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'org_categories[]'
  */
 export type ListEnumorg_categoriesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'org_categories[]'>
-    
-
-
-/**
- * Reference to a field of type 'booking_status'
- */
-export type Enumbooking_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'booking_status'>
-    
-
-
-/**
- * Reference to a field of type 'booking_status[]'
- */
-export type ListEnumbooking_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'booking_status[]'>
     
 
 

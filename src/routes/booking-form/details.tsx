@@ -112,6 +112,11 @@ function BookingDetailsPage() {
                 <Input id="org_name" value={values.org_name} onChange={(e) => updateField("org_name", e.target.value)} />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="event_name">Event Name</Label>
+                <Input id="event_name" value={values.event_name} onChange={(e) => updateField("event_name", e.target.value)} />
+              </div>
+
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="org_address">Organization Address</Label>
                 <Input

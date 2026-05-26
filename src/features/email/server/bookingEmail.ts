@@ -1,0 +1,1 @@
+export { sendBookingApprovedEmail } from "./bookingApprovalSender"

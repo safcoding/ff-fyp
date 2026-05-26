@@ -34,13 +34,14 @@ model bookings {
   pic_hp                                       String
   org_address                                  String
   org_name                                     String
-  org_state                                    states
-  org_type                                     org_categories
   quotation_id                                 String?
   slot_id                                      String
   booking_date                                 DateTime?          @db.Date
   booking_status                               booking_status?    @default(PENDING)
   discount_id                                  String?
+  org_state                                    states
+  org_type                                     org_categories
+  event_name                                   String?
   booking_addons                               booking_addons[]
   booking_foods                                booking_foods[]
   booking_packages                             booking_packages[]
@@ -95,7 +96,7 @@ model booking_addons {
 }
 
 model booking_foods {
-  booking_id    String  
+  booking_id    String
   food_id       Int
   food_quantity Int
   id            Int      @id @default(autoincrement())
