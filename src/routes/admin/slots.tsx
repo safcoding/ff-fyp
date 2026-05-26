@@ -82,7 +82,11 @@ function SlotsPage() {
       if (!value.slot_type) {
         return
       }
-      await createSlotMutation.mutateAsync({ data: value })
+      const payload = {
+        ...value,
+        slot_type: value.slot_type,
+      }
+      await createSlotMutation.mutateAsync({ data: payload })
       form.reset()
     },
   })
@@ -355,7 +359,11 @@ function SlotsPage() {
             if (!editValues.slot_type) {
               return
             }
-            void updateSlotMutation.mutateAsync({ data: editValues })
+            const payload = {
+              ...editValues,
+              slot_type: editValues.slot_type,
+            }
+            void updateSlotMutation.mutateAsync({ data: payload })
           }}
         >
           <div className="space-y-2 md:col-span-2">
