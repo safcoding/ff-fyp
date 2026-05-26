@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
 
-import { paxFieldMeta, validateDetails } from "@/lib/utils/booking/booking-form"
+import { validateDetails } from "@/lib/utils/booking/booking-form"
 import { useBookingDraft } from "@/hooks/useBookingDraft"
 import { StepIndicator } from "@/components/booking/StepIndicator"
 import { Button } from "@/components/ui/button"
@@ -23,7 +23,6 @@ function BookingDetailsPage() {
   const navigate = Route.useNavigate()
   const { values, updateField, isHydrated } = useBookingDraft()
   const [error, setError] = useState<string | null>(null)
-  const selectedPackage = values.packages.length > 0 ? values.packages[0] : null
 
   const stateOptions = useMemo(() => Object.values(states), [])
   const orgTypeOptions = useMemo(() => Object.values(org_categories), [])
@@ -47,7 +46,7 @@ function BookingDetailsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 3 of 5: Enter visitor and contact details.</CardDescription>
+          <CardDescription>Step 3 of 5: Enter contact details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={3} />
@@ -57,8 +56,8 @@ function BookingDetailsPage() {
             onSubmit={(e) => {
               e.preventDefault()
 
-              if (!selectedPackage) {
-                setError("Please select a package before entering visitor details.")
+              if (values.packages.length === 0) {
+                setError("Please select at least one package before entering details.")
                 return
               }
 
@@ -76,31 +75,6 @@ function BookingDetailsPage() {
               <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/package" })}>
                 Back to packages
               </Button>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {paxFieldMeta.map((fieldMeta) => (
-                <div key={fieldMeta.name} className="space-y-2">
-                  <Label htmlFor={fieldMeta.name}>{fieldMeta.label}</Label>
-                  <Input
-                    id={fieldMeta.name}
-                    type="number"
-                    min={0}
-                    step={1}
-                    value={Number(selectedPackage ? selectedPackage[fieldMeta.name] : 0)}
-                    onChange={(e) => {
-                      if (!selectedPackage) return
-                      const nextValue = Math.max(0, Math.floor(Number(e.target.value || 0)))
-                      updateField("packages", [
-                        {
-                          ...selectedPackage,
-                          [fieldMeta.name]: nextValue,
-                        },
-                      ])
-                    }}
-                  />
-                </div>
-              ))}
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
