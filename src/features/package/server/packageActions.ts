@@ -26,8 +26,6 @@ export function getPackagePricing(pkg: Record<string, unknown>): PackagePricing 
   }
 }
 
-
-
 export const getPackages = createServerFn({ method: "GET" }).handler(async () => {
   const packages = await prisma.packages.findMany({
     orderBy: { package_name: "asc" },
@@ -69,7 +67,13 @@ export const createPackage = createServerFn({ method: "POST" })
         price_non_my_senior: data.price_non_my_senior,
         price_non_my_oku: data.price_non_my_oku,
 
-        minimum_pax: data.minimum_pax
+        minimum_pax: data.minimum_pax,
+
+        package_activities: {
+          create: (data.activity_ids ?? []).map((activity_id) => ({
+            activity_id,
+          })),
+        }
       },
     })
 
@@ -79,23 +83,40 @@ export const createPackage = createServerFn({ method: "POST" })
 export const updatePackage = createServerFn({ method: "POST" })
   .inputValidator(packageSchema)
   .handler(async ({ data }) => {
-    const updated = await prisma.packages.update({
-      where: { package_id: data.package_id },
-      data: {
-        package_name: data.package_name,
-        package_note: data.package_note || null,
-        package_features: data.package_features,
-        package_availability: data.package_availability,
-        price_my_adult: data.price_my_adult,
-        price_my_kid: data.price_my_kid,
-        price_my_senior: data.price_my_senior,
-        price_my_oku: data.price_my_oku,
-        price_non_my_adult: data.price_non_my_adult,
-        price_non_my_kid: data.price_non_my_kid,
-        price_non_my_senior: data.price_non_my_senior,
-        price_non_my_oku: data.price_non_my_oku,
-        minimum_pax: data.minimum_pax
-      },
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedPackage = await tx.packages.update({
+        where: { package_id: data.package_id },
+        data: {
+          package_name: data.package_name,
+          package_note: data.package_note || null,
+          package_features: data.package_features,
+          package_availability: data.package_availability,
+          price_my_adult: data.price_my_adult,
+          price_my_kid: data.price_my_kid,
+          price_my_senior: data.price_my_senior,
+          price_my_oku: data.price_my_oku,
+          price_non_my_adult: data.price_non_my_adult,
+          price_non_my_kid: data.price_non_my_kid,
+          price_non_my_senior: data.price_non_my_senior,
+          price_non_my_oku: data.price_non_my_oku,
+          minimum_pax: data.minimum_pax,
+        },
+      })
+
+      await tx.package_activities.deleteMany({
+        where: { package_id: data.package_id },
+      })
+
+      if (data.activity_ids?.length) {
+        await tx.package_activities.createMany({
+          data: data.activity_ids.map((activity_id) => ({
+            package_id: data.package_id,
+            activity_id,
+          })),
+        })
+      }
+
+      return updatedPackage
     })
 
     return `Updated package ${updated.package_name}`
@@ -105,8 +126,14 @@ export const deletePackage = createServerFn({ method: "POST" })
   .inputValidator(deletePackageSchema)
   .handler(async ({ data }) => {
     try {
-      const deleted = await prisma.packages.delete({
-        where: { package_id: data.package_id },
+      const deleted = await prisma.$transaction(async (tx) => {
+        await tx.package_activities.deleteMany({
+          where: { package_id: data.package_id },
+        })
+
+        return tx.packages.delete({
+          where: { package_id: data.package_id },
+        })
       })
 
       return `Deleted package ${deleted.package_name}`

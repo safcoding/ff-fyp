@@ -15,7 +15,9 @@ export const packageSchema = z.object({
   price_non_my_adult: z.coerce.number().nonnegative(),
   price_non_my_kid: z.coerce.number().nonnegative(),
   price_non_my_senior: z.coerce.number().nonnegative(),
-  price_non_my_oku: z.coerce.number().nonnegative()
+  price_non_my_oku: z.coerce.number().nonnegative(),
+
+  activity_ids: z.array(z.coerce.number()).optional().default([])
 })
 
 export const createPackageSchema = packageSchema.omit({package_id: true})

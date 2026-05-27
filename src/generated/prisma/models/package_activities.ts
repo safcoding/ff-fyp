@@ -248,19 +248,17 @@ export type package_activitiesScalarWhereWithAggregatesInput = {
 }
 
 export type package_activitiesCreateInput = {
-  id: number
   activities?: Prisma.activitiesCreateNestedOneWithoutPackage_activitiesInput
   packages?: Prisma.packagesCreateNestedOneWithoutPackage_activitiesInput
 }
 
 export type package_activitiesUncheckedCreateInput = {
-  id: number
+  id?: number
   activity_id?: number | null
   package_id?: string | null
 }
 
 export type package_activitiesUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   activities?: Prisma.activitiesUpdateOneWithoutPackage_activitiesNestedInput
   packages?: Prisma.packagesUpdateOneWithoutPackage_activitiesNestedInput
 }
@@ -272,13 +270,13 @@ export type package_activitiesUncheckedUpdateInput = {
 }
 
 export type package_activitiesCreateManyInput = {
-  id: number
+  id?: number
   activity_id?: number | null
   package_id?: string | null
 }
 
 export type package_activitiesUpdateManyMutationInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+
 }
 
 export type package_activitiesUncheckedUpdateManyInput = {
@@ -410,12 +408,11 @@ export type package_activitiesUncheckedUpdateManyWithoutActivitiesNestedInput = 
 }
 
 export type package_activitiesCreateWithoutPackagesInput = {
-  id: number
   activities?: Prisma.activitiesCreateNestedOneWithoutPackage_activitiesInput
 }
 
 export type package_activitiesUncheckedCreateWithoutPackagesInput = {
-  id: number
+  id?: number
   activity_id?: number | null
 }
 
@@ -455,12 +452,11 @@ export type package_activitiesScalarWhereInput = {
 }
 
 export type package_activitiesCreateWithoutActivitiesInput = {
-  id: number
   packages?: Prisma.packagesCreateNestedOneWithoutPackage_activitiesInput
 }
 
 export type package_activitiesUncheckedCreateWithoutActivitiesInput = {
-  id: number
+  id?: number
   package_id?: string | null
 }
 
@@ -491,12 +487,11 @@ export type package_activitiesUpdateManyWithWhereWithoutActivitiesInput = {
 }
 
 export type package_activitiesCreateManyPackagesInput = {
-  id: number
+  id?: number
   activity_id?: number | null
 }
 
 export type package_activitiesUpdateWithoutPackagesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   activities?: Prisma.activitiesUpdateOneWithoutPackage_activitiesNestedInput
 }
 
@@ -511,12 +506,11 @@ export type package_activitiesUncheckedUpdateManyWithoutPackagesInput = {
 }
 
 export type package_activitiesCreateManyActivitiesInput = {
-  id: number
+  id?: number
   package_id?: string | null
 }
 
 export type package_activitiesUpdateWithoutActivitiesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   packages?: Prisma.packagesUpdateOneWithoutPackage_activitiesNestedInput
 }
 
@@ -1232,7 +1226,7 @@ export type package_activitiesCreateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * The data needed to create a package_activities.
    */
-  data: Prisma.XOR<Prisma.package_activitiesCreateInput, Prisma.package_activitiesUncheckedCreateInput>
+  data?: Prisma.XOR<Prisma.package_activitiesCreateInput, Prisma.package_activitiesUncheckedCreateInput>
 }
 
 /**

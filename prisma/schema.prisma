@@ -141,7 +141,7 @@ model discounts {
 }
 
 model package_activities {
-  id          Int         @id(map: "package_activities_pkey1")
+  id          Int         @id(map: "package_activities_pkey1") @default(autoincrement())
   activity_id Int?
   package_id  String?
   activities  activities? @relation(fields: [activity_id], references: [activity_id], onDelete: NoAction, onUpdate: NoAction, map: "activity_id_fkey")
