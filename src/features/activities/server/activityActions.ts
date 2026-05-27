@@ -27,8 +27,6 @@ export const createActivity = createServerFn({ method: "POST" })
     return `Created addon ${created.activity_name}`
   })
 
-
-
 export const updateActivity = createServerFn({ method: "POST" })
   .inputValidator(activitySchema)
   .handler(async ({ data }) => {
@@ -44,7 +42,7 @@ export const updateActivity = createServerFn({ method: "POST" })
     return `Updated addon ${updated.activity_name}`
   })
 
-export const deleteAddon = createServerFn({ method: "POST" })
+export const deleteActivity = createServerFn({ method: "POST" })
   .inputValidator(deleteActivitySchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.activities.delete({

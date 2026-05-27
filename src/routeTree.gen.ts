@@ -24,6 +24,7 @@ import { Route as AdminFoodsRouteImport } from './routes/admin/foods'
 import { Route as AdminDiscountsRouteImport } from './routes/admin/discounts'
 import { Route as AdminBookingsRouteImport } from './routes/admin/bookings'
 import { Route as AdminAddonsRouteImport } from './routes/admin/addons'
+import { Route as AdminActivitiesRouteImport } from './routes/admin/activities'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const PackagesRoute = PackagesRouteImport.update({
@@ -101,6 +102,11 @@ const AdminAddonsRoute = AdminAddonsRouteImport.update({
   path: '/admin/addons',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminActivitiesRoute = AdminActivitiesRouteImport.update({
+  id: '/admin/activities',
+  path: '/admin/activities',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/booking-form': typeof BookingFormRouteWithChildren
   '/packages': typeof PackagesRoute
+  '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/discounts': typeof AdminDiscountsRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/booking-form': typeof BookingFormRouteWithChildren
   '/packages': typeof PackagesRoute
+  '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/discounts': typeof AdminDiscountsRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/booking-form': typeof BookingFormRouteWithChildren
   '/packages': typeof PackagesRoute
+  '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/discounts': typeof AdminDiscountsRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/'
     | '/booking-form'
     | '/packages'
+    | '/admin/activities'
     | '/admin/addons'
     | '/admin/bookings'
     | '/admin/discounts'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/'
     | '/booking-form'
     | '/packages'
+    | '/admin/activities'
     | '/admin/addons'
     | '/admin/bookings'
     | '/admin/discounts'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/'
     | '/booking-form'
     | '/packages'
+    | '/admin/activities'
     | '/admin/addons'
     | '/admin/bookings'
     | '/admin/discounts'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookingFormRoute: typeof BookingFormRouteWithChildren
   PackagesRoute: typeof PackagesRoute
+  AdminActivitiesRoute: typeof AdminActivitiesRoute
   AdminAddonsRoute: typeof AdminAddonsRoute
   AdminBookingsRoute: typeof AdminBookingsRoute
   AdminDiscountsRoute: typeof AdminDiscountsRoute
@@ -340,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAddonsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/activities': {
+      id: '/admin/activities'
+      path: '/admin/activities'
+      fullPath: '/admin/activities'
+      preLoaderRoute: typeof AdminActivitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -374,6 +394,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookingFormRoute: BookingFormRouteWithChildren,
   PackagesRoute: PackagesRoute,
+  AdminActivitiesRoute: AdminActivitiesRoute,
   AdminAddonsRoute: AdminAddonsRoute,
   AdminBookingsRoute: AdminBookingsRoute,
   AdminDiscountsRoute: AdminDiscountsRoute,

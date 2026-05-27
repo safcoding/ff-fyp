@@ -12,6 +12,7 @@ function AdminIndex() {
     { href: "/admin/foods", label: "Manage Foods" },
     { href: "/admin/discounts", label: "Manage Discounts" },
     { href: "/admin/bookings", label: "Manage Bookings" },
+    { href: "/admin/activities", label: "Manage Activities" },
   ]
 
   return (
