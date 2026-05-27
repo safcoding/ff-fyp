@@ -630,14 +630,6 @@ export type packagesUpdatepackage_featuresInput = {
   push?: string | string[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type packagesCreateNestedOneWithoutBooking_packagesInput = {
   create?: Prisma.XOR<Prisma.packagesCreateWithoutBooking_packagesInput, Prisma.packagesUncheckedCreateWithoutBooking_packagesInput>
   connectOrCreate?: Prisma.packagesCreateOrConnectWithoutBooking_packagesInput

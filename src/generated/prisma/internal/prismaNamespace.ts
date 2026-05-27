@@ -396,7 +396,8 @@ export const ModelName = {
   booking_packages: 'booking_packages',
   discounts: 'discounts',
   package_activities: 'package_activities',
-  activities: 'activities'
+  activities: 'activities',
+  slot_schedules: 'slot_schedules'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1378,6 +1379,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    slot_schedules: {
+      payload: Prisma.$slot_schedulesPayload<ExtArgs>
+      fields: Prisma.slot_schedulesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.slot_schedulesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.slot_schedulesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>
+        }
+        findFirst: {
+          args: Prisma.slot_schedulesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.slot_schedulesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>
+        }
+        findMany: {
+          args: Prisma.slot_schedulesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>[]
+        }
+        create: {
+          args: Prisma.slot_schedulesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>
+        }
+        createMany: {
+          args: Prisma.slot_schedulesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.slot_schedulesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>[]
+        }
+        delete: {
+          args: Prisma.slot_schedulesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>
+        }
+        update: {
+          args: Prisma.slot_schedulesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>
+        }
+        deleteMany: {
+          args: Prisma.slot_schedulesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.slot_schedulesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.slot_schedulesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>[]
+        }
+        upsert: {
+          args: Prisma.slot_schedulesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$slot_schedulesPayload>
+        }
+        aggregate: {
+          args: Prisma.Slot_schedulesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSlot_schedules>
+        }
+        groupBy: {
+          args: Prisma.slot_schedulesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Slot_schedulesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.slot_schedulesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Slot_schedulesCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1456,7 +1531,8 @@ export const BookingsScalarFieldEnum = {
   discount_id: 'discount_id',
   org_state: 'org_state',
   org_type: 'org_type',
-  event_name: 'event_name'
+  event_name: 'event_name',
+  assigned_guide_count: 'assigned_guide_count'
 } as const
 
 export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]
@@ -1578,6 +1654,17 @@ export const ActivitiesScalarFieldEnum = {
 } as const
 
 export type ActivitiesScalarFieldEnum = (typeof ActivitiesScalarFieldEnum)[keyof typeof ActivitiesScalarFieldEnum]
+
+
+export const Slot_schedulesScalarFieldEnum = {
+  id: 'id',
+  slot_id: 'slot_id',
+  day_type: 'day_type',
+  start_time: 'start_time',
+  end_time: 'end_time'
+} as const
+
+export type Slot_schedulesScalarFieldEnum = (typeof Slot_schedulesScalarFieldEnum)[keyof typeof Slot_schedulesScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1744,6 +1831,20 @@ export type ListEnumdiscount_typesFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'day_type'
+ */
+export type Enumday_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'day_type'>
+
+
+
+/**
+ * Reference to a field of type 'day_type[]'
+ */
+export type ListEnumday_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'day_type[]'>
+
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1864,6 +1965,7 @@ export type GlobalOmitConfig = {
   discounts?: Prisma.discountsOmit
   package_activities?: Prisma.package_activitiesOmit
   activities?: Prisma.activitiesOmit
+  slot_schedules?: Prisma.slot_schedulesOmit
 }
 
 /* Types for Logging */
@@ -1926,4 +2028,3 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
-

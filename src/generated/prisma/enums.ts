@@ -69,3 +69,11 @@ export const slot_types = {
 } as const
 
 export type slot_types = (typeof slot_types)[keyof typeof slot_types]
+
+
+export const day_type = {
+  WEEKEND: 'WEEKEND',
+  WEEKDAY: 'WEEKDAY'
+} as const
+
+export type day_type = (typeof day_type)[keyof typeof day_type]

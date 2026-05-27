@@ -42,6 +42,7 @@ model bookings {
   org_state                                    states
   org_type                                     org_categories
   event_name                                   String?
+  assigned_guide_count                         Int?
   booking_addons                               booking_addons[]
   booking_foods                                booking_foods[]
   booking_packages                             booking_packages[]
@@ -78,13 +79,14 @@ model packages {
 }
 
 model slots {
-  slot_id       String      @id
-  slot_name     String
-  slot_start    DateTime    @db.Time(6)
-  slot_end      DateTime    @db.Time(6)
-  slot_capacity Int
-  slot_type     slot_types?
-  bookings      bookings[]
+  slot_id        String           @id
+  slot_name      String
+  slot_start     DateTime         @db.Time(6)
+  slot_end       DateTime         @db.Time(6)
+  slot_capacity  Int
+  slot_type      slot_types       @default(UNGUIDED)
+  bookings       bookings[]
+  slot_schedules slot_schedules[]
 }
 
 model booking_addons {
@@ -157,6 +159,17 @@ model activities {
   package_activities package_activities[]
 }
 
+model slot_schedules {
+  id         Int       @id @default(autoincrement())
+  slot_id    String
+  day_type   day_type
+  start_time DateTime  @db.Time(6)
+  end_time   DateTime  @db.Time(6)
+  slots      slots     @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_id_fkey")
+
+  @@unique([slot_id, day_type])
+}
+
 enum booking_status {
   PENDING
   APPROVED
@@ -202,4 +215,9 @@ enum states {
 enum slot_types {
   GUIDED
   UNGUIDED
+}
+
+enum day_type {
+  WEEKEND
+  WEEKDAY
 }

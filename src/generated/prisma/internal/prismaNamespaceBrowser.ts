@@ -63,7 +63,8 @@ export const ModelName = {
   booking_packages: 'booking_packages',
   discounts: 'discounts',
   package_activities: 'package_activities',
-  activities: 'activities'
+  activities: 'activities',
+  slot_schedules: 'slot_schedules'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -121,7 +122,8 @@ export const BookingsScalarFieldEnum = {
   discount_id: 'discount_id',
   org_state: 'org_state',
   org_type: 'org_type',
-  event_name: 'event_name'
+  event_name: 'event_name',
+  assigned_guide_count: 'assigned_guide_count'
 } as const
 
 export type BookingsScalarFieldEnum = (typeof BookingsScalarFieldEnum)[keyof typeof BookingsScalarFieldEnum]
@@ -243,6 +245,17 @@ export const ActivitiesScalarFieldEnum = {
 } as const
 
 export type ActivitiesScalarFieldEnum = (typeof ActivitiesScalarFieldEnum)[keyof typeof ActivitiesScalarFieldEnum]
+
+
+export const Slot_schedulesScalarFieldEnum = {
+  id: 'id',
+  slot_id: 'slot_id',
+  day_type: 'day_type',
+  start_time: 'start_time',
+  end_time: 'end_time'
+} as const
+
+export type Slot_schedulesScalarFieldEnum = (typeof Slot_schedulesScalarFieldEnum)[keyof typeof Slot_schedulesScalarFieldEnum]
 
 
 export const SortOrder = {

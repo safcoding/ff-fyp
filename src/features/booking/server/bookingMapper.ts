@@ -1,6 +1,6 @@
-import { Prisma } from "@/generated/prisma/client"
-import { calculatePaxBreakdown } from "./utils/pax-calculation"
-import type { ExtraBookingData } from "./bookingTypes"
+import { Prisma } from '@/generated/prisma/client'
+import { calculatePaxBreakdown } from './utils/pax-calculation'
+import type { ExtraBookingData } from './bookingTypes'
 
 export const bookingsInclude = {
   booking_addons: {
@@ -41,6 +41,7 @@ export const bookingsInclude = {
   slots: {
     select: {
       slot_name: true,
+      slot_type: true,
     },
   },
   discounts: {
@@ -78,6 +79,7 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
   return {
     booking_id: b.booking_id,
     booking_price: b.booking_price.toString(),
+    assigned_guide_count: b.assigned_guide_count,
     booking_date: b.booking_date,
     booking_status: b.booking_status,
     discount_id: b.discount_id,
@@ -86,6 +88,7 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
     quotation_id: b.quotation_id,
     slot_id: b.slot_id,
     slot_name: b.slots?.slot_name ?? null,
+    slot_type: b.slots?.slot_type ?? null,
     package_id: packageId,
     pax_total: b.pax_total,
     pic_name: b.pic_name,
@@ -114,7 +117,7 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
       food_name: f.foods.food_name,
       food_quantity: f.food_quantity,
       subtotal: f.subtotal === null ? null : Number(f.subtotal),
-    }))
+    })),
   }
 }
 
@@ -137,7 +140,7 @@ export const buildBookingPriceMaps = (related: ExtraBookingData) => {
         price_non_my_senior: Number(pkg.price_non_my_senior),
         price_non_my_oku: Number(pkg.price_non_my_oku),
       },
-    ])
+    ]),
   )
 
   const foodPriceMap = Object.fromEntries(
@@ -148,7 +151,7 @@ export const buildBookingPriceMaps = (related: ExtraBookingData) => {
         food_name: food.food_name,
         food_price: Number(food.food_price),
       },
-    ])
+    ]),
   )
 
   const addonPriceMap = Object.fromEntries(
@@ -161,7 +164,7 @@ export const buildBookingPriceMaps = (related: ExtraBookingData) => {
         addon_price: Number(addon.addon_price),
         addon_avail: addon.addon_avail,
       },
-    ])
+    ]),
   )
 
   return {

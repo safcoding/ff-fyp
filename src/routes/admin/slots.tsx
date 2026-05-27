@@ -1,25 +1,30 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useForm } from "@tanstack/react-form"
-import { useState } from "react"
+import { createFileRoute } from '@tanstack/react-router'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useForm } from '@tanstack/react-form'
+import { useState } from 'react'
 
-import { Button } from "@/components/ui/button"
-import { DeleteDialog } from "@/components/deleteDialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Modal } from "@/components/ui/modal"
+import { Button } from '@/components/ui/button'
+import { DeleteDialog } from '@/components/deleteDialog'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Modal } from '@/components/ui/modal'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { createSlot, deleteSlot, getSlotsAdmin, updateSlot } from "@/features/slot/server/slotActions"
-import { slot_types } from "@/generated/prisma/enums"
+} from '@/components/ui/select'
+import {
+  createSlot,
+  deleteSlot,
+  getSlotsAdmin,
+  updateSlot,
+} from '@/features/slot/server/slotActions'
+import { slot_types } from '@/generated/prisma/enums'
 
-export const Route = createFileRoute("/admin/slots")({ component: SlotsPage })
+export const Route = createFileRoute('/admin/slots')({ component: SlotsPage })
 
 type SlotForm = {
   slot_id: string
@@ -27,42 +32,58 @@ type SlotForm = {
   slot_start: string
   slot_end: string
   slot_capacity: number
-  slot_type: slot_types | ""
+  slot_type: slot_types | ''
+  weekday_start: string
+  weekday_end: string
+  weekend_start: string
+  weekend_end: string
 }
 
 const defaultValues: SlotForm = {
-  slot_id: "",
-  slot_name: "",
-  slot_start: "09:00",
-  slot_end: "10:00",
+  slot_id: '',
+  slot_name: '',
+  slot_start: '09:00',
+  slot_end: '10:00',
   slot_capacity: 1,
-  slot_type: ""
+  slot_type: '',
+  weekday_start: '10:00',
+  weekday_end: '12:00',
+  weekend_start: '09:00',
+  weekend_end: '11:00',
 }
 
 const slotTypeOptions = Object.values(slot_types)
 
 function SlotsPage() {
   const queryClient = useQueryClient()
-  const [editingSlot, setEditingSlot] = useState<(SlotForm & { slot_id: string }) | null>(null)
+  const [editingSlot, setEditingSlot] = useState<
+    (SlotForm & { slot_id: string }) | null
+  >(null)
   const [editValues, setEditValues] = useState<SlotForm>(defaultValues)
-  const [deletingSlot, setDeletingSlot] = useState<{ slot_id: string; slot_name: string } | null>(null)
+  const [createSlotType, setCreateSlotType] = useState<slot_types | ''>(
+    defaultValues.slot_type,
+  )
+  const [deletingSlot, setDeletingSlot] = useState<{
+    slot_id: string
+    slot_name: string
+  } | null>(null)
 
   const slotsQuery = useQuery({
-    queryKey: ["admin-slots"],
+    queryKey: ['admin-slots'],
     queryFn: () => getSlotsAdmin(),
   })
 
   const createSlotMutation = useMutation({
     mutationFn: createSlot,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["admin-slots"] })
+      await queryClient.invalidateQueries({ queryKey: ['admin-slots'] })
     },
   })
 
   const updateSlotMutation = useMutation({
     mutationFn: updateSlot,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["admin-slots"] })
+      await queryClient.invalidateQueries({ queryKey: ['admin-slots'] })
       setEditingSlot(null)
     },
   })
@@ -70,11 +91,10 @@ function SlotsPage() {
   const deleteSlotMutation = useMutation({
     mutationFn: deleteSlot,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["admin-slots"] })
+      await queryClient.invalidateQueries({ queryKey: ['admin-slots'] })
       setDeletingSlot(null)
     },
   })
-      
 
   const form = useForm({
     defaultValues,
@@ -82,8 +102,11 @@ function SlotsPage() {
       if (!value.slot_type) {
         return
       }
-      await createSlotMutation.mutateAsync({ data: value })
+      await createSlotMutation.mutateAsync({
+        data: { ...value, slot_type: value.slot_type },
+      })
       form.reset()
+      setCreateSlotType(defaultValues.slot_type)
     },
   })
 
@@ -94,6 +117,10 @@ function SlotsPage() {
     slot_end: string
     slot_capacity: number
     slot_type: slot_types | null
+    weekday_start: string
+    weekday_end: string
+    weekend_start: string
+    weekend_end: string
   }) {
     const normalized: SlotForm = {
       slot_id: pkg.slot_id,
@@ -101,7 +128,11 @@ function SlotsPage() {
       slot_start: pkg.slot_start,
       slot_end: pkg.slot_end,
       slot_capacity: pkg.slot_capacity,
-      slot_type: pkg.slot_type ?? "",
+      slot_type: pkg.slot_type ?? '',
+      weekday_start: pkg.weekday_start || defaultValues.weekday_start,
+      weekday_end: pkg.weekday_end || defaultValues.weekday_end,
+      weekend_start: pkg.weekend_start || defaultValues.weekend_start,
+      weekend_end: pkg.weekend_end || defaultValues.weekend_end,
     }
 
     setEditingSlot(normalized)
@@ -112,6 +143,10 @@ function SlotsPage() {
       slot_end: normalized.slot_end,
       slot_capacity: normalized.slot_capacity,
       slot_type: normalized.slot_type,
+      weekday_start: normalized.weekday_start,
+      weekday_end: normalized.weekday_end,
+      weekend_start: normalized.weekend_start,
+      weekend_end: normalized.weekend_end,
     })
   }
 
@@ -130,13 +165,12 @@ function SlotsPage() {
               void form.handleSubmit()
             }}
           >
-            <form.Field 
-            name="slot_id"
-            validators={{
-              onBlur: ({ value }) =>
-                value.length < 1 ? 'Slot ID Required' : undefined,
-            }}
-            
+            <form.Field
+              name="slot_id"
+              validators={{
+                onBlur: ({ value }) =>
+                  value.length < 1 ? 'Slot ID Required' : undefined,
+              }}
             >
               {(field) => (
                 <div className="space-y-2">
@@ -154,12 +188,12 @@ function SlotsPage() {
               )}
             </form.Field>
 
-            <form.Field 
-            name="slot_name"
-            validators={{
-              onBlur: ({ value }) =>
-                value.length < 1 ? 'Slot Name Required' : undefined,
-            }}            
+            <form.Field
+              name="slot_name"
+              validators={{
+                onBlur: ({ value }) =>
+                  value.length < 1 ? 'Slot Name Required' : undefined,
+              }}
             >
               {(field) => (
                 <div className="space-y-2">
@@ -177,19 +211,22 @@ function SlotsPage() {
               )}
             </form.Field>
 
-            <form.Field 
-            name="slot_type"
-            validators={{
-              onBlur: ({ value }) =>
-                value.length < 1 ? 'Slot Type Required' : undefined,
-            }}            
+            <form.Field
+              name="slot_type"
+              validators={{
+                onBlur: ({ value }) =>
+                  value.length < 1 ? 'Slot Type Required' : undefined,
+              }}
             >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor={field.name}>Slot Type</Label>
                   <Select
                     value={field.state.value}
-                    onValueChange={(value) => field.handleChange(value as slot_types)}
+                    onValueChange={(value) => {
+                      setCreateSlotType(value as slot_types)
+                      field.handleChange(value as slot_types)
+                    }}
                   >
                     <SelectTrigger id={field.name}>
                       <SelectValue placeholder="Select slot type" />
@@ -209,60 +246,68 @@ function SlotsPage() {
               )}
             </form.Field>
 
-            <form.Field 
-            name="slot_start"
-            validators={{
-              onBlur: ({ value }) =>
-                value.length < 1 ? 'Start Time Required' : undefined,
-            }}         
-            >
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>Start Time</Label>
-                  <Input
-                    id={field.name}
-                    type="time"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  {!field.state.meta.isValid && (
-                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+            {createSlotType === 'GUIDED' ? (
+              <>
+                <form.Field
+                  name="slot_start"
+                  validators={{
+                    onBlur: ({ value }) =>
+                      value.length < 1 ? 'Start Time Required' : undefined,
+                  }}
+                >
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Start Time</Label>
+                      <Input
+                        id={field.name}
+                        type="time"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      {!field.state.meta.isValid && (
+                        <em role="alert">
+                          {field.state.meta.errors.join(', ')}
+                        </em>
+                      )}
+                    </div>
                   )}
-                </div>
-              )}
-            </form.Field>
+                </form.Field>
 
-            <form.Field 
-            name="slot_end"
-            validators={{
-              onBlur: ({ value }) =>
-                value.length < 1 ? 'Slot End Time Required' : undefined,
-            }}
-            >
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>End Time</Label>
-                  <Input
-                    id={field.name}
-                    type="time"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  {!field.state.meta.isValid && (
-                    <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                <form.Field
+                  name="slot_end"
+                  validators={{
+                    onBlur: ({ value }) =>
+                      value.length < 1 ? 'Slot End Time Required' : undefined,
+                  }}
+                >
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>End Time</Label>
+                      <Input
+                        id={field.name}
+                        type="time"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      {!field.state.meta.isValid && (
+                        <em role="alert">
+                          {field.state.meta.errors.join(', ')}
+                        </em>
+                      )}
+                    </div>
                   )}
-                </div>
-              )}
-            </form.Field>
+                </form.Field>
+              </>
+            ) : null}
 
-            <form.Field 
-            name="slot_capacity"
-            validators={{
-              onBlur: ({ value }) =>
-                value < 1 ? 'At least 1 capacity Needed' : undefined,
-            }}
+            <form.Field
+              name="slot_capacity"
+              validators={{
+                onBlur: ({ value }) =>
+                  value < 1 ? 'At least 1 capacity Needed' : undefined,
+              }}
             >
               {(field) => (
                 <div className="space-y-2">
@@ -274,7 +319,9 @@ function SlotsPage() {
                     step={1}
                     value={Number(field.state.value)}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value || 0))}
+                    onChange={(e) =>
+                      field.handleChange(Number(e.target.value || 0))
+                    }
                   />
                   {!field.state.meta.isValid && (
                     <em role="alert">{field.state.meta.errors.join(', ')}</em>
@@ -283,16 +330,109 @@ function SlotsPage() {
               )}
             </form.Field>
 
+            {createSlotType === 'UNGUIDED' ? (
+              <>
+                <div className="md:col-span-2 border-t pt-4">
+                  <p className="text-sm font-medium">Visiting Times</p>
+                </div>
+
+                <form.Field name="weekday_start">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Weekday Start Time</Label>
+                      <Input
+                        id={field.name}
+                        type="time"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      {!field.state.meta.isValid && (
+                        <em role="alert">
+                          {field.state.meta.errors.join(', ')}
+                        </em>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
+
+                <form.Field name="weekday_end">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Weekday End Time</Label>
+                      <Input
+                        id={field.name}
+                        type="time"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      {!field.state.meta.isValid && (
+                        <em role="alert">
+                          {field.state.meta.errors.join(', ')}
+                        </em>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
+
+                <form.Field name="weekend_start">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Weekend Start Time</Label>
+                      <Input
+                        id={field.name}
+                        type="time"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      {!field.state.meta.isValid && (
+                        <em role="alert">
+                          {field.state.meta.errors.join(', ')}
+                        </em>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
+
+                <form.Field name="weekend_end">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor={field.name}>Weekend End Time</Label>
+                      <Input
+                        id={field.name}
+                        type="time"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      {!field.state.meta.isValid && (
+                        <em role="alert">
+                          {field.state.meta.errors.join(', ')}
+                        </em>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
+              </>
+            ) : null}
 
             <div className="md:col-span-2 space-y-2">
               <Button type="submit" disabled={createSlotMutation.isPending}>
-                {createSlotMutation.isPending ? "Creating slot..." : "Create slot"}
+                {createSlotMutation.isPending
+                  ? 'Creating slot...'
+                  : 'Create slot'}
               </Button>
               {createSlotMutation.isError ? (
-                <p className="text-sm text-red-600">{createSlotMutation.error.message}</p>
+                <p className="text-sm text-red-600">
+                  {createSlotMutation.error.message}
+                </p>
               ) : null}
               {createSlotMutation.isSuccess ? (
-                <p className="text-sm text-green-700">{createSlotMutation.data}</p>
+                <p className="text-sm text-green-700">
+                  {createSlotMutation.data}
+                </p>
               ) : null}
             </div>
           </form>
@@ -305,28 +445,55 @@ function SlotsPage() {
         </CardHeader>
         <CardContent>
           {slotsQuery.isPending ? <p>Loading slots...</p> : null}
-          {slotsQuery.isError ? <p className="text-sm text-red-600">{slotsQuery.error.message}</p> : null}
+          {slotsQuery.isError ? (
+            <p className="text-sm text-red-600">{slotsQuery.error.message}</p>
+          ) : null}
           {slotsQuery.data ? (
             <div className="space-y-3">
               {slotsQuery.data.map((slot) => (
-                <div key={slot.slot_id} className="rounded-md border p-3 text-sm">
+                <div
+                  key={slot.slot_id}
+                  className="rounded-md border p-3 text-sm"
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-medium">{slot.slot_name}</p>
                       <p>ID: {slot.slot_id}</p>
-                      <p>
-                        {slot.slot_start} - {slot.slot_end} | Capacity: {slot.slot_capacity}
-                      </p>
+                      <p>Type: {slot.slot_type}</p>
+                      {slot.slot_type === 'UNGUIDED' ? (
+                        <p>
+                          Weekday: {slot.weekday_start} - {slot.weekday_end} |
+                          Weekend: {slot.weekend_start} - {slot.weekend_end}
+                        </p>
+                      ) : (
+                        <p>
+                          {slot.slot_start} - {slot.slot_end} | Capacity:{' '}
+                          {slot.slot_capacity}
+                        </p>
+                      )}
+                      {slot.slot_type === 'UNGUIDED' ? (
+                        <p>Capacity: {slot.slot_capacity}</p>
+                      ) : null}
                     </div>
                     <div className="flex gap-2">
-                      <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(slot)}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditModal(slot)}
+                      >
                         Edit
                       </Button>
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        onClick={() => setDeletingSlot({ slot_id: slot.slot_id, slot_name: slot.slot_name })}
+                        onClick={() =>
+                          setDeletingSlot({
+                            slot_id: slot.slot_id,
+                            slot_name: slot.slot_name,
+                          })
+                        }
                       >
                         Remove
                       </Button>
@@ -355,7 +522,9 @@ function SlotsPage() {
             if (!editValues.slot_type) {
               return
             }
-            void updateSlotMutation.mutateAsync({ data: editValues })
+            void updateSlotMutation.mutateAsync({
+              data: { ...editValues, slot_type: editValues.slot_type },
+            })
           }}
         >
           <div className="space-y-2 md:col-span-2">
@@ -368,7 +537,12 @@ function SlotsPage() {
             <Input
               id="edit-slot-name"
               value={editValues.slot_name}
-              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_name: e.target.value }))}
+              onChange={(e) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  slot_name: e.target.value,
+                }))
+              }
             />
           </div>
 
@@ -380,27 +554,12 @@ function SlotsPage() {
               min={1}
               step={1}
               value={Number(editValues.slot_capacity)}
-              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_capacity: Number(e.target.value || 0) }))}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="edit-slot-start">Start Time</Label>
-            <Input
-              id="edit-slot-start"
-              type="time"
-              value={editValues.slot_start}
-              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_start: e.target.value }))}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="edit-slot-end">End Time</Label>
-            <Input
-              id="edit-slot-end"
-              type="time"
-              value={editValues.slot_end}
-              onChange={(e) => setEditValues((prev) => ({ ...prev, slot_end: e.target.value }))}
+              onChange={(e) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  slot_capacity: Number(e.target.value || 0),
+                }))
+              }
             />
           </div>
 
@@ -408,7 +567,12 @@ function SlotsPage() {
             <Label htmlFor="edit-slot-type">Slot Type</Label>
             <Select
               value={editValues.slot_type}
-              onValueChange={(value) => setEditValues((prev) => ({ ...prev, slot_type: value as slot_types }))}
+              onValueChange={(value) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  slot_type: value as slot_types,
+                }))
+              }
             >
               <SelectTrigger id="edit-slot-type">
                 <SelectValue placeholder="Select slot type" />
@@ -423,20 +587,130 @@ function SlotsPage() {
             </Select>
           </div>
 
+          {editValues.slot_type === 'GUIDED' ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="edit-slot-start">Start Time</Label>
+                <Input
+                  id="edit-slot-start"
+                  type="time"
+                  value={editValues.slot_start}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      slot_start: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-slot-end">End Time</Label>
+                <Input
+                  id="edit-slot-end"
+                  type="time"
+                  value={editValues.slot_end}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      slot_end: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+            </>
+          ) : null}
+
+          {editValues.slot_type === 'UNGUIDED' ? (
+            <>
+              <div className="md:col-span-2 border-t pt-4">
+                <p className="text-sm font-medium">Visiting Times</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-weekday-start">Weekday Start Time</Label>
+                <Input
+                  id="edit-weekday-start"
+                  type="time"
+                  value={editValues.weekday_start}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      weekday_start: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-weekday-end">Weekday End Time</Label>
+                <Input
+                  id="edit-weekday-end"
+                  type="time"
+                  value={editValues.weekday_end}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      weekday_end: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-weekend-start">Weekend Start Time</Label>
+                <Input
+                  id="edit-weekend-start"
+                  type="time"
+                  value={editValues.weekend_start}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      weekend_start: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-weekend-end">Weekend End Time</Label>
+                <Input
+                  id="edit-weekend-end"
+                  type="time"
+                  value={editValues.weekend_end}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      weekend_end: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+            </>
+          ) : null}
+
           <div className="md:col-span-2 space-y-2">
             <div className="flex gap-2">
               <Button type="submit" disabled={updateSlotMutation.isPending}>
-                {updateSlotMutation.isPending ? "Saving..." : "Save changes"}
+                {updateSlotMutation.isPending ? 'Saving...' : 'Save changes'}
               </Button>
-              <Button type="button" variant="outline" onClick={() => setEditingSlot(null)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditingSlot(null)}
+              >
                 Cancel
               </Button>
             </div>
             {updateSlotMutation.isError ? (
-              <p className="text-sm text-red-600">{updateSlotMutation.error.message}</p>
+              <p className="text-sm text-red-600">
+                {updateSlotMutation.error.message}
+              </p>
             ) : null}
             {updateSlotMutation.isSuccess ? (
-              <p className="text-sm text-green-700">{updateSlotMutation.data}</p>
+              <p className="text-sm text-green-700">
+                {updateSlotMutation.data}
+              </p>
             ) : null}
           </div>
         </form>
@@ -453,16 +727,20 @@ function SlotsPage() {
           if (!deletingSlot) {
             return
           }
-          void deleteSlotMutation.mutateAsync({ data: { slot_id: deletingSlot.slot_id } })
+          void deleteSlotMutation.mutateAsync({
+            data: { slot_id: deletingSlot.slot_id },
+          })
         }}
         pending={deleteSlotMutation.isPending}
         title="Remove Slot"
-        description={`This will permanently remove ${deletingSlot?.slot_name ?? "this slot"}.`}
+        description={`This will permanently remove ${deletingSlot?.slot_name ?? 'this slot'}.`}
         confirmLabel="Confirm remove"
       />
 
       {deleteSlotMutation.isError ? (
-        <p className="text-sm text-red-600">{deleteSlotMutation.error.message}</p>
+        <p className="text-sm text-red-600">
+          {deleteSlotMutation.error.message}
+        </p>
       ) : null}
       {deleteSlotMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteSlotMutation.data}</p>
