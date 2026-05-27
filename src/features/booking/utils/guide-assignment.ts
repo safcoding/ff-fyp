@@ -1,3 +1,5 @@
+export const GUIDE_PRICE = 150
+
 export const calculateAssignedGuideCount = (paxTotal: number): number => {
   if (paxTotal > 200) {
     throw new Error('Please contact staff for bookings above 200 pax.')
@@ -16,4 +18,8 @@ export const calculateAssignedGuideCount = (paxTotal: number): number => {
   }
 
   return 1
+}
+
+export const calculateGuideFee = (guideCount: number | null): number => {
+  return (guideCount ?? 0) * GUIDE_PRICE
 }

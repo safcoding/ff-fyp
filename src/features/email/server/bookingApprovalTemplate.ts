@@ -1,14 +1,19 @@
-import { formatCurrency } from "@/lib/utils"
-import type { BookingWithRelations } from "@/features/booking/server/bookingMapper"
-import { escapeHtml, formatDate, formatPaxValue, paxLabels } from "./emailFormat"
+import { formatCurrency } from '@/lib/utils'
+import type { BookingWithRelations } from '@/features/booking/server/bookingMapper'
+import {
+  escapeHtml,
+  formatDate,
+  formatPaxValue,
+  paxLabels,
+} from './emailFormat'
 
 const TERMS_AND_CONDITIONS = [
-  "1) Please arrive 15 minutes before your scheduled slot.",
-  "2) Late arrivals may result in shorter session time.",
-  "3) Bookings are subject to availability and capacity limits.",
-  "4) Cancellations must be made at least 48 hours in advance.",
-  "5) Payments are non-refundable once the booking is approved.",
-].join("\n")
+  '1) Please arrive 15 minutes before your scheduled slot.',
+  '2) Late arrivals may result in shorter session time.',
+  '3) Bookings are subject to availability and capacity limits.',
+  '4) Cancellations must be made at least 48 hours in advance.',
+  '5) Payments are non-refundable once the booking is approved.',
+].join('\n')
 
 function buildBookingLines(booking: BookingWithRelations) {
   const lines: string[] = []
@@ -16,14 +21,21 @@ function buildBookingLines(booking: BookingWithRelations) {
   lines.push(`Booking ID: ${booking.booking_id}`)
   lines.push(`Date: ${formatDate(booking.booking_date)}`)
   lines.push(`Slot: ${booking.slots?.slot_name ?? booking.slot_id}`)
+  lines.push(
+    `Tour Guides: ${
+      booking.slots?.slot_type === 'GUIDED'
+        ? (booking.assigned_guide_count ?? '-')
+        : 'Not required'
+    }`,
+  )
   lines.push(`Organization: ${booking.org_name}`)
   lines.push(`Type: ${booking.org_type}`)
   lines.push(`State: ${booking.org_state}`)
-  lines.push("")
-  lines.push("Visitors:")
+  lines.push('')
+  lines.push('Visitors:')
   for (const pkg of booking.booking_packages) {
     lines.push(
-      `- ${pkg.packages?.package_name ?? pkg.package_id}: MY Adult ${pkg.pax_my_adult ?? 0}, MY Kid ${pkg.pax_my_kid ?? 0}, MY Senior ${pkg.pax_my_senior ?? 0}, MY OKU ${pkg.pax_my_oku ?? 0}, Non-MY Adult ${pkg.pax_non_my_adult ?? 0}, Non-MY Kid ${pkg.pax_non_my_kid ?? 0}, Non-MY Senior ${pkg.pax_non_my_senior ?? 0}, Non-MY OKU ${pkg.pax_non_my_oku ?? 0}`
+      `- ${pkg.packages?.package_name ?? pkg.package_id}: MY Adult ${pkg.pax_my_adult ?? 0}, MY Kid ${pkg.pax_my_kid ?? 0}, MY Senior ${pkg.pax_my_senior ?? 0}, MY OKU ${pkg.pax_my_oku ?? 0}, Non-MY Adult ${pkg.pax_non_my_adult ?? 0}, Non-MY Kid ${pkg.pax_non_my_kid ?? 0}, Non-MY Senior ${pkg.pax_non_my_senior ?? 0}, Non-MY OKU ${pkg.pax_non_my_oku ?? 0}`,
     )
   }
 
@@ -48,10 +60,10 @@ function buildPackageRows(booking: BookingWithRelations) {
         <tr>
           <td style="padding:10px 8px; border-bottom:1px solid #e5e7eb; font-weight:600;">${escapeHtml(packageName)}</td>
           <td style="padding:10px 8px; border-bottom:1px solid #e5e7eb; color:#4b5563;">
-            ${paxPairs.map((pax) => `${pax.label}: ${pax.value}`).join("<br>")}
+            ${paxPairs.map((pax) => `${pax.label}: ${pax.value}`).join('<br>')}
           </td>
         </tr>
-      `
+      `,
     )
   }
 
@@ -63,7 +75,7 @@ function buildPackageRows(booking: BookingWithRelations) {
     `
   }
 
-  return rows.join("")
+  return rows.join('')
 }
 
 export function buildBookingApprovalText(
@@ -74,18 +86,20 @@ export function buildBookingApprovalText(
   const total = formatCurrency(Number(booking.booking_price))
 
   return [
-    "Your booking has been approved!",
-    "",
+    'Your booking has been approved!',
+    '',
     ...bookingLines,
-    "",
+    '',
     `Total Price: ${total}`,
-    "",
-    "Staff Comment:",
-    staffComment && staffComment.trim() ? staffComment.trim() : "No staff comment provided.",
-    "",
-    "Terms and Conditions:",
+    '',
+    'Staff Comment:',
+    staffComment && staffComment.trim()
+      ? staffComment.trim()
+      : 'No staff comment provided.',
+    '',
+    'Terms and Conditions:',
     TERMS_AND_CONDITIONS,
-  ].join("\n")
+  ].join('\n')
 }
 
 export function buildBookingApprovalHtml(
@@ -93,8 +107,11 @@ export function buildBookingApprovalHtml(
   staffComment: string | null,
 ) {
   const packageRows = buildPackageRows(booking)
-  const safeComment = staffComment && staffComment.trim() ? escapeHtml(staffComment.trim()) : "No staff comment provided."
-  const safeTerms = escapeHtml(TERMS_AND_CONDITIONS).replace(/\n/g, "<br>")
+  const safeComment =
+    staffComment && staffComment.trim()
+      ? escapeHtml(staffComment.trim())
+      : 'No staff comment provided.'
+  const safeTerms = escapeHtml(TERMS_AND_CONDITIONS).replace(/\n/g, '<br>')
 
   return `
   <div style="font-family: Arial, sans-serif; background:#f7f7f7; padding:24px;">
@@ -117,6 +134,14 @@ export function buildBookingApprovalHtml(
           <tr>
             <td style="padding:8px 0; color:#6b7280;">Booking Slot</td>
             <td style="padding:8px 0; font-weight:600; color:#111827;">${escapeHtml(booking.slots?.slot_name ?? booking.slot_id)}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0; color:#6b7280;">Tour Guides</td>
+            <td style="padding:8px 0; font-weight:600; color:#111827;">${
+              booking.slots?.slot_type === 'GUIDED'
+                ? (booking.assigned_guide_count ?? '-')
+                : 'Not required'
+            }</td>
           </tr>
           <tr>
             <td style="padding:8px 0; color:#6b7280;">Person In Charge (PIC)</td>

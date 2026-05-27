@@ -1,5 +1,6 @@
-import type { PackagePricing } from "@/features/package/server/packageActions"
-import { org_categories, states } from "@/generated/prisma/enums"
+import type { PackagePricing } from '@/features/package/server/packageActions'
+import { GUIDE_PRICE } from '@/features/booking/utils/guide-assignment'
+import { org_categories, states } from '@/generated/prisma/enums'
 
 export type Step = 1 | 2 | 3 | 4 | 5
 
@@ -41,38 +42,43 @@ export type FormValues = {
   foods: FoodSelection[]
 }
 
-export const bookingDraftStorageKey = "booking-form-draft-v1"
+export const bookingDraftStorageKey = 'booking-form-draft-v1'
 
 export const defaultFormValues: FormValues = {
-  booking_date: "",
-  pic_name: "",
-  pic_email: "",
-  pic_hp: "",
-  org_address: "",
-  org_name: "",
-  event_name:"",
-  org_state: "",
-  org_type: "",
-  slot_id: "",
+  booking_date: '',
+  pic_name: '',
+  pic_email: '',
+  pic_hp: '',
+  org_address: '',
+  org_name: '',
+  event_name: '',
+  org_state: '',
+  org_type: '',
+  slot_id: '',
   packages: [],
   addons: [],
   foods: [],
 }
 
-export const paxFieldMeta: ReadonlyArray<{ name: keyof PackageSelection; label: string }> = [
-  { name: "pax_my_adult", label: "MY Adult" },
-  { name: "pax_my_kid", label: "MY Kid" },
-  { name: "pax_my_senior", label: "MY Senior" },
-  { name: "pax_my_oku", label: "MY OKU" },
-  { name: "pax_non_my_adult", label: "Non-MY Adult" },
-  { name: "pax_non_my_kid", label: "Non-MY Kid" },
-  { name: "pax_non_my_senior", label: "Non-MY Senior" },
-  { name: "pax_non_my_oku", label: "Non-MY OKU" },
+export const paxFieldMeta: ReadonlyArray<{
+  name: keyof PackageSelection
+  label: string
+}> = [
+  { name: 'pax_my_adult', label: 'MY Adult' },
+  { name: 'pax_my_kid', label: 'MY Kid' },
+  { name: 'pax_my_senior', label: 'MY Senior' },
+  { name: 'pax_my_oku', label: 'MY OKU' },
+  { name: 'pax_non_my_adult', label: 'Non-MY Adult' },
+  { name: 'pax_non_my_kid', label: 'Non-MY Kid' },
+  { name: 'pax_non_my_senior', label: 'Non-MY Senior' },
+  { name: 'pax_non_my_oku', label: 'Non-MY OKU' },
 ]
 
-export type PaxTotals = Omit<PackageSelection, "package_id">
+export type PaxTotals = Omit<PackageSelection, 'package_id'>
 
-export const createEmptyPackageSelection = (packageId: string): PackageSelection => ({
+export const createEmptyPackageSelection = (
+  packageId: string,
+): PackageSelection => ({
   package_id: packageId,
   pax_my_adult: 0,
   pax_my_kid: 0,
@@ -100,6 +106,7 @@ export function computeTotal(
   packagePricingMap: Record<string, PackagePricing | undefined>,
   addons: Array<{ addon_id: number; addon_price: number }> = [],
   foods: Array<{ food_id: number; food_price: number }> = [],
+  guideFee = 0,
 ): number {
   const packageTotal = values.packages.reduce((sum, pkg) => {
     const pricing = packagePricingMap[pkg.package_id]
@@ -118,8 +125,12 @@ export function computeTotal(
     )
   }, 0)
 
-  const addonPriceMap = new Map(addons.map((addon) => [addon.addon_id, addon.addon_price]))
-  const foodPriceMap = new Map(foods.map((food) => [food.food_id, food.food_price]))
+  const addonPriceMap = new Map(
+    addons.map((addon) => [addon.addon_id, addon.addon_price]),
+  )
+  const foodPriceMap = new Map(
+    foods.map((food) => [food.food_id, food.food_price]),
+  )
 
   const addonTotal = values.addons.reduce((sum, item) => {
     const unitPrice = addonPriceMap.get(item.addon_id) ?? 0
@@ -131,7 +142,43 @@ export function computeTotal(
     return sum + unitPrice * item.quantity
   }, 0)
 
-  return packageTotal + addonTotal + foodTotal
+  return packageTotal + addonTotal + foodTotal + guideFee
+}
+
+export function getGuideAssignmentPreview(
+  slotType: string | null | undefined,
+  totalVisitors: number,
+) {
+  if (slotType !== 'GUIDED') {
+    return {
+      guideCount: null,
+      guideFee: 0,
+      error: null,
+    }
+  }
+
+  if (totalVisitors > 200) {
+    return {
+      guideCount: null,
+      guideFee: 0,
+      error: 'Please contact staff for bookings above 200 pax.',
+    }
+  }
+
+  const guideCount =
+    totalVisitors >= 151
+      ? 4
+      : totalVisitors >= 101
+        ? 3
+        : totalVisitors >= 51
+          ? 2
+          : 1
+
+  return {
+    guideCount,
+    guideFee: guideCount * GUIDE_PRICE,
+    error: null,
+  }
 }
 
 export function getPaxTotals(values: FormValues): PaxTotals {
@@ -165,20 +212,20 @@ export function getTotalVisitors(values: FormValues) {
 
 export function validateDetails(values: FormValues): string | null {
   if (getTotalVisitors(values) < 20) {
-    return "At least 20 visitors are required."
+    return 'At least 20 visitors are required.'
   }
 
   const allowedStates = new Set(Object.values(states))
   const allowedOrgTypes = new Set(Object.values(org_categories))
 
   const requiredTextFields: Array<{ key: keyof FormValues; label: string }> = [
-    { key: "pic_name", label: "Person in Charge Name" },
-    { key: "pic_email", label: "Person in Charge Email" },
-    { key: "pic_hp", label: "Phone" },
-    { key: "org_name", label: "Organization Name" },
-    { key: "org_address", label: "Organization Address" },
-    { key: "org_state", label: "Organization State" },
-    { key: "org_type", label: "Organization Type" },
+    { key: 'pic_name', label: 'Person in Charge Name' },
+    { key: 'pic_email', label: 'Person in Charge Email' },
+    { key: 'pic_hp', label: 'Phone' },
+    { key: 'org_name', label: 'Organization Name' },
+    { key: 'org_address', label: 'Organization Address' },
+    { key: 'org_state', label: 'Organization State' },
+    { key: 'org_type', label: 'Organization Type' },
   ]
 
   for (const field of requiredTextFields) {
@@ -189,23 +236,23 @@ export function validateDetails(values: FormValues): string | null {
   }
 
   if (!allowedStates.has(values.org_state)) {
-    return "Please select a valid organization state."
+    return 'Please select a valid organization state.'
   }
 
   if (!allowedOrgTypes.has(values.org_type)) {
-    return "Please select a valid organization type."
+    return 'Please select a valid organization type.'
   }
 
   const email = values.pic_email.trim()
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailPattern.test(email)) {
-    return "Please enter a valid email address."
+    return 'Please enter a valid email address.'
   }
 
   const phone = values.pic_hp.trim()
- const phonePattern = /^\+?[1-9]\d{7,14}$/
+  const phonePattern = /^\+?[1-9]\d{7,14}$/
   if (!phonePattern.test(phone)) {
-    return "Phone must be in valid E.164 format (example: +60123456789)."
+    return 'Phone must be in valid E.164 format (example: +60123456789).'
   }
 
   return null

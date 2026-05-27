@@ -10,7 +10,10 @@ import {
   calculatePackageSubtotal,
 } from './price-calculation'
 import { calculatePaxTotal } from './pax-calculation'
-import { calculateAssignedGuideCount } from './guide-assignment'
+import {
+  calculateAssignedGuideCount,
+  calculateGuideFee,
+} from '../../utils/guide-assignment'
 import { getSlotTimeForDate } from '../bookingAvailabilityService'
 
 export const prepareBookingWriteData = async (data: BookingFormInput) => {
@@ -73,6 +76,11 @@ export const prepareBookingWriteData = async (data: BookingFormInput) => {
     subtotal: calculateAddonSubtotal(row, addonPriceMap[row.addon_id]),
   }))
 
+  const paxTotal = calculatePaxTotal(data.packages)
+  const assignedGuideCount =
+    slot.slot_type === 'GUIDED' ? calculateAssignedGuideCount(paxTotal) : null
+  const guideFee = calculateGuideFee(assignedGuideCount)
+
   const bookingPrice = calculateBookingTotal(
     data.packages,
     data.foods,
@@ -80,11 +88,8 @@ export const prepareBookingWriteData = async (data: BookingFormInput) => {
     packagePriceMap,
     foodPriceMap,
     addonPriceMap,
+    guideFee,
   )
-
-  const paxTotal = calculatePaxTotal(data.packages)
-  const assignedGuideCount =
-    slot.slot_type === 'GUIDED' ? calculateAssignedGuideCount(paxTotal) : null
 
   return {
     bookingPrice,

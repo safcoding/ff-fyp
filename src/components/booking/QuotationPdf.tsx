@@ -1,10 +1,19 @@
-import { Document, Page, StyleSheet, Text, View, pdf } from "@react-pdf/renderer"
+import {
+  Document,
+  Page,
+  StyleSheet,
+  Text,
+  View,
+  pdf,
+} from '@react-pdf/renderer'
 
 export type QuotationBookingData = {
   booking_id: string
   booking_price: string
+  assigned_guide_count?: number | null
   booking_date: string | Date | null
   slot_id: string
+  slot_type?: string | null
   package_id: string
   pic_name: string
   pic_email: string
@@ -34,30 +43,30 @@ export type QuotationBookingData = {
 }
 
 const quotationStyles = StyleSheet.create({
-  page: { padding: 32, fontSize: 10, fontFamily: "Helvetica" },
-  title: { fontSize: 18, marginBottom: 8, fontWeight: "bold" },
-  section: { marginTop: 12, marginBottom: 6, fontSize: 11, fontWeight: "bold" },
+  page: { padding: 32, fontSize: 10, fontFamily: 'Helvetica' },
+  title: { fontSize: 18, marginBottom: 8, fontWeight: 'bold' },
+  section: { marginTop: 12, marginBottom: 6, fontSize: 11, fontWeight: 'bold' },
   row: { marginBottom: 4 },
-  muted: { color: "#4b5563" },
-  twoCol: { flexDirection: "row", justifyContent: "space-between", gap: 12 },
+  muted: { color: '#4b5563' },
+  twoCol: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   col: { flexGrow: 1 },
 })
 
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-MY", {
-    style: "currency",
-    currency: "MYR",
+  return new Intl.NumberFormat('en-MY', {
+    style: 'currency',
+    currency: 'MYR',
     maximumFractionDigits: 2,
   }).format(value)
 }
 
 function formatDate(value: Date | string | null) {
-  if (!value) return "-"
-  const date = typeof value === "string" ? new Date(value) : value
-  return new Intl.DateTimeFormat("en-MY", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
+  if (!value) return '-'
+  const date = typeof value === 'string' ? new Date(value) : value
+  return new Intl.DateTimeFormat('en-MY', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
   }).format(date)
 }
 
@@ -68,8 +77,12 @@ function QuotationDocument({ booking }: { booking: QuotationBookingData }) {
     <Document>
       <Page size="A4" style={quotationStyles.page}>
         <Text style={quotationStyles.title}>Booking Quotation</Text>
-        <Text style={quotationStyles.row}>Quotation Date: {formatDate(new Date())}</Text>
-        <Text style={quotationStyles.row}>Booking ID: {booking.booking_id}</Text>
+        <Text style={quotationStyles.row}>
+          Quotation Date: {formatDate(new Date())}
+        </Text>
+        <Text style={quotationStyles.row}>
+          Booking ID: {booking.booking_id}
+        </Text>
 
         <Text style={quotationStyles.section}>Customer</Text>
         <Text style={quotationStyles.row}>Name: {booking.pic_name}</Text>
@@ -85,25 +98,51 @@ function QuotationDocument({ booking }: { booking: QuotationBookingData }) {
         <Text style={quotationStyles.section}>Booking Summary</Text>
         <View style={quotationStyles.twoCol}>
           <View style={quotationStyles.col}>
-            <Text style={quotationStyles.row}>Booking Date: {formatDate(booking.booking_date)}</Text>
+            <Text style={quotationStyles.row}>
+              Booking Date: {formatDate(booking.booking_date)}
+            </Text>
             <Text style={quotationStyles.row}>Slot: {booking.slot_id}</Text>
-            <Text style={quotationStyles.row}>Package: {booking.package_id}</Text>
+            <Text style={quotationStyles.row}>
+              Tour Guides:{' '}
+              {booking.slot_type === 'GUIDED'
+                ? (booking.assigned_guide_count ?? '-')
+                : 'Not required'}
+            </Text>
+            <Text style={quotationStyles.row}>
+              Package: {booking.package_id}
+            </Text>
           </View>
           <View style={quotationStyles.col}>
-            <Text style={quotationStyles.row}>Total: {formatCurrency(total)}</Text>
-            <Text style={[quotationStyles.row, quotationStyles.muted]}>Includes add-ons and foods.</Text>
+            <Text style={quotationStyles.row}>
+              Total: {formatCurrency(total)}
+            </Text>
+            <Text style={[quotationStyles.row, quotationStyles.muted]}>
+              Includes add-ons and foods.
+            </Text>
           </View>
         </View>
 
         <Text style={quotationStyles.section}>Visitors</Text>
-        <Text style={quotationStyles.row}>MY Adult: {booking.pax_my_adult}</Text>
+        <Text style={quotationStyles.row}>
+          MY Adult: {booking.pax_my_adult}
+        </Text>
         <Text style={quotationStyles.row}>MY Kid: {booking.pax_my_kid}</Text>
-        <Text style={quotationStyles.row}>MY Senior: {booking.pax_my_senior}</Text>
+        <Text style={quotationStyles.row}>
+          MY Senior: {booking.pax_my_senior}
+        </Text>
         <Text style={quotationStyles.row}>MY OKU: {booking.pax_my_oku}</Text>
-        <Text style={quotationStyles.row}>Non-MY Adult: {booking.pax_non_my_adult}</Text>
-        <Text style={quotationStyles.row}>Non-MY Kid: {booking.pax_non_my_kid}</Text>
-        <Text style={quotationStyles.row}>Non-MY Senior: {booking.pax_non_my_senior}</Text>
-        <Text style={quotationStyles.row}>Non-MY OKU: {booking.pax_non_my_oku}</Text>
+        <Text style={quotationStyles.row}>
+          Non-MY Adult: {booking.pax_non_my_adult}
+        </Text>
+        <Text style={quotationStyles.row}>
+          Non-MY Kid: {booking.pax_non_my_kid}
+        </Text>
+        <Text style={quotationStyles.row}>
+          Non-MY Senior: {booking.pax_non_my_senior}
+        </Text>
+        <Text style={quotationStyles.row}>
+          Non-MY OKU: {booking.pax_non_my_oku}
+        </Text>
 
         <Text style={quotationStyles.section}>Add-ons</Text>
         {booking.booking_addons.length ? (
@@ -113,7 +152,9 @@ function QuotationDocument({ booking }: { booking: QuotationBookingData }) {
             </Text>
           ))
         ) : (
-          <Text style={[quotationStyles.row, quotationStyles.muted]}>No add-ons selected.</Text>
+          <Text style={[quotationStyles.row, quotationStyles.muted]}>
+            No add-ons selected.
+          </Text>
         )}
 
         <Text style={quotationStyles.section}>Foods</Text>
@@ -124,7 +165,9 @@ function QuotationDocument({ booking }: { booking: QuotationBookingData }) {
             </Text>
           ))
         ) : (
-          <Text style={[quotationStyles.row, quotationStyles.muted]}>No foods selected.</Text>
+          <Text style={[quotationStyles.row, quotationStyles.muted]}>
+            No foods selected.
+          </Text>
         )}
       </Page>
     </Document>

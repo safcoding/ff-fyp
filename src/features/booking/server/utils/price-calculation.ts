@@ -1,8 +1,12 @@
-import z from "zod"
-import { bookingPackagesSchema, bookingFoodSchema, bookingAddonSchema} from "@/schemas/bookingSchemas"
-import { packageSchema } from "@/schemas/packageSchemas"
-import { foodSchema } from "@/schemas/foodSchemas"
-import { addonSchema } from "@/schemas/addonSchemas"
+import z from 'zod'
+import {
+  bookingPackagesSchema,
+  bookingFoodSchema,
+  bookingAddonSchema,
+} from '@/schemas/bookingSchemas'
+import { packageSchema } from '@/schemas/packageSchemas'
+import { foodSchema } from '@/schemas/foodSchemas'
+import { addonSchema } from '@/schemas/addonSchemas'
 
 type PackageRow = z.infer<typeof bookingPackagesSchema>
 type FoodRow = z.infer<typeof bookingFoodSchema>
@@ -10,17 +14,17 @@ type AddonRow = z.infer<typeof bookingAddonSchema>
 
 type PackagePrice = Pick<
   z.infer<typeof packageSchema>,
-  | "price_my_adult"
-  | "price_my_kid"
-  | "price_my_senior"
-  | "price_my_oku"
-  | "price_non_my_adult"
-  | "price_non_my_kid"
-  | "price_non_my_senior"
-  | "price_non_my_oku"
+  | 'price_my_adult'
+  | 'price_my_kid'
+  | 'price_my_senior'
+  | 'price_my_oku'
+  | 'price_non_my_adult'
+  | 'price_non_my_kid'
+  | 'price_non_my_senior'
+  | 'price_non_my_oku'
 >
-type FoodPrice = Pick<z.infer<typeof foodSchema>, "food_price">
-type AddonPrice = Pick<z.infer<typeof addonSchema>, "addon_price">
+type FoodPrice = Pick<z.infer<typeof foodSchema>, 'food_price'>
+type AddonPrice = Pick<z.infer<typeof addonSchema>, 'addon_price'>
 
 type PackagePriceMap = Record<string, PackagePrice>
 type FoodPriceMap = Record<number, FoodPrice>
@@ -28,9 +32,9 @@ type AddonPriceMap = Record<number, AddonPrice>
 
 export const calculatePackageSubtotal = (
   pax: PackageRow,
-  price: PackagePrice
+  price: PackagePrice,
 ): number => {
-  return ( 
+  return (
     price.price_my_adult * pax.pax_my_adult +
     price.price_my_kid * pax.pax_my_kid +
     price.price_my_oku * pax.pax_my_oku +
@@ -39,31 +43,32 @@ export const calculatePackageSubtotal = (
     price.price_non_my_kid * pax.pax_non_my_kid +
     price.price_non_my_senior * pax.pax_non_my_senior +
     price.price_non_my_oku * pax.pax_non_my_oku
-              );
+  )
 }
 
 export const calculateFoodSubtotal = (
   quantity: FoodRow,
-  food: FoodPrice
-):number => {
-  return (quantity.quantity * food.food_price);
+  food: FoodPrice,
+): number => {
+  return quantity.quantity * food.food_price
 }
 
 export const calculateAddonSubtotal = (
   quantity: AddonRow,
-  addon: AddonPrice
-):number => {
-  return (quantity.quantity * addon.addon_price);
+  addon: AddonPrice,
+): number => {
+  return quantity.quantity * addon.addon_price
 }
 
-export const calculateBookingTotal =(
+export const calculateBookingTotal = (
   packageRows: PackageRow[],
   foodRows: FoodRow[],
   addonRows: AddonRow[],
   packagePrices: PackagePriceMap,
   foodPrices: FoodPriceMap,
-  addonPrices: AddonPriceMap
-):number => {
+  addonPrices: AddonPriceMap,
+  guideFee = 0,
+): number => {
   const packagesTotal = packageRows.reduce((sum, row) => {
     const price = packagePrices[row.package_id]
     return sum + calculatePackageSubtotal(row, price)
@@ -81,5 +86,5 @@ export const calculateBookingTotal =(
     return sum + calculateAddonSubtotal(row, price)
   }, 0)
 
-  return packagesTotal + foodsTotal + addonsTotal
+  return packagesTotal + foodsTotal + addonsTotal + guideFee
 }

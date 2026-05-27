@@ -1,21 +1,41 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { useMemo } from "react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { createFileRoute } from '@tanstack/react-router'
+import { useMemo } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { formatCurrency } from "@/lib/utils"
-import { computeTotal, getPaxTotals, getTotalVisitors, paxFieldMeta } from "@/lib/utils/booking/booking-form"
-import { useBookingDraft } from "@/hooks/useBookingDraft"
-import { getAddons } from "@/features/addon/server/addonActions"
-import { getFoods } from "@/features/food/server/foodActions"
-import { getPackagePricing, getPackages } from "@/features/package/server/packageActions"
-import { createBooking, getBookings } from "@/features/booking/server/bookingActions"
-import { getSlots } from "@/features/slot/server/slotActions"
-import { StepIndicator } from "@/components/booking/StepIndicator"
+import { formatCurrency } from '@/lib/utils'
+import {
+  computeTotal,
+  getGuideAssignmentPreview,
+  getPaxTotals,
+  getTotalVisitors,
+  paxFieldMeta,
+} from '@/lib/utils/booking/booking-form'
+import { useBookingDraft } from '@/hooks/useBookingDraft'
+import { getAddons } from '@/features/addon/server/addonActions'
+import { getFoods } from '@/features/food/server/foodActions'
+import {
+  getPackagePricing,
+  getPackages,
+} from '@/features/package/server/packageActions'
+import {
+  createBooking,
+  getBookings,
+} from '@/features/booking/server/bookingActions'
+import { getSlots } from '@/features/slot/server/slotActions'
+import { StepIndicator } from '@/components/booking/StepIndicator'
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
-export const Route = createFileRoute("/booking-form/review")({ component: BookingReviewPage })
+export const Route = createFileRoute('/booking-form/review')({
+  component: BookingReviewPage,
+})
 
 function BookingReviewPage() {
   const navigate = Route.useNavigate()
@@ -23,41 +43,42 @@ function BookingReviewPage() {
   const { values, clearDraft, isHydrated } = useBookingDraft()
 
   const bookingsQuery = useQuery({
-    queryKey: ["bookings"],
+    queryKey: ['bookings'],
     queryFn: () => getBookings(),
   })
 
   const packagesQuery = useQuery({
-    queryKey: ["packages"],
+    queryKey: ['packages'],
     queryFn: () => getPackages(),
   })
 
   const slotsQuery = useQuery({
-    queryKey: ["slots", "booking-form"],
+    queryKey: ['slots', 'booking-form'],
     queryFn: () => getSlots(),
   })
 
   const addonsQuery = useQuery({
-    queryKey: ["addons"],
+    queryKey: ['addons'],
     queryFn: () => getAddons(),
   })
 
   const foodsQuery = useQuery({
-    queryKey: ["foods"],
+    queryKey: ['foods'],
     queryFn: () => getFoods(),
   })
 
   const createBookingMutation = useMutation({
     mutationFn: createBooking,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["bookings"] })
+      await queryClient.invalidateQueries({ queryKey: ['bookings'] })
       clearDraft()
-      void navigate({ to: "/booking-form/date-slot" })
+      void navigate({ to: '/booking-form/date-slot' })
     },
   })
 
   const selectedSlot = useMemo(
-    () => (slotsQuery.data ?? []).find((slot) => slot.slot_id === values.slot_id),
+    () =>
+      (slotsQuery.data ?? []).find((slot) => slot.slot_id === values.slot_id),
     [slotsQuery.data, values.slot_id],
   )
 
@@ -66,20 +87,39 @@ function BookingReviewPage() {
       (packagesQuery.data ?? []).map((pkg) => [
         pkg.package_id,
         getPackagePricing(pkg as unknown as Record<string, unknown>),
-      ])
+      ]),
     )
   }, [packagesQuery.data])
 
   const totalVisitors = getTotalVisitors(values)
   const paxTotals = getPaxTotals(values)
+  const guideAssignment = getGuideAssignmentPreview(
+    selectedSlot?.slot_type,
+    totalVisitors,
+  )
 
   const estimatedTotal = useMemo(
-    () => computeTotal(values, packagePricingMap, addonsQuery.data ?? [], foodsQuery.data ?? []),
-    [values, packagePricingMap, addonsQuery.data, foodsQuery.data],
+    () =>
+      computeTotal(
+        values,
+        packagePricingMap,
+        addonsQuery.data ?? [],
+        foodsQuery.data ?? [],
+        guideAssignment.guideFee,
+      ),
+    [
+      values,
+      packagePricingMap,
+      addonsQuery.data,
+      foodsQuery.data,
+      guideAssignment.guideFee,
+    ],
   )
 
   const addonById = useMemo(() => {
-    return new Map((addonsQuery.data ?? []).map((addon) => [addon.addon_id, addon]))
+    return new Map(
+      (addonsQuery.data ?? []).map((addon) => [addon.addon_id, addon]),
+    )
   }, [addonsQuery.data])
 
   const foodById = useMemo(() => {
@@ -87,7 +127,9 @@ function BookingReviewPage() {
   }, [foodsQuery.data])
 
   const packageById = useMemo(() => {
-    return new Map((packagesQuery.data ?? []).map((pkg) => [pkg.package_id, pkg]))
+    return new Map(
+      (packagesQuery.data ?? []).map((pkg) => [pkg.package_id, pkg]),
+    )
   }, [packagesQuery.data])
 
   if (!isHydrated) {
@@ -113,12 +155,23 @@ function BookingReviewPage() {
             onSubmit={(e) => {
               e.preventDefault()
               e.stopPropagation()
+              if (guideAssignment.error) {
+                return
+              }
               createBookingMutation.mutate({ data: values })
             }}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-slate-600">Review your booking before submission.</p>
-              <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/addons-foods" })}>
+              <p className="text-sm text-slate-600">
+                Review your booking before submission.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  void navigate({ to: '/booking-form/addons-foods' })
+                }
+              >
                 Back to add-ons
               </Button>
             </div>
@@ -129,8 +182,9 @@ function BookingReviewPage() {
                   <CardTitle className="text-base">Schedule</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1 text-sm">
-                  <p>Date: {values.booking_date || "-"}</p>
-                  <p>Slot: {selectedSlot?.slot_name ?? "-"}</p>
+                  <p>Date: {values.booking_date || '-'}</p>
+                  <p>Slot: {selectedSlot?.slot_name ?? '-'}</p>
+                  <p>Slot Type: {selectedSlot?.slot_type ?? '-'}</p>
                 </CardContent>
               </Card>
 
@@ -147,7 +201,11 @@ function BookingReviewPage() {
                       return (
                         <div key={pkg.package_id} className="space-y-1">
                           <p>{info?.package_name ?? pkg.package_id}</p>
-                          {info?.package_note ? <p className="text-slate-600">{info.package_note}</p> : null}
+                          {info?.package_note ? (
+                            <p className="text-slate-600">
+                              {info.package_note}
+                            </p>
+                          ) : null}
                         </div>
                       )
                     })
@@ -165,7 +223,34 @@ function BookingReviewPage() {
                       {meta.label}: {Number(paxTotals[meta.name])}
                     </p>
                   ))}
-                  <p className="pt-2 font-medium">Total Visitors: {totalVisitors}</p>
+                  <p className="pt-2 font-medium">
+                    Total Visitors: {totalVisitors}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Tour Guides</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-1 text-sm">
+                  {selectedSlot?.slot_type === 'GUIDED' ? (
+                    guideAssignment.error ? (
+                      <p className="text-red-600">{guideAssignment.error}</p>
+                    ) : (
+                      <>
+                        <p>Assigned Guides: {guideAssignment.guideCount}</p>
+                        <p>
+                          Guide Fee: {formatCurrency(guideAssignment.guideFee)}
+                        </p>
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <p>Assigned Guides: Not required</p>
+                      <p>Guide Fee: {formatCurrency(0)}</p>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
@@ -175,7 +260,9 @@ function BookingReviewPage() {
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   {values.addons.length === 0 && values.foods.length === 0 ? (
-                    <p className="text-slate-600">No add-ons or foods selected.</p>
+                    <p className="text-slate-600">
+                      No add-ons or foods selected.
+                    </p>
                   ) : (
                     <>
                       {values.addons.length > 0 ? (
@@ -222,7 +309,9 @@ function BookingReviewPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">PIC and Organization</CardTitle>
+                  <CardTitle className="text-base">
+                    PIC and Organization
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1 text-sm">
                   <p>PIC: {values.pic_name}</p>
@@ -238,22 +327,43 @@ function BookingReviewPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Estimated Total Amount</CardTitle>
+                <CardTitle className="text-base">
+                  Estimated Total Amount
+                </CardTitle>
                 <CardDescription>
-                  Computed from selected package pricing and pax counts, and validated server-side on submit.
+                  Computed from selected package pricing, pax counts, add-ons,
+                  foods, and guided tour guide fees.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-semibold">{formatCurrency(estimatedTotal)}</p>
+                <p className="text-2xl font-semibold">
+                  {formatCurrency(estimatedTotal)}
+                </p>
               </CardContent>
             </Card>
 
-            <Button type="submit" disabled={createBookingMutation.isPending}>
-              {createBookingMutation.isPending ? "Creating booking..." : "Confirm and create booking"}
+            <Button
+              type="submit"
+              disabled={
+                createBookingMutation.isPending ||
+                Boolean(guideAssignment.error)
+              }
+            >
+              {createBookingMutation.isPending
+                ? 'Creating booking...'
+                : 'Confirm and create booking'}
             </Button>
 
-            {createBookingMutation.isError ? <p className="text-sm text-red-600">{createBookingMutation.error.message}</p> : null}
-            {createBookingMutation.isSuccess ? <p className="text-sm text-green-700">{createBookingMutation.data}</p> : null}
+            {createBookingMutation.isError ? (
+              <p className="text-sm text-red-600">
+                {createBookingMutation.error.message}
+              </p>
+            ) : null}
+            {createBookingMutation.isSuccess ? (
+              <p className="text-sm text-green-700">
+                {createBookingMutation.data}
+              </p>
+            ) : null}
           </form>
         </CardContent>
       </Card>
@@ -261,18 +371,31 @@ function BookingReviewPage() {
       <Card>
         <CardHeader>
           <CardTitle>Existing Bookings</CardTitle>
-          <CardDescription>Recent bookings fetched via TanStack Query and server function.</CardDescription>
+          <CardDescription>
+            Recent bookings fetched via TanStack Query and server function.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {bookingsQuery.isPending ? <p>Loading bookings...</p> : null}
-          {bookingsQuery.isError ? <p className="text-red-600">{bookingsQuery.error.message}</p> : null}
+          {bookingsQuery.isError ? (
+            <p className="text-red-600">{bookingsQuery.error.message}</p>
+          ) : null}
           {bookingsQuery.data ? (
             <div className="space-y-3">
               {bookingsQuery.data.map((booking) => (
-                <div key={booking.booking_id} className="rounded-md border p-3 text-sm">
+                <div
+                  key={booking.booking_id}
+                  className="rounded-md border p-3 text-sm"
+                >
                   <p className="font-medium">{booking.org_name}</p>
                   <p>Package ID: {booking.package_id}</p>
                   <p>Slot ID: {booking.slot_id}</p>
+                  <p>
+                    Tour Guides:{' '}
+                    {booking.slot_type === 'GUIDED'
+                      ? (booking.assigned_guide_count ?? '-')
+                      : 'Not required'}
+                  </p>
                   <p>Total Price: {booking.booking_price}</p>
                 </div>
               ))}
