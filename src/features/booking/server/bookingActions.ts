@@ -201,7 +201,12 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
           slot_name: true,
           slot_start: true,
           slot_end: true,
+          weekday_start: true,
+          weekday_end: true,
+          weekend_start: true,
+          weekend_end: true,
           slot_capacity: true,
+          slot_type: true,
         },
       }),
       prisma.bookings.findMany({
@@ -268,12 +273,26 @@ export const getBookingAvailability = createServerFn({ method: "POST" })
       ? slots.map((slot) => {
           const booked = bookedByDateAndSlot.get(data.date!)?.get(slot.slot_id) ?? 0
           const remaining = Math.max(slot.slot_capacity - booked, 0)
+          const selectedDate = new Date(`${data.date}T00:00:00`)
+          const isWeekend = selectedDate.getDay() === 0 || selectedDate.getDay() === 6
+
+          const startTime = slot.slot_type === "UNGUIDED"
+            ? isWeekend
+              ? slot.weekend_start
+              : slot.weekday_start
+            : slot.slot_start
+
+          const endTime = slot.slot_type === "UNGUIDED"
+            ? isWeekend
+              ? slot.weekend_end
+              : slot.weekday_end
+            : slot.slot_end
 
           return {
             slot_id: slot.slot_id,
             slot_name: slot.slot_name,
-            slot_start: toHHmm(slot.slot_start),
-            slot_end: toHHmm(slot.slot_end),
+            slot_start: startTime ? toHHmm(startTime) : "",
+            slot_end: endTime ? toHHmm(endTime) : "",
             slot_capacity: slot.slot_capacity,
             booked_visitors: booked,
             remaining_capacity: remaining,

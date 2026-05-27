@@ -37,6 +37,7 @@ export type Booking_packagesAvgAggregateOutputType = {
   pax_non_my_oku: number | null
   subtotal: runtime.Decimal | null
   id: number | null
+  selected_activity: number | null
 }
 
 export type Booking_packagesSumAggregateOutputType = {
@@ -50,6 +51,7 @@ export type Booking_packagesSumAggregateOutputType = {
   pax_non_my_oku: number | null
   subtotal: runtime.Decimal | null
   id: number | null
+  selected_activity: number | null
 }
 
 export type Booking_packagesMinAggregateOutputType = {
@@ -65,6 +67,7 @@ export type Booking_packagesMinAggregateOutputType = {
   pax_non_my_oku: number | null
   subtotal: runtime.Decimal | null
   id: number | null
+  selected_activity: number | null
 }
 
 export type Booking_packagesMaxAggregateOutputType = {
@@ -80,6 +83,7 @@ export type Booking_packagesMaxAggregateOutputType = {
   pax_non_my_oku: number | null
   subtotal: runtime.Decimal | null
   id: number | null
+  selected_activity: number | null
 }
 
 export type Booking_packagesCountAggregateOutputType = {
@@ -95,6 +99,7 @@ export type Booking_packagesCountAggregateOutputType = {
   pax_non_my_oku: number
   subtotal: number
   id: number
+  selected_activity: number
   _all: number
 }
 
@@ -110,6 +115,7 @@ export type Booking_packagesAvgAggregateInputType = {
   pax_non_my_oku?: true
   subtotal?: true
   id?: true
+  selected_activity?: true
 }
 
 export type Booking_packagesSumAggregateInputType = {
@@ -123,6 +129,7 @@ export type Booking_packagesSumAggregateInputType = {
   pax_non_my_oku?: true
   subtotal?: true
   id?: true
+  selected_activity?: true
 }
 
 export type Booking_packagesMinAggregateInputType = {
@@ -138,6 +145,7 @@ export type Booking_packagesMinAggregateInputType = {
   pax_non_my_oku?: true
   subtotal?: true
   id?: true
+  selected_activity?: true
 }
 
 export type Booking_packagesMaxAggregateInputType = {
@@ -153,6 +161,7 @@ export type Booking_packagesMaxAggregateInputType = {
   pax_non_my_oku?: true
   subtotal?: true
   id?: true
+  selected_activity?: true
 }
 
 export type Booking_packagesCountAggregateInputType = {
@@ -168,6 +177,7 @@ export type Booking_packagesCountAggregateInputType = {
   pax_non_my_oku?: true
   subtotal?: true
   id?: true
+  selected_activity?: true
   _all?: true
 }
 
@@ -270,6 +280,7 @@ export type Booking_packagesGroupByOutputType = {
   pax_non_my_oku: number | null
   subtotal: runtime.Decimal | null
   id: number
+  selected_activity: number | null
   _count: Booking_packagesCountAggregateOutputType | null
   _avg: Booking_packagesAvgAggregateOutputType | null
   _sum: Booking_packagesSumAggregateOutputType | null
@@ -308,6 +319,8 @@ export type booking_packagesWhereInput = {
   pax_non_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   subtotal?: Prisma.DecimalNullableFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFilter<"booking_packages"> | number
+  selected_activity?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  package_activities?: Prisma.XOR<Prisma.ActivitiesNullableScalarRelationFilter, Prisma.activitiesWhereInput> | null
   bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
   packages?: Prisma.XOR<Prisma.PackagesScalarRelationFilter, Prisma.packagesWhereInput>
 }
@@ -325,6 +338,8 @@ export type booking_packagesOrderByWithRelationInput = {
   pax_non_my_oku?: Prisma.SortOrderInput | Prisma.SortOrder
   subtotal?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrderInput | Prisma.SortOrder
+  package_activities?: Prisma.activitiesOrderByWithRelationInput
   bookings?: Prisma.bookingsOrderByWithRelationInput
   packages?: Prisma.packagesOrderByWithRelationInput
 }
@@ -345,6 +360,8 @@ export type booking_packagesWhereUniqueInput = Prisma.AtLeast<{
   pax_non_my_senior?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   pax_non_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   subtotal?: Prisma.DecimalNullableFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  selected_activity?: Prisma.IntNullableFilter<"booking_packages"> | number | null
+  package_activities?: Prisma.XOR<Prisma.ActivitiesNullableScalarRelationFilter, Prisma.activitiesWhereInput> | null
   bookings?: Prisma.XOR<Prisma.BookingsScalarRelationFilter, Prisma.bookingsWhereInput>
   packages?: Prisma.XOR<Prisma.PackagesScalarRelationFilter, Prisma.packagesWhereInput>
 }, "id">
@@ -362,6 +379,7 @@ export type booking_packagesOrderByWithAggregationInput = {
   pax_non_my_oku?: Prisma.SortOrderInput | Prisma.SortOrder
   subtotal?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.booking_packagesCountOrderByAggregateInput
   _avg?: Prisma.booking_packagesAvgOrderByAggregateInput
   _max?: Prisma.booking_packagesMaxOrderByAggregateInput
@@ -385,6 +403,7 @@ export type booking_packagesScalarWhereWithAggregatesInput = {
   pax_non_my_oku?: Prisma.IntNullableWithAggregatesFilter<"booking_packages"> | number | null
   subtotal?: Prisma.DecimalNullableWithAggregatesFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntWithAggregatesFilter<"booking_packages"> | number
+  selected_activity?: Prisma.IntNullableWithAggregatesFilter<"booking_packages"> | number | null
 }
 
 export type booking_packagesCreateInput = {
@@ -397,6 +416,7 @@ export type booking_packagesCreateInput = {
   pax_non_my_senior?: number | null
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  package_activities?: Prisma.activitiesCreateNestedOneWithoutBooking_packagesInput
   bookings: Prisma.bookingsCreateNestedOneWithoutBooking_packagesInput
   packages: Prisma.packagesCreateNestedOneWithoutBooking_packagesInput
 }
@@ -414,6 +434,7 @@ export type booking_packagesUncheckedCreateInput = {
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: number
+  selected_activity?: number | null
 }
 
 export type booking_packagesUpdateInput = {
@@ -426,6 +447,7 @@ export type booking_packagesUpdateInput = {
   pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  package_activities?: Prisma.activitiesUpdateOneWithoutBooking_packagesNestedInput
   bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_packagesNestedInput
   packages?: Prisma.packagesUpdateOneRequiredWithoutBooking_packagesNestedInput
 }
@@ -443,6 +465,7 @@ export type booking_packagesUncheckedUpdateInput = {
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  selected_activity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type booking_packagesCreateManyInput = {
@@ -458,6 +481,7 @@ export type booking_packagesCreateManyInput = {
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: number
+  selected_activity?: number | null
 }
 
 export type booking_packagesUpdateManyMutationInput = {
@@ -485,6 +509,7 @@ export type booking_packagesUncheckedUpdateManyInput = {
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  selected_activity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type Booking_packagesListRelationFilter = {
@@ -510,6 +535,7 @@ export type booking_packagesCountOrderByAggregateInput = {
   pax_non_my_oku?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrder
 }
 
 export type booking_packagesAvgOrderByAggregateInput = {
@@ -523,6 +549,7 @@ export type booking_packagesAvgOrderByAggregateInput = {
   pax_non_my_oku?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrder
 }
 
 export type booking_packagesMaxOrderByAggregateInput = {
@@ -538,6 +565,7 @@ export type booking_packagesMaxOrderByAggregateInput = {
   pax_non_my_oku?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrder
 }
 
 export type booking_packagesMinOrderByAggregateInput = {
@@ -553,6 +581,7 @@ export type booking_packagesMinOrderByAggregateInput = {
   pax_non_my_oku?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrder
 }
 
 export type booking_packagesSumOrderByAggregateInput = {
@@ -566,6 +595,7 @@ export type booking_packagesSumOrderByAggregateInput = {
   pax_non_my_oku?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   id?: Prisma.SortOrder
+  selected_activity?: Prisma.SortOrder
 }
 
 export type booking_packagesCreateNestedManyWithoutBookingsInput = {
@@ -652,6 +682,48 @@ export type booking_packagesUncheckedUpdateManyWithoutPackagesNestedInput = {
   deleteMany?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
 }
 
+export type booking_packagesCreateNestedManyWithoutPackage_activitiesInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput> | Prisma.booking_packagesCreateWithoutPackage_activitiesInput[] | Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput | Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput[]
+  createMany?: Prisma.booking_packagesCreateManyPackage_activitiesInputEnvelope
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+}
+
+export type booking_packagesUncheckedCreateNestedManyWithoutPackage_activitiesInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput> | Prisma.booking_packagesCreateWithoutPackage_activitiesInput[] | Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput | Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput[]
+  createMany?: Prisma.booking_packagesCreateManyPackage_activitiesInputEnvelope
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+}
+
+export type booking_packagesUpdateManyWithoutPackage_activitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput> | Prisma.booking_packagesCreateWithoutPackage_activitiesInput[] | Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput | Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput[]
+  upsert?: Prisma.booking_packagesUpsertWithWhereUniqueWithoutPackage_activitiesInput | Prisma.booking_packagesUpsertWithWhereUniqueWithoutPackage_activitiesInput[]
+  createMany?: Prisma.booking_packagesCreateManyPackage_activitiesInputEnvelope
+  set?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  disconnect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  delete?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  update?: Prisma.booking_packagesUpdateWithWhereUniqueWithoutPackage_activitiesInput | Prisma.booking_packagesUpdateWithWhereUniqueWithoutPackage_activitiesInput[]
+  updateMany?: Prisma.booking_packagesUpdateManyWithWhereWithoutPackage_activitiesInput | Prisma.booking_packagesUpdateManyWithWhereWithoutPackage_activitiesInput[]
+  deleteMany?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
+}
+
+export type booking_packagesUncheckedUpdateManyWithoutPackage_activitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.booking_packagesCreateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput> | Prisma.booking_packagesCreateWithoutPackage_activitiesInput[] | Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput[]
+  connectOrCreate?: Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput | Prisma.booking_packagesCreateOrConnectWithoutPackage_activitiesInput[]
+  upsert?: Prisma.booking_packagesUpsertWithWhereUniqueWithoutPackage_activitiesInput | Prisma.booking_packagesUpsertWithWhereUniqueWithoutPackage_activitiesInput[]
+  createMany?: Prisma.booking_packagesCreateManyPackage_activitiesInputEnvelope
+  set?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  disconnect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  delete?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  connect?: Prisma.booking_packagesWhereUniqueInput | Prisma.booking_packagesWhereUniqueInput[]
+  update?: Prisma.booking_packagesUpdateWithWhereUniqueWithoutPackage_activitiesInput | Prisma.booking_packagesUpdateWithWhereUniqueWithoutPackage_activitiesInput[]
+  updateMany?: Prisma.booking_packagesUpdateManyWithWhereWithoutPackage_activitiesInput | Prisma.booking_packagesUpdateManyWithWhereWithoutPackage_activitiesInput[]
+  deleteMany?: Prisma.booking_packagesScalarWhereInput | Prisma.booking_packagesScalarWhereInput[]
+}
+
 export type booking_packagesCreateWithoutBookingsInput = {
   pax_my_adult?: number | null
   pax_my_kid?: number | null
@@ -662,6 +734,7 @@ export type booking_packagesCreateWithoutBookingsInput = {
   pax_non_my_senior?: number | null
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  package_activities?: Prisma.activitiesCreateNestedOneWithoutBooking_packagesInput
   packages: Prisma.packagesCreateNestedOneWithoutBooking_packagesInput
 }
 
@@ -677,6 +750,7 @@ export type booking_packagesUncheckedCreateWithoutBookingsInput = {
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: number
+  selected_activity?: number | null
 }
 
 export type booking_packagesCreateOrConnectWithoutBookingsInput = {
@@ -721,6 +795,7 @@ export type booking_packagesScalarWhereInput = {
   pax_non_my_oku?: Prisma.IntNullableFilter<"booking_packages"> | number | null
   subtotal?: Prisma.DecimalNullableFilter<"booking_packages"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFilter<"booking_packages"> | number
+  selected_activity?: Prisma.IntNullableFilter<"booking_packages"> | number | null
 }
 
 export type booking_packagesCreateWithoutPackagesInput = {
@@ -733,6 +808,7 @@ export type booking_packagesCreateWithoutPackagesInput = {
   pax_non_my_senior?: number | null
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  package_activities?: Prisma.activitiesCreateNestedOneWithoutBooking_packagesInput
   bookings: Prisma.bookingsCreateNestedOneWithoutBooking_packagesInput
 }
 
@@ -748,6 +824,7 @@ export type booking_packagesUncheckedCreateWithoutPackagesInput = {
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: number
+  selected_activity?: number | null
 }
 
 export type booking_packagesCreateOrConnectWithoutPackagesInput = {
@@ -776,7 +853,22 @@ export type booking_packagesUpdateManyWithWhereWithoutPackagesInput = {
   data: Prisma.XOR<Prisma.booking_packagesUpdateManyMutationInput, Prisma.booking_packagesUncheckedUpdateManyWithoutPackagesInput>
 }
 
-export type booking_packagesCreateManyBookingsInput = {
+export type booking_packagesCreateWithoutPackage_activitiesInput = {
+  pax_my_adult?: number | null
+  pax_my_kid?: number | null
+  pax_my_senior?: number | null
+  pax_my_oku?: number | null
+  pax_non_my_adult?: number | null
+  pax_non_my_kid?: number | null
+  pax_non_my_senior?: number | null
+  pax_non_my_oku?: number | null
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bookings: Prisma.bookingsCreateNestedOneWithoutBooking_packagesInput
+  packages: Prisma.packagesCreateNestedOneWithoutBooking_packagesInput
+}
+
+export type booking_packagesUncheckedCreateWithoutPackage_activitiesInput = {
+  booking_id: string
   package_id: string
   pax_my_adult?: number | null
   pax_my_kid?: number | null
@@ -790,6 +882,47 @@ export type booking_packagesCreateManyBookingsInput = {
   id?: number
 }
 
+export type booking_packagesCreateOrConnectWithoutPackage_activitiesInput = {
+  where: Prisma.booking_packagesWhereUniqueInput
+  create: Prisma.XOR<Prisma.booking_packagesCreateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput>
+}
+
+export type booking_packagesCreateManyPackage_activitiesInputEnvelope = {
+  data: Prisma.booking_packagesCreateManyPackage_activitiesInput | Prisma.booking_packagesCreateManyPackage_activitiesInput[]
+  skipDuplicates?: boolean
+}
+
+export type booking_packagesUpsertWithWhereUniqueWithoutPackage_activitiesInput = {
+  where: Prisma.booking_packagesWhereUniqueInput
+  update: Prisma.XOR<Prisma.booking_packagesUpdateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedUpdateWithoutPackage_activitiesInput>
+  create: Prisma.XOR<Prisma.booking_packagesCreateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedCreateWithoutPackage_activitiesInput>
+}
+
+export type booking_packagesUpdateWithWhereUniqueWithoutPackage_activitiesInput = {
+  where: Prisma.booking_packagesWhereUniqueInput
+  data: Prisma.XOR<Prisma.booking_packagesUpdateWithoutPackage_activitiesInput, Prisma.booking_packagesUncheckedUpdateWithoutPackage_activitiesInput>
+}
+
+export type booking_packagesUpdateManyWithWhereWithoutPackage_activitiesInput = {
+  where: Prisma.booking_packagesScalarWhereInput
+  data: Prisma.XOR<Prisma.booking_packagesUpdateManyMutationInput, Prisma.booking_packagesUncheckedUpdateManyWithoutPackage_activitiesInput>
+}
+
+export type booking_packagesCreateManyBookingsInput = {
+  package_id: string
+  pax_my_adult?: number | null
+  pax_my_kid?: number | null
+  pax_my_senior?: number | null
+  pax_my_oku?: number | null
+  pax_non_my_adult?: number | null
+  pax_non_my_kid?: number | null
+  pax_non_my_senior?: number | null
+  pax_non_my_oku?: number | null
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  id?: number
+  selected_activity?: number | null
+}
+
 export type booking_packagesUpdateWithoutBookingsInput = {
   pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -800,6 +933,7 @@ export type booking_packagesUpdateWithoutBookingsInput = {
   pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  package_activities?: Prisma.activitiesUpdateOneWithoutBooking_packagesNestedInput
   packages?: Prisma.packagesUpdateOneRequiredWithoutBooking_packagesNestedInput
 }
 
@@ -815,6 +949,7 @@ export type booking_packagesUncheckedUpdateWithoutBookingsInput = {
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  selected_activity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type booking_packagesUncheckedUpdateManyWithoutBookingsInput = {
@@ -829,6 +964,7 @@ export type booking_packagesUncheckedUpdateManyWithoutBookingsInput = {
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  selected_activity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type booking_packagesCreateManyPackagesInput = {
@@ -843,6 +979,7 @@ export type booking_packagesCreateManyPackagesInput = {
   pax_non_my_oku?: number | null
   subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: number
+  selected_activity?: number | null
 }
 
 export type booking_packagesUpdateWithoutPackagesInput = {
@@ -855,6 +992,7 @@ export type booking_packagesUpdateWithoutPackagesInput = {
   pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  package_activities?: Prisma.activitiesUpdateOneWithoutBooking_packagesNestedInput
   bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_packagesNestedInput
 }
 
@@ -870,10 +1008,71 @@ export type booking_packagesUncheckedUpdateWithoutPackagesInput = {
   pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  selected_activity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type booking_packagesUncheckedUpdateManyWithoutPackagesInput = {
   booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  selected_activity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type booking_packagesCreateManyPackage_activitiesInput = {
+  booking_id: string
+  package_id: string
+  pax_my_adult?: number | null
+  pax_my_kid?: number | null
+  pax_my_senior?: number | null
+  pax_my_oku?: number | null
+  pax_non_my_adult?: number | null
+  pax_non_my_kid?: number | null
+  pax_non_my_senior?: number | null
+  pax_non_my_oku?: number | null
+  subtotal?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  id?: number
+}
+
+export type booking_packagesUpdateWithoutPackage_activitiesInput = {
+  pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bookings?: Prisma.bookingsUpdateOneRequiredWithoutBooking_packagesNestedInput
+  packages?: Prisma.packagesUpdateOneRequiredWithoutBooking_packagesNestedInput
+}
+
+export type booking_packagesUncheckedUpdateWithoutPackage_activitiesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  package_id?: Prisma.StringFieldUpdateOperationsInput | string
+  pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pax_non_my_oku?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotal?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type booking_packagesUncheckedUpdateManyWithoutPackage_activitiesInput = {
+  booking_id?: Prisma.StringFieldUpdateOperationsInput | string
+  package_id?: Prisma.StringFieldUpdateOperationsInput | string
   pax_my_adult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_my_kid?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pax_my_senior?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -901,6 +1100,8 @@ export type booking_packagesSelect<ExtArgs extends runtime.Types.Extensions.Inte
   pax_non_my_oku?: boolean
   subtotal?: boolean
   id?: boolean
+  selected_activity?: boolean
+  package_activities?: boolean | Prisma.booking_packages$package_activitiesArgs<ExtArgs>
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_packages"]>
@@ -918,6 +1119,8 @@ export type booking_packagesSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   pax_non_my_oku?: boolean
   subtotal?: boolean
   id?: boolean
+  selected_activity?: boolean
+  package_activities?: boolean | Prisma.booking_packages$package_activitiesArgs<ExtArgs>
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_packages"]>
@@ -935,6 +1138,8 @@ export type booking_packagesSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   pax_non_my_oku?: boolean
   subtotal?: boolean
   id?: boolean
+  selected_activity?: boolean
+  package_activities?: boolean | Prisma.booking_packages$package_activitiesArgs<ExtArgs>
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking_packages"]>
@@ -952,18 +1157,22 @@ export type booking_packagesSelectScalar = {
   pax_non_my_oku?: boolean
   subtotal?: boolean
   id?: boolean
+  selected_activity?: boolean
 }
 
-export type booking_packagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "package_id" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "subtotal" | "id", ExtArgs["result"]["booking_packages"]>
+export type booking_packagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"booking_id" | "package_id" | "pax_my_adult" | "pax_my_kid" | "pax_my_senior" | "pax_my_oku" | "pax_non_my_adult" | "pax_non_my_kid" | "pax_non_my_senior" | "pax_non_my_oku" | "subtotal" | "id" | "selected_activity", ExtArgs["result"]["booking_packages"]>
 export type booking_packagesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  package_activities?: boolean | Prisma.booking_packages$package_activitiesArgs<ExtArgs>
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
 }
 export type booking_packagesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  package_activities?: boolean | Prisma.booking_packages$package_activitiesArgs<ExtArgs>
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
 }
 export type booking_packagesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  package_activities?: boolean | Prisma.booking_packages$package_activitiesArgs<ExtArgs>
   bookings?: boolean | Prisma.bookingsDefaultArgs<ExtArgs>
   packages?: boolean | Prisma.packagesDefaultArgs<ExtArgs>
 }
@@ -971,6 +1180,7 @@ export type booking_packagesIncludeUpdateManyAndReturn<ExtArgs extends runtime.T
 export type $booking_packagesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "booking_packages"
   objects: {
+    package_activities: Prisma.$activitiesPayload<ExtArgs> | null
     bookings: Prisma.$bookingsPayload<ExtArgs>
     packages: Prisma.$packagesPayload<ExtArgs>
   }
@@ -987,6 +1197,7 @@ export type $booking_packagesPayload<ExtArgs extends runtime.Types.Extensions.In
     pax_non_my_oku: number | null
     subtotal: runtime.Decimal | null
     id: number
+    selected_activity: number | null
   }, ExtArgs["result"]["booking_packages"]>
   composites: {}
 }
@@ -1381,6 +1592,7 @@ readonly fields: booking_packagesFieldRefs;
  */
 export interface Prisma__booking_packagesClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  package_activities<T extends Prisma.booking_packages$package_activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.booking_packages$package_activitiesArgs<ExtArgs>>): Prisma.Prisma__activitiesClient<runtime.Types.Result.GetResult<Prisma.$activitiesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bookings<T extends Prisma.bookingsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.bookingsDefaultArgs<ExtArgs>>): Prisma.Prisma__bookingsClient<runtime.Types.Result.GetResult<Prisma.$bookingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   packages<T extends Prisma.packagesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.packagesDefaultArgs<ExtArgs>>): Prisma.Prisma__packagesClient<runtime.Types.Result.GetResult<Prisma.$packagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1424,6 +1636,7 @@ export interface booking_packagesFieldRefs {
   readonly pax_non_my_oku: Prisma.FieldRef<"booking_packages", 'Int'>
   readonly subtotal: Prisma.FieldRef<"booking_packages", 'Decimal'>
   readonly id: Prisma.FieldRef<"booking_packages", 'Int'>
+  readonly selected_activity: Prisma.FieldRef<"booking_packages", 'Int'>
 }
     
 
@@ -1817,6 +2030,25 @@ export type booking_packagesDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many booking_packages to delete.
    */
   limit?: number
+}
+
+/**
+ * booking_packages.package_activities
+ */
+export type booking_packages$package_activitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the activities
+   */
+  select?: Prisma.activitiesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the activities
+   */
+  omit?: Prisma.activitiesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.activitiesInclude<ExtArgs> | null
+  where?: Prisma.activitiesWhereInput
 }
 
 /**

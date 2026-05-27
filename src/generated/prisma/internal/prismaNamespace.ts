@@ -394,7 +394,9 @@ export const ModelName = {
   booking_foods: 'booking_foods',
   quotations: 'quotations',
   booking_packages: 'booking_packages',
-  discounts: 'discounts'
+  discounts: 'discounts',
+  package_activities: 'package_activities',
+  activities: 'activities'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1230,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    package_activities: {
+      payload: Prisma.$package_activitiesPayload<ExtArgs>
+      fields: Prisma.package_activitiesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.package_activitiesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.package_activitiesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>
+        }
+        findFirst: {
+          args: Prisma.package_activitiesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.package_activitiesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>
+        }
+        findMany: {
+          args: Prisma.package_activitiesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>[]
+        }
+        create: {
+          args: Prisma.package_activitiesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>
+        }
+        createMany: {
+          args: Prisma.package_activitiesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.package_activitiesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>[]
+        }
+        delete: {
+          args: Prisma.package_activitiesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>
+        }
+        update: {
+          args: Prisma.package_activitiesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>
+        }
+        deleteMany: {
+          args: Prisma.package_activitiesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.package_activitiesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.package_activitiesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>[]
+        }
+        upsert: {
+          args: Prisma.package_activitiesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$package_activitiesPayload>
+        }
+        aggregate: {
+          args: Prisma.Package_activitiesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePackage_activities>
+        }
+        groupBy: {
+          args: Prisma.package_activitiesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Package_activitiesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.package_activitiesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Package_activitiesCountAggregateOutputType> | number
+        }
+      }
+    }
+    activities: {
+      payload: Prisma.$activitiesPayload<ExtArgs>
+      fields: Prisma.activitiesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.activitiesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.activitiesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>
+        }
+        findFirst: {
+          args: Prisma.activitiesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.activitiesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>
+        }
+        findMany: {
+          args: Prisma.activitiesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>[]
+        }
+        create: {
+          args: Prisma.activitiesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>
+        }
+        createMany: {
+          args: Prisma.activitiesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.activitiesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>[]
+        }
+        delete: {
+          args: Prisma.activitiesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>
+        }
+        update: {
+          args: Prisma.activitiesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>
+        }
+        deleteMany: {
+          args: Prisma.activitiesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.activitiesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.activitiesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>[]
+        }
+        upsert: {
+          args: Prisma.activitiesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$activitiesPayload>
+        }
+        aggregate: {
+          args: Prisma.ActivitiesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateActivities>
+        }
+        groupBy: {
+          args: Prisma.activitiesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActivitiesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.activitiesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActivitiesCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1395,7 +1545,8 @@ export const Booking_packagesScalarFieldEnum = {
   pax_non_my_senior: 'pax_non_my_senior',
   pax_non_my_oku: 'pax_non_my_oku',
   subtotal: 'subtotal',
-  id: 'id'
+  id: 'id',
+  selected_activity: 'selected_activity'
 } as const
 
 export type Booking_packagesScalarFieldEnum = (typeof Booking_packagesScalarFieldEnum)[keyof typeof Booking_packagesScalarFieldEnum]
@@ -1408,6 +1559,25 @@ export const DiscountsScalarFieldEnum = {
 } as const
 
 export type DiscountsScalarFieldEnum = (typeof DiscountsScalarFieldEnum)[keyof typeof DiscountsScalarFieldEnum]
+
+
+export const Package_activitiesScalarFieldEnum = {
+  id: 'id',
+  activity_id: 'activity_id',
+  package_id: 'package_id'
+} as const
+
+export type Package_activitiesScalarFieldEnum = (typeof Package_activitiesScalarFieldEnum)[keyof typeof Package_activitiesScalarFieldEnum]
+
+
+export const ActivitiesScalarFieldEnum = {
+  activity_name: 'activity_name',
+  activity_desc: 'activity_desc',
+  is_active: 'is_active',
+  activity_id: 'activity_id'
+} as const
+
+export type ActivitiesScalarFieldEnum = (typeof ActivitiesScalarFieldEnum)[keyof typeof ActivitiesScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1692,6 +1862,8 @@ export type GlobalOmitConfig = {
   quotations?: Prisma.quotationsOmit
   booking_packages?: Prisma.booking_packagesOmit
   discounts?: Prisma.discountsOmit
+  package_activities?: Prisma.package_activitiesOmit
+  activities?: Prisma.activitiesOmit
 }
 
 /* Types for Logging */

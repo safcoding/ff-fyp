@@ -59,21 +59,22 @@ model foods {
 }
 
 model packages {
-  package_id           String             @id @default(uuid())
+  package_id           String               @id @default(uuid())
   package_name         String
   package_availability Boolean
   package_note         String?
-  price_my_adult       Decimal            @db.Decimal(3, 0)
-  price_my_kid         Decimal            @db.Decimal(3, 0)
-  price_my_senior      Decimal            @db.Decimal(3, 0)
-  price_my_oku         Decimal            @db.Decimal(3, 0)
-  price_non_my_adult   Decimal            @db.Decimal(3, 0)
-  price_non_my_kid     Decimal            @db.Decimal(3, 0)
-  price_non_my_senior  Decimal            @db.Decimal(3, 0)
-  price_non_my_oku     Decimal            @db.Decimal(3, 0)
-  package_features     String[]           @default([])
+  price_my_adult       Decimal              @db.Decimal(3, 0)
+  price_my_kid         Decimal              @db.Decimal(3, 0)
+  price_my_senior      Decimal              @db.Decimal(3, 0)
+  price_my_oku         Decimal              @db.Decimal(3, 0)
+  price_non_my_adult   Decimal              @db.Decimal(3, 0)
+  price_non_my_kid     Decimal              @db.Decimal(3, 0)
+  price_non_my_senior  Decimal              @db.Decimal(3, 0)
+  price_non_my_oku     Decimal              @db.Decimal(3, 0)
+  package_features     String[]             @default([])
   minimum_pax          Int?
   booking_packages     booking_packages[]
+  package_activities   package_activities[]
 }
 
 model slots {
@@ -114,20 +115,22 @@ model quotations {
 }
 
 model booking_packages {
-  booking_id        String
-  package_id        String
-  pax_my_adult      Int?
-  pax_my_kid        Int?
-  pax_my_senior     Int?
-  pax_my_oku        Int?
-  pax_non_my_adult  Int?
-  pax_non_my_kid    Int?
-  pax_non_my_senior Int?
-  pax_non_my_oku    Int?
-  subtotal          Decimal? @db.Decimal(10, 2)
-  id                Int      @id @default(autoincrement())
-  bookings          bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
-  packages          packages @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
+  booking_id         String
+  package_id         String
+  pax_my_adult       Int?
+  pax_my_kid         Int?
+  pax_my_senior      Int?
+  pax_my_oku         Int?
+  pax_non_my_adult   Int?
+  pax_non_my_kid     Int?
+  pax_non_my_senior  Int?
+  pax_non_my_oku     Int?
+  subtotal           Decimal?    @db.Decimal(10, 2)
+  id                 Int         @id @default(autoincrement())
+  selected_activity  Int?
+  package_activities activities? @relation(fields: [selected_activity], references: [activity_id], onDelete: NoAction, onUpdate: NoAction, map: "activity_name_fkey")
+  bookings           bookings    @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
+  packages           packages    @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
 }
 
 model discounts {
@@ -135,6 +138,23 @@ model discounts {
   discount_type   discount_types
   discount_amount Decimal        @db.Decimal(6, 2)
   bookings        bookings[]
+}
+
+model package_activities {
+  id          Int         @id(map: "package_activities_pkey1")
+  activity_id Int?
+  package_id  String?
+  activities  activities? @relation(fields: [activity_id], references: [activity_id], onDelete: NoAction, onUpdate: NoAction, map: "activity_id_fkey")
+  packages    packages?   @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
+}
+
+model activities {
+  activity_name      String
+  activity_desc      String?
+  is_active          Boolean?
+  activity_id        Int                  @id @default(autoincrement())
+  booking_packages   booking_packages[]
+  package_activities package_activities[]
 }
 
 enum booking_status {

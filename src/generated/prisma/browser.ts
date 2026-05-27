@@ -72,3 +72,13 @@ export type booking_packages = Prisma.booking_packagesModel
  * 
  */
 export type discounts = Prisma.discountsModel
+/**
+ * Model package_activities
+ * 
+ */
+export type package_activities = Prisma.package_activitiesModel
+/**
+ * Model activities
+ * 
+ */
+export type activities = Prisma.activitiesModel

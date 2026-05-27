@@ -61,7 +61,9 @@ export const ModelName = {
   booking_foods: 'booking_foods',
   quotations: 'quotations',
   booking_packages: 'booking_packages',
-  discounts: 'discounts'
+  discounts: 'discounts',
+  package_activities: 'package_activities',
+  activities: 'activities'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -208,7 +210,8 @@ export const Booking_packagesScalarFieldEnum = {
   pax_non_my_senior: 'pax_non_my_senior',
   pax_non_my_oku: 'pax_non_my_oku',
   subtotal: 'subtotal',
-  id: 'id'
+  id: 'id',
+  selected_activity: 'selected_activity'
 } as const
 
 export type Booking_packagesScalarFieldEnum = (typeof Booking_packagesScalarFieldEnum)[keyof typeof Booking_packagesScalarFieldEnum]
@@ -221,6 +224,25 @@ export const DiscountsScalarFieldEnum = {
 } as const
 
 export type DiscountsScalarFieldEnum = (typeof DiscountsScalarFieldEnum)[keyof typeof DiscountsScalarFieldEnum]
+
+
+export const Package_activitiesScalarFieldEnum = {
+  id: 'id',
+  activity_id: 'activity_id',
+  package_id: 'package_id'
+} as const
+
+export type Package_activitiesScalarFieldEnum = (typeof Package_activitiesScalarFieldEnum)[keyof typeof Package_activitiesScalarFieldEnum]
+
+
+export const ActivitiesScalarFieldEnum = {
+  activity_name: 'activity_name',
+  activity_desc: 'activity_desc',
+  is_active: 'is_active',
+  activity_id: 'activity_id'
+} as const
+
+export type ActivitiesScalarFieldEnum = (typeof ActivitiesScalarFieldEnum)[keyof typeof ActivitiesScalarFieldEnum]
 
 
 export const SortOrder = {
