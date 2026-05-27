@@ -29,6 +29,11 @@ export function getPackagePricing(pkg: Record<string, unknown>): PackagePricing 
 export const getPackages = createServerFn({ method: "GET" }).handler(async () => {
   const packages = await prisma.packages.findMany({
     orderBy: { package_name: "asc" },
+    include: {
+      package_activities: {
+        select: { activity_id: true },
+      },
+    },
   })
 
   return packages.map((pkg) => ({
@@ -45,6 +50,7 @@ export const getPackages = createServerFn({ method: "GET" }).handler(async () =>
     price_non_my_kid: Number(pkg.price_non_my_kid),
     price_non_my_senior: Number(pkg.price_non_my_senior),
     price_non_my_oku: Number(pkg.price_non_my_oku),
+    activity_ids: pkg.package_activities.map((item) => item.activity_id).filter(Boolean),
   }))
 })
 

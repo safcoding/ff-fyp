@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
+import { getActivities } from "@/features/activities/server/activityActions"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -28,6 +29,7 @@ type PackageForm = {
   price_non_my_kid: number
   price_non_my_senior: number
   price_non_my_oku: number
+  activity_ids:number[]
 }
 
 const defaultValues: PackageForm = {
@@ -43,6 +45,7 @@ const defaultValues: PackageForm = {
   price_non_my_kid: 0,
   price_non_my_senior: 0,
   price_non_my_oku: 0,
+  activity_ids: [],
 }
 
 const priceFields: ReadonlyArray<{ name: keyof PackageForm; label: string }> = [
@@ -70,6 +73,7 @@ type PackageData = {
   price_non_my_kid: number
   price_non_my_senior: number
   price_non_my_oku: number
+  activity_ids: number[]
 }
 
 function normalizeFeatures(value: string) {
@@ -113,6 +117,11 @@ function PackagesPage() {
     },
   })
 
+  const activitiesQuery = useQuery({
+    queryKey: ["admin-activity"],
+    queryFn: () => getActivities(),
+  })
+
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
@@ -142,6 +151,7 @@ function PackagesPage() {
       price_non_my_kid: pkg.price_non_my_kid,
       price_non_my_senior: pkg.price_non_my_senior,
       price_non_my_oku: pkg.price_non_my_oku,
+      activity_ids: pkg.activity_ids ?? [],
     })
   }
 
@@ -255,6 +265,37 @@ function PackagesPage() {
                 </form.Field>
               ))}
             </div>
+
+            <form.Field name="activity_ids">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label>Activities</Label>
+                  {activitiesQuery.isError ? (
+                    <p className="text-sm text-red-600">Failed to load activities.</p>
+                  ) : null}
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {activitiesQuery.data?.map((activity) => {
+                      const checked = field.state.value.includes(activity.activity_id)
+                      return (
+                        <label key={activity.activity_id} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={(e) => {
+                              const next = e.target.checked
+                                ? [...field.state.value, activity.activity_id]
+                                : field.state.value.filter((id) => id !== activity.activity_id)
+                              field.handleChange(next)
+                            }}
+                          />
+                          {activity.activity_name}
+                        </label>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </form.Field>
 
             <Button type="submit" disabled={createPackageMutation.isPending}>
               {createPackageMutation.isPending ? "Creating package..." : "Create package"}
@@ -396,6 +437,35 @@ function PackagesPage() {
                 />
               </div>
             ))}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Activities</Label>
+            {activitiesQuery.isError ? (
+              <p className="text-sm text-red-600">Failed to load activities.</p>
+            ) : null}
+            <div className="grid gap-2 sm:grid-cols-2">
+              {activitiesQuery.data?.map((activity) => {
+                const checked = editValues.activity_ids.includes(activity.activity_id)
+                return (
+                  <label key={activity.activity_id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) =>
+                        setEditValues((prev) => ({
+                          ...prev,
+                          activity_ids: e.target.checked
+                            ? [...prev.activity_ids, activity.activity_id]
+                            : prev.activity_ids.filter((id) => id !== activity.activity_id),
+                        }))
+                      }
+                    />
+                    {activity.activity_name}
+                  </label>
+                )
+              })}
+            </div>
           </div>
 
           <div className="space-y-2">
