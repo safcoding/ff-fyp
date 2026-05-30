@@ -16,6 +16,7 @@ export type FoodSelection = {
 
 export type PackageSelection = {
   package_id: string
+  selected_activity: number | null
   pax_my_adult: number
   pax_my_kid: number
   pax_my_senior: number
@@ -80,6 +81,7 @@ export const createEmptyPackageSelection = (
   packageId: string,
 ): PackageSelection => ({
   package_id: packageId,
+  selected_activity: null,
   pax_my_adult: 0,
   pax_my_kid: 0,
   pax_my_senior: 0,

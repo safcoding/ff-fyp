@@ -21,6 +21,7 @@ export const bookingsInclude = {
   booking_packages: {
     select: {
       package_id: true,
+      selected_activity: true,
       pax_my_adult: true,
       pax_my_kid: true,
       pax_my_senior: true,
@@ -30,6 +31,12 @@ export const bookingsInclude = {
       pax_non_my_senior: true,
       pax_non_my_oku: true,
       subtotal: true,
+      package_activities: {
+        select: {
+          activity_id: true,
+          activity_name: true,
+        },
+      },
       packages: {
         select: {
           package_name: true,
@@ -60,6 +67,8 @@ export type BookingWithRelations = Prisma.bookingsGetPayload<{
 export const mapBookingToUi = (b: BookingWithRelations) => {
   const packages = b.booking_packages.map((p) => ({
     package_id: p.package_id,
+    selected_activity: p.selected_activity ?? null,
+    selected_activity_name: p.package_activities?.activity_name ?? null,
     pax_my_adult: p.pax_my_adult ?? 0,
     pax_my_kid: p.pax_my_kid ?? 0,
     pax_my_senior: p.pax_my_senior ?? 0,

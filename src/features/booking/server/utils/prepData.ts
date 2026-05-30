@@ -53,6 +53,7 @@ export const prepareBookingWriteData = async (data: BookingFormInput) => {
 
   const packageRows = data.packages.map((row) => ({
     package_id: row.package_id,
+    selected_activity: row.selected_activity ?? null,
     pax_my_adult: row.pax_my_adult,
     pax_my_kid: row.pax_my_kid,
     pax_my_senior: row.pax_my_senior,

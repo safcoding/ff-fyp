@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,11 +9,21 @@ datasource db {
 }
 
 model User {
-  user_id    Int      @id @default(autoincrement())
-  user_email String   @unique(map: "User_email_key")
-  user_name  String?
-  createdAt  DateTime @default(now())
-  user_pass  String
+  id       String       @id 
+  user_email    String    @unique(map: "User_email_key")
+  user_name     String?
+  createdAt     DateTime  @default(now())
+  user_pass     String
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
 }
 
 model addons {
@@ -46,9 +57,9 @@ model bookings {
   booking_addons                               booking_addons[]
   booking_foods                                booking_foods[]
   booking_packages                             booking_packages[]
-  discounts                                    discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: NoAction, onUpdate: NoAction, map: "discount_id_fkey")
+  discounts                                    discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: Restrict, map: "discount_id_fkey")
   quotations_bookings_quotation_idToquotations quotations?        @relation("bookings_quotation_idToquotations", fields: [quotation_id], references: [quotation_id], onDelete: NoAction, onUpdate: NoAction, map: "quotation_id_fkey")
-  slots                                        slots              @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_fkey")
+  slots                                        slots              @relation(fields: [slot_id], references: [slot_id], map: "slot_fkey")
   quotations                                   quotations[]
 }
 
@@ -95,8 +106,8 @@ model booking_addons {
   addon_quantity Int
   id             Int      @id @default(autoincrement())
   subtotal       Decimal? @db.Decimal(10, 2)
-  addons         addons   @relation(fields: [addon_id], references: [addon_id], onDelete: NoAction, onUpdate: NoAction, map: "addon_id_fkey")
-  bookings       bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
+  addons         addons   @relation(fields: [addon_id], references: [addon_id], map: "addon_id_fkey")
+  bookings       bookings @relation(fields: [booking_id], references: [booking_id], onDelete: Cascade, map: "booking_id_fkey")
 }
 
 model booking_foods {
@@ -105,8 +116,8 @@ model booking_foods {
   food_quantity Int
   id            Int      @id @default(autoincrement())
   subtotal      Decimal? @db.Decimal(10, 2)
-  bookings      bookings @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
-  foods         foods    @relation(fields: [food_id], references: [food_id], onDelete: NoAction, onUpdate: NoAction, map: "food_id_fkey")
+  bookings      bookings @relation(fields: [booking_id], references: [booking_id], onDelete: Cascade, map: "booking_id_fkey")
+  foods         foods    @relation(fields: [food_id], references: [food_id], map: "food_id_fkey")
 }
 
 model quotations {
@@ -131,8 +142,8 @@ model booking_packages {
   id                 Int         @id @default(autoincrement())
   selected_activity  Int?
   package_activities activities? @relation(fields: [selected_activity], references: [activity_id], onDelete: NoAction, onUpdate: NoAction, map: "activity_name_fkey")
-  bookings           bookings    @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_id_fkey")
-  packages           packages    @relation(fields: [package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction, map: "package_id_fkey")
+  bookings           bookings    @relation(fields: [booking_id], references: [booking_id], onDelete: Cascade, map: "booking_id_fkey")
+  packages           packages    @relation(fields: [package_id], references: [package_id], map: "package_id_fkey")
 }
 
 model discounts {
@@ -160,12 +171,12 @@ model activities {
 }
 
 model slot_schedules {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   slot_id    String
   day_type   day_type
-  start_time DateTime  @db.Time(6)
-  end_time   DateTime  @db.Time(6)
-  slots      slots     @relation(fields: [slot_id], references: [slot_id], onDelete: NoAction, onUpdate: NoAction, map: "slot_id_fkey")
+  start_time DateTime @db.Time(6)
+  end_time   DateTime @db.Time(6)
+  slots      slots    @relation(fields: [slot_id], references: [slot_id], onDelete: Cascade, map: "slot_id_fkey")
 
   @@unique([slot_id, day_type])
 }
@@ -185,13 +196,13 @@ enum discount_types {
 enum org_categories {
   CORPORATE
   GOVERNMENT
-  UNIVERSITY_COLLEGE   @map("UNIVERSITY/COLLEGE")
+  UNIVERSITY_COLLEGE @map("UNIVERSITY/COLLEGE")
   INTERNATIONAL_SCHOOL @map("INTERNATIONAL SCHOOL")
-  SECONDARY_SCHOOL     @map("SECONDARY SCHOOL")
-  PRIMARY_SCHOOL       @map("PRIMARY SCHOOL")
+  SECONDARY_SCHOOL @map("SECONDARY SCHOOL")
+  PRIMARY_SCHOOL @map("PRIMARY SCHOOL")
   KINDERGARTEN
-  TRAVEL_AGENCY        @map("TRAVEL AGENCY")
-  PERSONAL_GROUP       @map("PERSONAL GROUP")
+  TRAVEL_AGENCY @map("TRAVEL AGENCY")
+  PERSONAL_GROUP @map("PERSONAL GROUP")
 }
 
 enum states {
@@ -199,12 +210,12 @@ enum states {
   MELAKA
   NEGERI_SEMBILAN @map("NEGERI SEMBILAN")
   SELANGOR
-  KUALA_LUMPUR    @map("KUALA LUMPUR")
+  KUALA_LUMPUR @map("KUALA LUMPUR")
   PUTRAJAYA
   PERAK
   KEDAH
   PERLIS
-  PULAU_PINANG    @map("PULAU PINANG")
+  PULAU_PINANG @map("PULAU PINANG")
   TERENGGANU
   PAHANG
   SABAH
@@ -220,4 +231,52 @@ enum slot_types {
 enum day_type {
   WEEKEND
   WEEKDAY
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

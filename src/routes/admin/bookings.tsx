@@ -238,6 +238,10 @@ function BookingPage() {
                               {booking.package_id}
                             </p>
                             <p>
+                              <span className="font-medium">Activity:</span>{' '}
+                              {booking.packages?.[0]?.selected_activity_name ?? '-'}
+                            </p>
+                            <p>
                               <span className="font-medium">Quotation:</span>{' '}
                               {booking.quotation_id ?? '-'}
                             </p>

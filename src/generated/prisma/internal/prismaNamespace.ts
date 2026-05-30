@@ -1834,14 +1834,14 @@ export type ListEnumdiscount_typesFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'day_type'
  */
 export type Enumday_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'day_type'>
-
+    
 
 
 /**
  * Reference to a field of type 'day_type[]'
  */
 export type ListEnumday_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'day_type[]'>
-
+    
 
 
 /**
@@ -2028,3 +2028,4 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
+

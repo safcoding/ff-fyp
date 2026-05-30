@@ -81,6 +81,9 @@ function BookingPackagePage() {
                   const pricing = getPackagePricing(pkg as unknown as Record<string, unknown>)
                   const isSelected = selectedPackageIds.has(pkg.package_id)
                   const selectedPackage = values.packages.find((item) => item.package_id === pkg.package_id)
+                  const activities = Array.isArray((pkg as { activities?: unknown }).activities)
+                    ? ((pkg as { activities: Array<{ activity_id: number; activity_name: string }> }).activities)
+                    : []
 
                   return (
                     <div
@@ -127,32 +130,65 @@ function BookingPackagePage() {
                       </div>
 
                       {isSelected && selectedPackage ? (
-                        <div className="mt-4 grid gap-3 md:grid-cols-2">
-                          {paxFieldMeta.map((fieldMeta) => (
-                            <div key={`${pkg.package_id}-${fieldMeta.name}`} className="space-y-1">
-                              <Label className="text-xs text-slate-600" htmlFor={`${pkg.package_id}-${fieldMeta.name}`}>
-                                {fieldMeta.label}
+                        <div className="mt-4 space-y-4">
+                          {activities.length > 0 ? (
+                            <div className="space-y-2">
+                              <Label className="text-xs text-slate-600" htmlFor={`${pkg.package_id}-activity`}>
+                                Select activity
                               </Label>
-                              <Input
-                                id={`${pkg.package_id}-${fieldMeta.name}`}
-                                type="number"
-                                min={0}
-                                step={1}
-                                value={Number(selectedPackage[fieldMeta.name])}
+                              <select
+                                id={`${pkg.package_id}-activity`}
+                                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                                value={selectedPackage.selected_activity ?? ""}
                                 onChange={(e) => {
-                                  const nextValue = Math.max(0, Math.floor(Number(e.target.value || 0)))
+                                  const nextValue = e.target.value ? Number(e.target.value) : null
                                   updateField(
                                     "packages",
                                     values.packages.map((item) =>
                                       item.package_id === pkg.package_id
-                                        ? { ...item, [fieldMeta.name]: nextValue }
+                                        ? { ...item, selected_activity: nextValue }
                                         : item,
                                     ),
                                   )
                                 }}
-                              />
+                              >
+                                <option value="">No activity selected</option>
+                                {activities.map((activity) => (
+                                  <option key={activity.activity_id} value={activity.activity_id}>
+                                    {activity.activity_name}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
-                          ))}
+                          ) : null}
+
+                          <div className="grid gap-3 md:grid-cols-2">
+                            {paxFieldMeta.map((fieldMeta) => (
+                              <div key={`${pkg.package_id}-${fieldMeta.name}`} className="space-y-1">
+                                <Label className="text-xs text-slate-600" htmlFor={`${pkg.package_id}-${fieldMeta.name}`}>
+                                  {fieldMeta.label}
+                                </Label>
+                                <Input
+                                  id={`${pkg.package_id}-${fieldMeta.name}`}
+                                  type="number"
+                                  min={0}
+                                  step={1}
+                                  value={Number(selectedPackage[fieldMeta.name])}
+                                  onChange={(e) => {
+                                    const nextValue = Math.max(0, Math.floor(Number(e.target.value || 0)))
+                                    updateField(
+                                      "packages",
+                                      values.packages.map((item) =>
+                                        item.package_id === pkg.package_id
+                                          ? { ...item, [fieldMeta.name]: nextValue }
+                                          : item,
+                                      ),
+                                    )
+                                  }}
+                                />
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       ) : null}
                     </div>

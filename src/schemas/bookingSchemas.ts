@@ -13,6 +13,7 @@ export const bookingFoodSchema = z.object({
 
 export const bookingPackagesSchema = z.object({
         package_id: z.string(),
+  selected_activity: z.coerce.number().int().nullable().optional(),
         pax_my_adult: z.coerce.number().int().min(0),
         pax_my_kid: z.coerce.number().int().min(0),
         pax_my_senior: z.coerce.number().int().min(0),

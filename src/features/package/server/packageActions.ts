@@ -31,7 +31,15 @@ export const getPackages = createServerFn({ method: "GET" }).handler(async () =>
     orderBy: { package_name: "asc" },
     include: {
       package_activities: {
-        select: { activity_id: true },
+        select: {
+          activity_id: true,
+          activities: {
+            select: {
+              activity_id: true,
+              activity_name: true,
+            },
+          },
+        },
       },
     },
   })
@@ -51,6 +59,9 @@ export const getPackages = createServerFn({ method: "GET" }).handler(async () =>
     price_non_my_senior: Number(pkg.price_non_my_senior),
     price_non_my_oku: Number(pkg.price_non_my_oku),
     activity_ids: pkg.package_activities.map((item) => item.activity_id).filter(Boolean),
+    activities: pkg.package_activities
+      .map((item) => item.activities)
+      .filter((activity): activity is { activity_id: number; activity_name: string } => Boolean(activity)),
   }))
 })
 
