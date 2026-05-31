@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
 import { packageSchema, createPackageSchema, deletePackageSchema } from "@/schemas/packageSchemas"
 import { prisma } from "@/db"
+import authMiddleware from "@/lib/auth-middleware"
 
 export type PackagePricing = {
   price_my_adult: number
@@ -66,6 +67,7 @@ export const getPackages = createServerFn({ method: "GET" }).handler(async () =>
 })
 
 export const createPackage = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(createPackageSchema)
   .handler(async ({ data }) => {
     const created = await prisma.packages.create({
@@ -98,6 +100,7 @@ export const createPackage = createServerFn({ method: "POST" })
   })
 
 export const updatePackage = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(packageSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.$transaction(async (tx) => {
@@ -140,6 +143,7 @@ export const updatePackage = createServerFn({ method: "POST" })
   })
 
 export const deletePackage = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(deletePackageSchema)
   .handler(async ({ data }) => {
     try {

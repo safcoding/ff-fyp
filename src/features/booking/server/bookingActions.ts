@@ -15,6 +15,7 @@ import { approveBookingSchema } from '@/schemas/discountSchemas'
 import { sendBookingApprovedEmail } from '../../email/server/bookingApprovalSender'
 import { applyDiscount } from '@/features/discount/server/discountActions'
 import { getBookingAvailabilityForMonth } from './bookingAvailabilityService'
+import authMiddleware from '@/lib/auth-middleware'
 
 export const getBookings = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -99,6 +100,7 @@ export const createBooking = createServerFn({ method: 'POST' })
   })
 
 export const updateBooking = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
   .inputValidator(schema.bookingSchema)
   .handler(async ({ data }) => {
     const writeData = await prepareBookingWriteData(data)
@@ -111,6 +113,7 @@ export const updateBooking = createServerFn({ method: 'POST' })
   })
 
 export const deleteBooking = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
   .inputValidator(schema.deleteBookingSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.bookings.delete({
@@ -121,6 +124,7 @@ export const deleteBooking = createServerFn({ method: 'POST' })
   })
 
 export const approveBooking = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
   .inputValidator(approveBookingSchema)
   .handler(async ({ data }) => {
     const booking = await prisma.bookings.findUnique({

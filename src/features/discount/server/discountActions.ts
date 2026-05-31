@@ -5,6 +5,7 @@ import {
   deleteDiscountSchema,
   updateDiscountSchema,
 } from "@/schemas/discountSchemas"
+import authMiddleware from "@/lib/auth-middleware"
 
 export const getDiscounts = createServerFn({ method: "GET" }).handler(async () => {
   const discounts = await prisma.discounts.findMany({
@@ -19,6 +20,7 @@ export const getDiscounts = createServerFn({ method: "GET" }).handler(async () =
 })
 
 export const createDiscount = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(createDiscountSchema)
   .handler(async ({ data }) => {
     const created = await prisma.discounts.create({
@@ -33,6 +35,7 @@ export const createDiscount = createServerFn({ method: "POST" })
   })
 
 export const updateDiscount = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(updateDiscountSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.discounts.update({
@@ -47,6 +50,7 @@ export const updateDiscount = createServerFn({ method: "POST" })
   })
 
 export const deleteDiscount = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(deleteDiscountSchema)
   .handler(async ({ data }) => {
     try {

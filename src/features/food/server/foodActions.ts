@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
 import { foodSchema, createFoodSchema, deleteFoodSchema } from "@/schemas/foodSchemas"
-
+import authMiddleware from "@/lib/auth-middleware"
 
 export const getFoods = createServerFn({ method: "GET" }).handler(async () => {
   const foods = await prisma.foods.findMany({ orderBy: { food_name: "asc" } })
@@ -14,6 +14,7 @@ export const getFoods = createServerFn({ method: "GET" }).handler(async () => {
 })
 
 export const createFood = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(createFoodSchema)
   .handler(async ({ data }) => {
     const created = await prisma.foods.create({
@@ -27,6 +28,7 @@ export const createFood = createServerFn({ method: "POST" })
   })
 
 export const updateFood = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(foodSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.foods.update({
@@ -41,6 +43,7 @@ export const updateFood = createServerFn({ method: "POST" })
   })
 
 export const deleteFood = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(deleteFoodSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.foods.delete({

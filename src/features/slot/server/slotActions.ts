@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { toHHmm, toIsoDateTimeForTimeColumn } from '@/lib/utils'
 import { deleteSlotSchema, slotSchema } from '@/schemas/slotSchemas'
+import authMiddleware from '@/lib/auth-middleware'
 
 const buildUnguidedSchedules = (data: {
   slot_id: string
@@ -103,6 +104,7 @@ export const getSlotsAdmin = createServerFn({ method: 'GET' }).handler(
 )
 
 export const createSlot = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
   .inputValidator(slotSchema)
   .handler(async ({ data }) => {
     const created = await prisma.$transaction(async (tx) => {
@@ -131,6 +133,7 @@ export const createSlot = createServerFn({ method: 'POST' })
   })
 
 export const updateSlot = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
   .inputValidator(slotSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.$transaction(async (tx) => {
@@ -162,6 +165,7 @@ export const updateSlot = createServerFn({ method: 'POST' })
   })
 
 export const deleteSlot = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
   .inputValidator(deleteSlotSchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.slots.delete({

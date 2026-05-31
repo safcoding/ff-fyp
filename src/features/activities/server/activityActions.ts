@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
 import { activitySchema, createActivitySchema, deleteActivitySchema } from "@/schemas/activitySchemas"
+import authMiddleware from "@/lib/auth-middleware"
 
 export const getActivities = createServerFn({ method: "GET" }).handler(async () => {
   const activities = await prisma.activities.findMany({ orderBy: { activity_id: "asc" } })
@@ -14,6 +15,7 @@ export const getActivities = createServerFn({ method: "GET" }).handler(async () 
 })
 
 export const createActivity = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(createActivitySchema)
   .handler(async ({ data }) => {
     const created = await prisma.activities.create({
@@ -28,6 +30,7 @@ export const createActivity = createServerFn({ method: "POST" })
   })
 
 export const updateActivity = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(activitySchema)
   .handler(async ({ data }) => {
     const updated = await prisma.activities.update({
@@ -43,6 +46,7 @@ export const updateActivity = createServerFn({ method: "POST" })
   })
 
 export const deleteActivity = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
   .inputValidator(deleteActivitySchema)
   .handler(async ({ data }) => {
     const deleted = await prisma.activities.delete({
