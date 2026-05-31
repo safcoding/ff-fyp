@@ -17,7 +17,13 @@ function AdminLayout() {
 
   return (  
   <div>
-    <Button onClick={() => signOut()}>Sign out</Button>
+    <Button onClick={() => signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = '/'
+        }
+      }
+    })}>Sign out</Button>
     <Outlet />
   </div>)
 }
