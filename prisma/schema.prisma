@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -9,20 +8,16 @@ datasource db {
 }
 
 model User {
-  id       String       @id 
-  user_email    String    @unique(map: "User_email_key")
-  user_name     String?
+  id            String    @id
   createdAt     DateTime  @default(now())
-  user_pass     String
   name          String
-  email         String
+  email         String    @unique
   emailVerified Boolean   @default(false)
   image         String?
   updatedAt     DateTime  @updatedAt
-  sessions      Session[]
   accounts      Account[]
+  sessions      Session[]
 
-  @@unique([email])
   @@map("user")
 }
 
@@ -181,62 +176,10 @@ model slot_schedules {
   @@unique([slot_id, day_type])
 }
 
-enum booking_status {
-  PENDING
-  APPROVED
-  POSTPONED
-  CANCELLED
-}
-
-enum discount_types {
-  PERCENTAGE
-  FLAT
-}
-
-enum org_categories {
-  CORPORATE
-  GOVERNMENT
-  UNIVERSITY_COLLEGE @map("UNIVERSITY/COLLEGE")
-  INTERNATIONAL_SCHOOL @map("INTERNATIONAL SCHOOL")
-  SECONDARY_SCHOOL @map("SECONDARY SCHOOL")
-  PRIMARY_SCHOOL @map("PRIMARY SCHOOL")
-  KINDERGARTEN
-  TRAVEL_AGENCY @map("TRAVEL AGENCY")
-  PERSONAL_GROUP @map("PERSONAL GROUP")
-}
-
-enum states {
-  JOHOR
-  MELAKA
-  NEGERI_SEMBILAN @map("NEGERI SEMBILAN")
-  SELANGOR
-  KUALA_LUMPUR @map("KUALA LUMPUR")
-  PUTRAJAYA
-  PERAK
-  KEDAH
-  PERLIS
-  PULAU_PINANG @map("PULAU PINANG")
-  TERENGGANU
-  PAHANG
-  SABAH
-  SARAWAK
-  LABUAN
-}
-
-enum slot_types {
-  GUIDED
-  UNGUIDED
-}
-
-enum day_type {
-  WEEKEND
-  WEEKDAY
-}
-
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
@@ -244,7 +187,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
@@ -254,7 +196,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -264,6 +205,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("account")
@@ -279,4 +221,56 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum booking_status {
+  PENDING
+  APPROVED
+  POSTPONED
+  CANCELLED
+}
+
+enum discount_types {
+  PERCENTAGE
+  FLAT
+}
+
+enum org_categories {
+  CORPORATE
+  GOVERNMENT
+  UNIVERSITY_COLLEGE   @map("UNIVERSITY/COLLEGE")
+  INTERNATIONAL_SCHOOL @map("INTERNATIONAL SCHOOL")
+  SECONDARY_SCHOOL     @map("SECONDARY SCHOOL")
+  PRIMARY_SCHOOL       @map("PRIMARY SCHOOL")
+  KINDERGARTEN
+  TRAVEL_AGENCY        @map("TRAVEL AGENCY")
+  PERSONAL_GROUP       @map("PERSONAL GROUP")
+}
+
+enum states {
+  JOHOR
+  MELAKA
+  NEGERI_SEMBILAN @map("NEGERI SEMBILAN")
+  SELANGOR
+  KUALA_LUMPUR    @map("KUALA LUMPUR")
+  PUTRAJAYA
+  PERAK
+  KEDAH
+  PERLIS
+  PULAU_PINANG    @map("PULAU PINANG")
+  TERENGGANU
+  PAHANG
+  SABAH
+  SARAWAK
+  LABUAN
+}
+
+enum slot_types {
+  GUIDED
+  UNGUIDED
+}
+
+enum day_type {
+  WEEKEND
+  WEEKDAY
 }

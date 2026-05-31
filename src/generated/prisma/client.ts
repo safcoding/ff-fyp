@@ -109,3 +109,18 @@ export type activities = Prisma.activitiesModel
  * 
  */
 export type slot_schedules = Prisma.slot_schedulesModel
+/**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Verification
+ * 
+ */
+export type Verification = Prisma.VerificationModel
