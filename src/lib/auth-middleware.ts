@@ -1,14 +1,15 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
-import { auth } from "@/lib/auth";
+import { createMiddleware } from "@tanstack/react-start";
+import { getSessionFn } from "./auth-serverFn";
 
-export const getSessionFn = createServerFn({ method: "GET" }).handler(
-    async () => {
-        const headers = getRequestHeaders();
-        const session = await auth.api.getSession({
-            headers,
-        });
+const authMiddleware = createMiddleware({ type: "function" }).server(
+    async ({ next }) => {
+        const session = await getSessionFn();
 
-        return session;
+        if (!session?.user) {
+            throw new Error("Unauthorized");
+        }
+        return next({ context: { session } });
     },
 );
+
+export default authMiddleware;
