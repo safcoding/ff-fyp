@@ -10,5 +10,10 @@ function BookingFormEntryPage() {
     void navigate({ to: "/booking-form/date-slot", replace: true })
   }, [navigate])
 
-  return <Outlet />
+  return (
+  <div className="bg-[#445412]">
+    <Outlet />
+  </div>
+
+)
 }

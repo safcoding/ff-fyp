@@ -68,12 +68,11 @@ function BookingDateSlotPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card className="border-0 shadow-xl">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <CalendarDays className="h-6 w-6 text-rose-500" />
-            Booking Wizard
+    <div className="mx-auto max-w-6xl space-y-8 p-6 ">
+      <Card className="bg-[#fbf0d8] shadow-xl">
+        <CardHeader className="pb-4 items-center text-center">
+          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+            PRE-BOOKING SLOT
           </CardTitle>
           <CardDescription>Step 1 of 5: Select date and slot.</CardDescription>
         </CardHeader>
@@ -105,9 +104,10 @@ function BookingDateSlotPage() {
               void navigate({ to: "/booking-form/package" })
             }}
           >
-            <div className="grid gap-8 lg:grid-cols-[1fr,1fr]">
+            <div className="grid md:grid-cols-2">
               <div className="flex flex-col">
                 <Calendar
+                className="bg-white/40 font-bold"
                   mode="single"
                   selected={selectedDate ?? date}
                   onSelect={handleDateSelect}
@@ -166,12 +166,12 @@ function BookingDateSlotPage() {
                               type="button"
                               disabled={isFull || isBlocked}
                               className={cn(
-                                "group relative flex items-center justify-between rounded-xl border-2 p-4 text-left transition-all duration-200",
+                                "bg-white group relative flex items-center justify-between rounded-xl border-2 p-4 text-left transition-all duration-200",
                                 isFull || isBlocked
                                   ? "cursor-not-allowed border-muted bg-muted/50 opacity-60"
                                   : isSelected
-                                    ? "border-rose-500 bg-rose-50 shadow-md"
-                                    : "cursor-pointer border-border hover:border-rose-300 hover:bg-rose-50/50",
+                                    ? "border-[#445412] bg-amber-500 shadow-md"
+                                    : "cursor-pointer border-border hover:border-[#445412] hover:bg-[#445412]-50/50",
                               )}
                               onClick={() => {
                                 if (isFull || isBlocked) {
@@ -236,12 +236,13 @@ function BookingDateSlotPage() {
                     ) : null}
 
                     {values.slot_id ? (
-                      <div className="mt-6 rounded-xl border border-rose-200 bg-rose-50 p-4">
-                        <h4 className="mb-2 font-medium text-rose-900">Your Selection</h4>
-                        <p className="text-sm text-rose-700">
+                      <div className="mt-6 rounded-xl border border-amber-500 p-4">
+                        <h4 className="mb-2 font-medium text-black">Your Selection</h4>
+                        <p className="text-sm text-black">
                           {format(selectedDate, "MMMM d, yyyy")} at{" "}
                           {slotsForSelectedDate.find((slot) => slot.slot_id === values.slot_id)?.slot_start ?? "Selected time"}
                         </p>
+                        <p className="p-3 text-olive-950">Guided Slots will automatically assign a fixed number of tour guides as stated in the packages page </p>
                       </div>
                     ) : null}
                   </>
@@ -258,9 +259,11 @@ function BookingDateSlotPage() {
                 )}
               </div>
             </div>
-
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <Button type="submit">Next: Choose package</Button>
+            <div className="items-center">
+            <Button className="text-xl p-6 " type="submit">Next</Button>
+            </div>
+
           </form>
         </CardContent>
       </Card>
