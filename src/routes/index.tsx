@@ -2,7 +2,6 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import EmblaCarousel from 'embla-carousel'
 
-import { Button } from '@/components/ui/button'
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
@@ -89,7 +88,6 @@ function App() {
         <section className="relative mx-auto gap-8 bg-[#445412] w-screen">
           <div className="justify-center max-w-full text-center p-10">
             <h2 className="text-4xl font-fraunces font-black text-[#fbf0d8]">Find Your Way Around</h2>
-            <h3 className="text-xl font-sans font-black text-black">Have a look at the activity zones</h3>
           </div>
           <div className="rounded-2xl max-w-6xl mx-auto px-6 pb-10">
             <img
