@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TncRouteImport } from './routes/tnc'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as BookingFormRouteImport } from './routes/booking-form'
@@ -32,6 +33,11 @@ import { Route as AdminAddonsRouteImport } from './routes/admin/addons'
 import { Route as AdminActivitiesRouteImport } from './routes/admin/activities'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const TncRoute = TncRouteImport.update({
+  id: '/tnc',
+  path: '/tnc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/booking-form': typeof BookingFormRouteWithChildren
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/tnc': typeof TncRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/blocks': typeof AdminBlocksRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/booking-form': typeof BookingFormRouteWithChildren
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/tnc': typeof TncRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/blocks': typeof AdminBlocksRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/booking-form': typeof BookingFormRouteWithChildren
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/tnc': typeof TncRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
   '/admin/blocks': typeof AdminBlocksRoute
@@ -224,6 +233,7 @@ export interface FileRouteTypes {
     | '/booking-form'
     | '/login'
     | '/packages'
+    | '/tnc'
     | '/admin/activities'
     | '/admin/addons'
     | '/admin/blocks'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/booking-form'
     | '/login'
     | '/packages'
+    | '/tnc'
     | '/admin/activities'
     | '/admin/addons'
     | '/admin/blocks'
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/booking-form'
     | '/login'
     | '/packages'
+    | '/tnc'
     | '/admin/activities'
     | '/admin/addons'
     | '/admin/blocks'
@@ -296,11 +308,19 @@ export interface RootRouteChildren {
   BookingFormRoute: typeof BookingFormRouteWithChildren
   LoginRoute: typeof LoginRoute
   PackagesRoute: typeof PackagesRoute
+  TncRoute: typeof TncRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tnc': {
+      id: '/tnc'
+      path: '/tnc'
+      fullPath: '/tnc'
+      preLoaderRoute: typeof TncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages': {
       id: '/packages'
       path: '/packages'
@@ -513,6 +533,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookingFormRoute: BookingFormRouteWithChildren,
   LoginRoute: LoginRoute,
   PackagesRoute: PackagesRoute,
+  TncRoute: TncRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
