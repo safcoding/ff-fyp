@@ -102,3 +102,8 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model booking_blocks
+ * 
+ */
+export type booking_blocks = Prisma.booking_blocksModel

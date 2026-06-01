@@ -140,22 +140,23 @@ function BookingDateSlotPage() {
                           const isFull = slot.is_full
                           const spotsLeft = slot.remaining_capacity
                           const isSelected = values.slot_id === slot.slot_id
+                          const isBlocked = slot.is_blocked
 
                           return (
                             <button
                               key={slot.slot_id}
                               type="button"
-                              disabled={isFull}
+                              disabled={isFull || isBlocked}
                               className={cn(
                                 "group relative flex items-center justify-between rounded-xl border-2 p-4 text-left transition-all duration-200",
-                                isFull
+                                isFull || isBlocked
                                   ? "cursor-not-allowed border-muted bg-muted/50 opacity-60"
                                   : isSelected
                                     ? "border-rose-500 bg-rose-50 shadow-md"
                                     : "cursor-pointer border-border hover:border-rose-300 hover:bg-rose-50/50",
                               )}
                               onClick={() => {
-                                if (isFull) {
+                                if (isFull || isBlocked) {
                                   return
                                 }
                                 updateField("slot_id", slot.slot_id)
@@ -190,7 +191,11 @@ function BookingDateSlotPage() {
                               </div>
 
                               <div className="flex items-center gap-2">
-                                {isFull ? (
+                                {isBlocked ? (
+                                  <span className="rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                                    Blocked
+                                  </span>
+                                ) : isFull ? (
                                   <span className="rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                                     Full
                                   </span>

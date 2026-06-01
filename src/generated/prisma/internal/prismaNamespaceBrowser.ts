@@ -67,7 +67,8 @@ export const ModelName = {
   slot_schedules: 'slot_schedules',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  booking_blocks: 'booking_blocks'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -306,6 +307,16 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const Booking_blocksScalarFieldEnum = {
+  id: 'id',
+  block_date: 'block_date',
+  slot_id: 'slot_id',
+  reason: 'reason'
+} as const
+
+export type Booking_blocksScalarFieldEnum = (typeof Booking_blocksScalarFieldEnum)[keyof typeof Booking_blocksScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -91,6 +91,7 @@ model slots {
   slot_end       DateTime         @db.Time(6)
   slot_capacity  Int
   slot_type      slot_types       @default(UNGUIDED)
+  booking_blocks booking_blocks[]
   bookings       bookings[]
   slot_schedules slot_schedules[]
 }
@@ -221,6 +222,14 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model booking_blocks {
+  id         Int      @id @default(autoincrement())
+  block_date DateTime @db.Date
+  slot_id    String?
+  reason     String?
+  slots      slots?   @relation(fields: [slot_id], references: [slot_id], onDelete: Cascade, onUpdate: NoAction, map: "slot_id_fkey")
 }
 
 enum booking_status {

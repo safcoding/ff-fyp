@@ -400,7 +400,8 @@ export const ModelName = {
   slot_schedules: 'slot_schedules',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  booking_blocks: 'booking_blocks'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules" | "session" | "account" | "verification"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules" | "session" | "account" | "verification" | "booking_blocks"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1678,6 +1679,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    booking_blocks: {
+      payload: Prisma.$booking_blocksPayload<ExtArgs>
+      fields: Prisma.booking_blocksFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.booking_blocksFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.booking_blocksFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>
+        }
+        findFirst: {
+          args: Prisma.booking_blocksFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.booking_blocksFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>
+        }
+        findMany: {
+          args: Prisma.booking_blocksFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>[]
+        }
+        create: {
+          args: Prisma.booking_blocksCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>
+        }
+        createMany: {
+          args: Prisma.booking_blocksCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.booking_blocksCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>[]
+        }
+        delete: {
+          args: Prisma.booking_blocksDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>
+        }
+        update: {
+          args: Prisma.booking_blocksUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>
+        }
+        deleteMany: {
+          args: Prisma.booking_blocksDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.booking_blocksUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.booking_blocksUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>[]
+        }
+        upsert: {
+          args: Prisma.booking_blocksUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$booking_blocksPayload>
+        }
+        aggregate: {
+          args: Prisma.Booking_blocksAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBooking_blocks>
+        }
+        groupBy: {
+          args: Prisma.booking_blocksGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_blocksGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.booking_blocksCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Booking_blocksCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1937,6 +2012,16 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const Booking_blocksScalarFieldEnum = {
+  id: 'id',
+  block_date: 'block_date',
+  slot_id: 'slot_id',
+  reason: 'reason'
+} as const
+
+export type Booking_blocksScalarFieldEnum = (typeof Booking_blocksScalarFieldEnum)[keyof typeof Booking_blocksScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2241,6 +2326,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  booking_blocks?: Prisma.booking_blocksOmit
 }
 
 /* Types for Logging */

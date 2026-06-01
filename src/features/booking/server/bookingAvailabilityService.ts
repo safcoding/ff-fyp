@@ -59,7 +59,7 @@ export const getBookingAvailabilityForMonth = async (data: {
   const monthStart = new Date(Date.UTC(year, month - 1, 1))
   const nextMonthStart = new Date(Date.UTC(year, month, 1))
 
-  const [slots, monthBookings] = await Promise.all([
+  const [slots, monthBookings, monthBlocks] = await Promise.all([
     prisma.slots.findMany({
       orderBy: { slot_name: 'asc' },
       select: {
@@ -92,6 +92,19 @@ export const getBookingAvailabilityForMonth = async (data: {
         pax_total: true,
       },
     }),
+    prisma.booking_blocks.findMany({
+      where: {
+        block_date: {
+          gte: monthStart,
+          lt: nextMonthStart,
+        },
+      },
+      select: {
+        block_date: true,
+        slot_id: true,
+        reason: true,
+      },
+    }),
   ])
 
   const activeBookings = monthBookings.filter((booking) => {
@@ -100,6 +113,20 @@ export const getBookingAvailabilityForMonth = async (data: {
   })
 
   const bookedByDateAndSlot = new Map<string, Map<string, number>>()
+  const blockedDates = new Set<string>()
+  const blockedSlotsByDate = new Map<string, Map<string, string | null>>()
+
+  for (const block of monthBlocks) {
+    const dateKey = block.block_date.toISOString().slice(0, 10)
+    if (!block.slot_id) {
+      blockedDates.add(dateKey)
+      continue
+    }
+
+    const slotMap = blockedSlotsByDate.get(dateKey) ?? new Map<string, string | null>()
+    slotMap.set(block.slot_id, block.reason ?? null)
+    blockedSlotsByDate.set(dateKey, slotMap)
+  }
 
   for (const booking of activeBookings) {
     if (!booking.booking_date) {
@@ -125,15 +152,24 @@ export const getBookingAvailabilityForMonth = async (data: {
     const dateKey = cursor.toISOString().slice(0, 10)
     const slotMap =
       bookedByDateAndSlot.get(dateKey) ?? new Map<string, number>()
+    const blockedSlots = blockedSlotsByDate.get(dateKey) ?? new Map<string, string | null>()
 
     const availableSlots = slots.filter((slot) => {
+      if (blockedDates.has(dateKey)) {
+        return false
+      }
+      if (blockedSlots.has(slot.slot_id)) {
+        return false
+      }
       const slotTime = getSlotTimeForDate(slot, dateKey)
       const booked = slotMap.get(slot.slot_id) ?? 0
 
       return slotTime && booked < slot.slot_capacity
     })
 
-    if (availableSlots.length === 0) {
+    if (blockedDates.has(dateKey)) {
+      dateStatuses[dateKey] = 'full'
+    } else if (availableSlots.length === 0) {
       dateStatuses[dateKey] = 'full'
     } else if (availableSlots.length <= Math.ceil(slots.length / 3)) {
       dateStatuses[dateKey] = 'limited'
@@ -157,6 +193,10 @@ export const getBookingAvailabilityForMonth = async (data: {
         const booked =
           bookedByDateAndSlot.get(data.date!)?.get(slot.slot_id) ?? 0
         const remaining = Math.max(slot.slot_capacity - booked, 0)
+        const blockedReason = blockedDates.has(data.date!)
+          ? 'Blocked by admin'
+          : blockedSlotsByDate.get(data.date!)?.get(slot.slot_id) ?? null
+        const isBlocked = Boolean(blockedReason)
 
         return [
           {
@@ -167,8 +207,10 @@ export const getBookingAvailabilityForMonth = async (data: {
             slot_end: toHHmm(slotTime.end),
             slot_capacity: slot.slot_capacity,
             booked_visitors: booked,
-            remaining_capacity: remaining,
-            is_full: remaining <= 0,
+            remaining_capacity: isBlocked ? 0 : remaining,
+            is_full: isBlocked || remaining <= 0,
+            is_blocked: isBlocked,
+            blocked_reason: isBlocked ? blockedReason : null,
           },
         ]
       })
