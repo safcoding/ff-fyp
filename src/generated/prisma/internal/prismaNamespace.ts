@@ -401,7 +401,8 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  booking_blocks: 'booking_blocks'
+  booking_blocks: 'booking_blocks',
+  global_settings: 'global_settings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules" | "session" | "account" | "verification" | "booking_blocks"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules" | "session" | "account" | "verification" | "booking_blocks" | "global_settings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1753,6 +1754,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    global_settings: {
+      payload: Prisma.$global_settingsPayload<ExtArgs>
+      fields: Prisma.global_settingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.global_settingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.global_settingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>
+        }
+        findFirst: {
+          args: Prisma.global_settingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.global_settingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>
+        }
+        findMany: {
+          args: Prisma.global_settingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>[]
+        }
+        create: {
+          args: Prisma.global_settingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>
+        }
+        createMany: {
+          args: Prisma.global_settingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.global_settingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>[]
+        }
+        delete: {
+          args: Prisma.global_settingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>
+        }
+        update: {
+          args: Prisma.global_settingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.global_settingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.global_settingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.global_settingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.global_settingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$global_settingsPayload>
+        }
+        aggregate: {
+          args: Prisma.Global_settingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGlobal_settings>
+        }
+        groupBy: {
+          args: Prisma.global_settingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Global_settingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.global_settingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Global_settingsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2022,6 +2097,19 @@ export const Booking_blocksScalarFieldEnum = {
 } as const
 
 export type Booking_blocksScalarFieldEnum = (typeof Booking_blocksScalarFieldEnum)[keyof typeof Booking_blocksScalarFieldEnum]
+
+
+export const Global_settingsScalarFieldEnum = {
+  id: 'id',
+  min_lead_days: 'min_lead_days',
+  company_name: 'company_name',
+  company_address: 'company_address',
+  company_phone: 'company_phone',
+  company_email: 'company_email',
+  sst_registration: 'sst_registration'
+} as const
+
+export type Global_settingsScalarFieldEnum = (typeof Global_settingsScalarFieldEnum)[keyof typeof Global_settingsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2327,6 +2415,7 @@ export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
   booking_blocks?: Prisma.booking_blocksOmit
+  global_settings?: Prisma.global_settingsOmit
 }
 
 /* Types for Logging */

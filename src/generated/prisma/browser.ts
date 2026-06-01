@@ -107,3 +107,8 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type booking_blocks = Prisma.booking_blocksModel
+/**
+ * Model global_settings
+ * 
+ */
+export type global_settings = Prisma.global_settingsModel

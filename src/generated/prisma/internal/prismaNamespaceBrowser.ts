@@ -68,7 +68,8 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  booking_blocks: 'booking_blocks'
+  booking_blocks: 'booking_blocks',
+  global_settings: 'global_settings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -317,6 +318,19 @@ export const Booking_blocksScalarFieldEnum = {
 } as const
 
 export type Booking_blocksScalarFieldEnum = (typeof Booking_blocksScalarFieldEnum)[keyof typeof Booking_blocksScalarFieldEnum]
+
+
+export const Global_settingsScalarFieldEnum = {
+  id: 'id',
+  min_lead_days: 'min_lead_days',
+  company_name: 'company_name',
+  company_address: 'company_address',
+  company_phone: 'company_phone',
+  company_email: 'company_email',
+  sst_registration: 'sst_registration'
+} as const
+
+export type Global_settingsScalarFieldEnum = (typeof Global_settingsScalarFieldEnum)[keyof typeof Global_settingsScalarFieldEnum]
 
 
 export const SortOrder = {

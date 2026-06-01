@@ -232,6 +232,16 @@ model booking_blocks {
   slots      slots?   @relation(fields: [slot_id], references: [slot_id], onDelete: Cascade, onUpdate: NoAction, map: "slot_id_fkey")
 }
 
+model global_settings {
+  id               Int     @id @default(autoincrement())
+  min_lead_days    Int?
+  company_name     String?
+  company_address  String?
+  company_phone    String?
+  company_email    String?
+  sst_registration String?
+}
+
 enum booking_status {
   PENDING
   APPROVED

@@ -21,6 +21,7 @@ import { Route as BookingFormDetailsRouteImport } from './routes/booking-form/de
 import { Route as BookingFormDateSlotRouteImport } from './routes/booking-form/date-slot'
 import { Route as BookingFormAddonsFoodsRouteImport } from './routes/booking-form/addons-foods'
 import { Route as AdminSlotsRouteImport } from './routes/admin/slots'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
 import { Route as AdminFoodsRouteImport } from './routes/admin/foods'
 import { Route as AdminDiscountsRouteImport } from './routes/admin/discounts'
@@ -90,6 +91,11 @@ const AdminSlotsRoute = AdminSlotsRouteImport.update({
   path: '/slots',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPackagesRoute = AdminPackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/admin/discounts': typeof AdminDiscountsRoute
   '/admin/foods': typeof AdminFoodsRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/slots': typeof AdminSlotsRoute
   '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/admin/discounts': typeof AdminDiscountsRoute
   '/admin/foods': typeof AdminFoodsRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/slots': typeof AdminSlotsRoute
   '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/admin/discounts': typeof AdminDiscountsRoute
   '/admin/foods': typeof AdminFoodsRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/slots': typeof AdminSlotsRoute
   '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/admin/discounts'
     | '/admin/foods'
     | '/admin/packages'
+    | '/admin/settings'
     | '/admin/slots'
     | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/admin/discounts'
     | '/admin/foods'
     | '/admin/packages'
+    | '/admin/settings'
     | '/admin/slots'
     | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/admin/discounts'
     | '/admin/foods'
     | '/admin/packages'
+    | '/admin/settings'
     | '/admin/slots'
     | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
@@ -360,6 +372,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSlotsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/packages': {
       id: '/admin/packages'
       path: '/packages'
@@ -427,6 +446,7 @@ interface AdminRouteChildren {
   AdminDiscountsRoute: typeof AdminDiscountsRoute
   AdminFoodsRoute: typeof AdminFoodsRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSlotsRoute: typeof AdminSlotsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -439,6 +459,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDiscountsRoute: AdminDiscountsRoute,
   AdminFoodsRoute: AdminFoodsRoute,
   AdminPackagesRoute: AdminPackagesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminSlotsRoute: AdminSlotsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }

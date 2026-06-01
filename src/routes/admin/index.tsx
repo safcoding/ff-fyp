@@ -14,6 +14,7 @@ function AdminIndex() {
     { href: "/admin/bookings", label: "Manage Bookings" },
     { href: "/admin/activities", label: "Manage Activities" },
     { href: "/admin/blocks", label: "Manage Blocks" },
+    { href: "/admin/settings", label: "Manage Settings" },
   ]
 
   return (

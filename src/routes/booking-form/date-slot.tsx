@@ -34,6 +34,14 @@ function BookingDateSlotPage() {
       }),
   })
 
+  const disabledDates = availabilityQuery.data?.fully_booked_dates
+    ? availabilityQuery.data.fully_booked_dates.map((dateKey) => new Date(`${dateKey}T00:00:00`))
+    : []
+  const minBookingDate = availabilityQuery.data?.min_booking_date
+    ? new Date(`${availabilityQuery.data.min_booking_date}T00:00:00`)
+    : undefined
+  const leadDays = availabilityQuery.data?.min_lead_days ?? null
+
   const slotsForSelectedDate = values.booking_date ? availabilityQuery.data?.slots_for_date ?? [] : []
 
   function handleDateSelect(selected: Date | undefined) {
@@ -100,10 +108,20 @@ function BookingDateSlotPage() {
             <div className="grid gap-8 lg:grid-cols-[1fr,1fr]">
               <div className="flex flex-col">
                 <Calendar
-                mode="single"
-                selected={selectedDate ?? date}
-                onSelect={handleDateSelect}
+                  mode="single"
+                  selected={selectedDate ?? date}
+                  onSelect={handleDateSelect}
+                  disabled={
+                    minBookingDate
+                      ? [{ before: minBookingDate }, ...disabledDates]
+                      : disabledDates
+                  }
                 />
+                {leadDays !== null ? (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Bookings must be made at least {leadDays} days in advance.
+                  </p>
+                ) : null}
                 <div className="mt-4 flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full border border-emerald-300 bg-emerald-100" />
