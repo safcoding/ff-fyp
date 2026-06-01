@@ -27,3 +27,13 @@ export const toIsoDateTimeForTimeColumn = (value: Date | string) => {
 
   return `1970-01-01T${raw.slice(0, 8)}.000Z`
 }
+
+export function formatDate(value: Date | string | null) {
+  if (!value) return '-'
+  const date = typeof value === 'string' ? new Date(value) : value
+  return new Intl.DateTimeFormat('en-MY', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+  }).format(date)
+}

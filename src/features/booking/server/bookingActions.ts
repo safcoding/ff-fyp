@@ -27,13 +27,23 @@ export const getBookings = createServerFn({ method: 'GET' }).handler(
 export const getBookingById = createServerFn({ method: 'POST' })
   .inputValidator(schema.bookingIdSchema)
   .handler(async ({ data }) => {
-    const booking = await loadBookingID(data)
+    const [booking, settings] = await Promise.all([
+      loadBookingID(data),
+      prisma.global_settings.findFirst({ orderBy: { id: 'asc' } }),
+    ])
 
     if (!booking) {
       throw new Error('Booking not found')
     }
 
-    return mapBookingToUi(booking)
+    return {
+      ...mapBookingToUi(booking),
+      company_name: settings?.company_name ?? null,
+      company_address: settings?.company_address ?? null,
+      company_phone: settings?.company_phone ?? null,
+      company_email: settings?.company_email ?? null,
+      sst_registration: settings?.sst_registration ?? null,
+    }
   })
 
 export const createBooking = createServerFn({ method: 'POST' })
