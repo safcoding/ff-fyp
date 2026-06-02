@@ -106,7 +106,7 @@ export const createBooking = createServerFn({ method: 'POST' })
         },
       },
     })
-    return `Created booking for ${newBooking.pic_name} with email ${newBooking.pic_email}. Total price: ${newBooking.booking_price.toString()}`
+    return {id: newBooking.booking_id}
   })
 
 export const updateBooking = createServerFn({ method: 'POST' })

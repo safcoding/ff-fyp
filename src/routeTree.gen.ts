@@ -17,6 +17,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as BookingFormSuccessRouteImport } from './routes/booking-form/success'
 import { Route as BookingFormReviewRouteImport } from './routes/booking-form/review'
 import { Route as BookingFormPackageRouteImport } from './routes/booking-form/package'
 import { Route as BookingFormDetailsRouteImport } from './routes/booking-form/details'
@@ -72,6 +73,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const BookingFormSuccessRoute = BookingFormSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => BookingFormRoute,
 } as any)
 const BookingFormReviewRoute = BookingFormReviewRouteImport.update({
   id: '/review',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/booking-form/details': typeof BookingFormDetailsRoute
   '/booking-form/package': typeof BookingFormPackageRoute
   '/booking-form/review': typeof BookingFormReviewRoute
+  '/booking-form/success': typeof BookingFormSuccessRoute
   '/admin/': typeof AdminIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/booking-form/details': typeof BookingFormDetailsRoute
   '/booking-form/package': typeof BookingFormPackageRoute
   '/booking-form/review': typeof BookingFormReviewRoute
+  '/booking-form/success': typeof BookingFormSuccessRoute
   '/admin': typeof AdminIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/booking-form/details': typeof BookingFormDetailsRoute
   '/booking-form/package': typeof BookingFormPackageRoute
   '/booking-form/review': typeof BookingFormReviewRoute
+  '/booking-form/success': typeof BookingFormSuccessRoute
   '/admin/': typeof AdminIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/booking-form/details'
     | '/booking-form/package'
     | '/booking-form/review'
+    | '/booking-form/success'
     | '/admin/'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/booking-form/details'
     | '/booking-form/package'
     | '/booking-form/review'
+    | '/booking-form/success'
     | '/admin'
     | '/api/auth/$'
   id:
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/booking-form/details'
     | '/booking-form/package'
     | '/booking-form/review'
+    | '/booking-form/success'
     | '/admin/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -369,6 +381,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/booking-form/success': {
+      id: '/booking-form/success'
+      path: '/success'
+      fullPath: '/booking-form/success'
+      preLoaderRoute: typeof BookingFormSuccessRouteImport
+      parentRoute: typeof BookingFormRoute
     }
     '/booking-form/review': {
       id: '/booking-form/review'
@@ -512,6 +531,7 @@ interface BookingFormRouteChildren {
   BookingFormDetailsRoute: typeof BookingFormDetailsRoute
   BookingFormPackageRoute: typeof BookingFormPackageRoute
   BookingFormReviewRoute: typeof BookingFormReviewRoute
+  BookingFormSuccessRoute: typeof BookingFormSuccessRoute
 }
 
 const BookingFormRouteChildren: BookingFormRouteChildren = {
@@ -520,6 +540,7 @@ const BookingFormRouteChildren: BookingFormRouteChildren = {
   BookingFormDetailsRoute: BookingFormDetailsRoute,
   BookingFormPackageRoute: BookingFormPackageRoute,
   BookingFormReviewRoute: BookingFormReviewRoute,
+  BookingFormSuccessRoute: BookingFormSuccessRoute,
 }
 
 const BookingFormRouteWithChildren = BookingFormRoute._addFileChildren(

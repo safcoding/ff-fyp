@@ -61,10 +61,13 @@ function BookingReviewPage() {
 
   const createBookingMutation = useMutation({
     mutationFn: createBooking,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void navigate({ 
+        to: '/booking-form/success',
+        search: {bookingId: data.id} ,
+      })
       clearDraft()
-      void navigate({ to: '/booking-form/date-slot' })
     },
   })
 
@@ -358,6 +361,7 @@ function BookingReviewPage() {
                 {createBookingMutation.data}
               </p>
             ) : null}
+
           </form>
         </CardContent>
       </Card>
