@@ -74,7 +74,12 @@ function FoodsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8 p-6">
+    <div className="space-y-6">
+      <div className="border-b border-[#445412]/10 pb-6">
+        <h1 className="font-fraunces font-black text-4xl text-[#445412]">Foods</h1>
+        <p className="text-sm text-stone-500 mt-1">Manage food items available for group bookings.</p>
+      </div>
+      <div className="space-y-8 mx-auto max-w-4xl">
       <Card>
         <CardHeader>
           <CardTitle>Create Food</CardTitle>
@@ -277,6 +282,7 @@ function FoodsPage() {
       {deleteFoodMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteFoodMutation.data}</p>
       ) : null}
+      </div>
     </div>
   )
 }

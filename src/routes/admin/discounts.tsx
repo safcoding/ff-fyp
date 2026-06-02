@@ -79,7 +79,7 @@ function DiscountsPage() {
   })
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 p-6">
+    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Discounts</h1><p className="text-sm text-stone-500 mt-1">Set up discount codes and rates for bookings.</p></div><div className="mx-auto max-w-5xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Create Discount</CardTitle>
@@ -290,6 +290,6 @@ function DiscountsPage() {
       {deleteDiscountMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteDiscountMutation.data}</p>
       ) : null}
-    </div>
+      </div></div>
   )
 }

@@ -151,7 +151,7 @@ function SlotsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 p-6">
+    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Slots</h1><p className="text-sm text-stone-500 mt-1">Configure available time slots and tour schedules.</p></div><div className="mx-auto max-w-5xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Create Slot</CardTitle>
@@ -745,6 +745,6 @@ function SlotsPage() {
       {deleteSlotMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteSlotMutation.data}</p>
       ) : null}
-    </div>
+      </div></div>
   )
 }

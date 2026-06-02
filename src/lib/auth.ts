@@ -27,6 +27,7 @@ export const auth = betterAuth({
       defaultRole: 'user',
       adminRoles: ['admin'],
       adminUserIds,
+
     }),
     tanstackStartCookies(),
   ],

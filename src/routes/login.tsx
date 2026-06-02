@@ -1,12 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession, signIn } from '@/lib/auth-client'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { SignUpForm } from '@/features/users/client/SignUpForm'
+import { Leaf, Lock, Mail } from 'lucide-react'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -27,46 +22,49 @@ function LoginPage() {
   }, [isPending, session, navigate])
 
   if (isPending) {
-    return <div className="mx-auto max-w-md p-6">Checking session...</div>
+    return (
+      <div className="min-h-screen bg-[#fbf0d8] flex items-center justify-center">
+        <p className="text-sm text-stone-500">Checking session...</p>
+      </div>
+    )
   }
 
-  if (session?.user) {
-    return null
-  }
+  if (session?.user) return null
 
   return (
-    <div className="mx-auto max-w-md p-6">
-      <SignUpForm/>
-      <Card>
-        <CardHeader>
-          <CardTitle>Admin login</CardTitle>
-          <CardDescription>Sign in with the email and password provided by an admin.</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen bg-[#fbf0d8] flex flex-col items-center justify-center px-4">
+      {/* Card */}
+      <div className="w-full max-w-sm bg-white border border-[#445412]/10 rounded-2xl shadow-lg overflow-hidden">
+        {/* Green header strip */}
+        <div className="bg-[#445412] px-8 py-7 text-center">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <Leaf className="w-5 h-5 text-[#a8c15a]" />
+            <span className="font-fraunces font-black text-xl text-[#fbf0d8] tracking-tight">Farm Fresh</span>
+          </div>
+          <p className="text-[#fbf0d8]/60 text-xs uppercase tracking-widest">Admin Portal</p>
+        </div>
+
+        <div className="px-8 py-7">
+          <h2 className="font-fraunces font-black text-2xl text-[#445412] mb-1">Sign in</h2>
+          <p className="text-xs text-stone-400 mb-6">Use the credentials provided by your administrator.</p>
+
           <form
             className="space-y-4"
-            onSubmit={async (event) => {
-              event.preventDefault()
+            onSubmit={async (e) => {
+              e.preventDefault()
               setError(null)
-
               if (!email.trim() || !password) {
                 setError('Email and password are required.')
                 return
               }
-
               try {
                 setIsSubmitting(true)
-                const result = await signIn.email({
-                  email: email.trim(),
-                  password,
-                })
-
+                const result = await signIn.email({ email: email.trim(), password })
                 if (result.error) {
                   setError(result.error.message ?? 'Unable to sign in.')
                   return
                 }
-
-                await navigate({ to: '/' })
+                await navigate({ to: '/admin' })
               } catch (err) {
                 setError(err instanceof Error ? err.message : 'Unable to sign in.')
               } finally {
@@ -74,36 +72,62 @@ function LoginPage() {
               }
             }}
           >
-            <div className="space-y-2">
-              <Label htmlFor="login-email">Email</Label>
-              <Input
-                id="login-email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
+            <div className="space-y-1">
+              <label htmlFor="login-email" className="block text-xs font-bold text-stone-500 uppercase tracking-wide">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300" />
+                <input
+                  id="login-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-9 pr-3 h-10 border border-stone-200 rounded-lg text-sm outline-none focus:border-[#445412] transition-colors"
+                  placeholder="you@example.com"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="login-password">Password</Label>
-              <Input
-                id="login-password"
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
+            <div className="space-y-1">
+              <label htmlFor="login-password" className="block text-xs font-bold text-stone-500 uppercase tracking-wide">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300" />
+                <input
+                  id="login-password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-3 h-10 border border-stone-200 rounded-lg text-sm outline-none focus:border-[#445412] transition-colors"
+                  placeholder="••••••••"
+                />
+              </div>
             </div>
 
-            {error ? <p className="text-sm text-red-600">{error}</p> : null}
+            {error ? (
+              <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>
+            ) : null}
 
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-10 bg-[#445412] hover:bg-[#3a4810] text-[#fbf0d8] font-bold text-sm rounded-lg transition-colors disabled:opacity-50"
+            >
               {isSubmitting ? 'Signing in...' : 'Sign in'}
-            </Button>
+            </button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <p className="mt-6 text-xs text-stone-400">
+        Farm Fresh @ UPM — Admin Portal
+      </p>
     </div>
   )
 }

@@ -23,6 +23,7 @@ import { Route as BookingFormPackageRouteImport } from './routes/booking-form/pa
 import { Route as BookingFormDetailsRouteImport } from './routes/booking-form/details'
 import { Route as BookingFormDateSlotRouteImport } from './routes/booking-form/date-slot'
 import { Route as BookingFormAddonsFoodsRouteImport } from './routes/booking-form/addons-foods'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminSlotsRouteImport } from './routes/admin/slots'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
@@ -104,6 +105,11 @@ const BookingFormAddonsFoodsRoute = BookingFormAddonsFoodsRouteImport.update({
   path: '/addons-foods',
   getParentRoute: () => BookingFormRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSlotsRoute = AdminSlotsRouteImport.update({
   id: '/slots',
   path: '/slots',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/slots': typeof AdminSlotsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
   '/booking-form/details': typeof BookingFormDetailsRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/slots': typeof AdminSlotsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
   '/booking-form/details': typeof BookingFormDetailsRoute
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/slots': typeof AdminSlotsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/booking-form/addons-foods': typeof BookingFormAddonsFoodsRoute
   '/booking-form/date-slot': typeof BookingFormDateSlotRoute
   '/booking-form/details': typeof BookingFormDetailsRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/settings'
     | '/admin/slots'
+    | '/admin/users'
     | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
     | '/booking-form/details'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/settings'
     | '/admin/slots'
+    | '/admin/users'
     | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
     | '/booking-form/details'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/settings'
     | '/admin/slots'
+    | '/admin/users'
     | '/booking-form/addons-foods'
     | '/booking-form/date-slot'
     | '/booking-form/details'
@@ -424,6 +436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingFormAddonsFoodsRouteImport
       parentRoute: typeof BookingFormRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/slots': {
       id: '/admin/slots'
       path: '/slots'
@@ -507,6 +526,7 @@ interface AdminRouteChildren {
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSlotsRoute: typeof AdminSlotsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -520,6 +540,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPackagesRoute: AdminPackagesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSlotsRoute: AdminSlotsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

@@ -71,7 +71,7 @@ function BlocksPage() {
   })
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 p-6">
+    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Date Blocks</h1><p className="text-sm text-stone-500 mt-1">Block out dates when the farm is unavailable for bookings.</p></div><div className="mx-auto max-w-5xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Create Block</CardTitle>
@@ -231,6 +231,6 @@ function BlocksPage() {
       {deleteBlockMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteBlockMutation.data}</p>
       ) : null}
-    </div>
+      </div></div>
   )
 }

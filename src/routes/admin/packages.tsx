@@ -156,7 +156,7 @@ function PackagesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-6">
+    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Packages</h1><p className="text-sm text-stone-500 mt-1">Create and manage tour packages and pricing tiers.</p></div><div className="mx-auto max-w-6xl space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Create Package</CardTitle>
@@ -512,6 +512,6 @@ function PackagesPage() {
       {deletePackageMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deletePackageMutation.data}</p>
       ) : null}
-    </div>
+      </div></div>
   )
 }

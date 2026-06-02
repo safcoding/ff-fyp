@@ -59,10 +59,14 @@ function SettingsPage() {
   })
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 p-6">
-      <Card>
+    <div className="space-y-6">
+      <div className="border-b border-[#445412]/10 pb-6">
+        <h1 className="font-fraunces font-black text-4xl text-[#445412]">Settings</h1>
+        <p className="text-sm text-stone-500 mt-1">Manage company information and global booking settings.</p>
+      </div>
+      <Card className="border-[#445412]/10 shadow-sm">
         <CardHeader>
-          <CardTitle>Global Settings</CardTitle>
+          <CardTitle className="text-[#445412]">Company & Booking Settings</CardTitle>
         </CardHeader>
         <CardContent>
           <form

@@ -375,10 +375,6 @@ export type activitiesUpdateOneWithoutPackage_activitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.activitiesUpdateToOneWithWhereWithoutPackage_activitiesInput, Prisma.activitiesUpdateWithoutPackage_activitiesInput>, Prisma.activitiesUncheckedUpdateWithoutPackage_activitiesInput>
 }
 
-export type NullableBoolFieldUpdateOperationsInput = {
-  set?: boolean | null
-}
-
 export type activitiesCreateWithoutBooking_packagesInput = {
   activity_name: string
   activity_desc?: string | null

@@ -701,10 +701,6 @@ export type BookingsNullableScalarRelationFilter = {
   isNot?: Prisma.bookingsWhereInput | null
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type NullableEnumbooking_statusFieldUpdateOperationsInput = {
   set?: $Enums.booking_status | null
 }

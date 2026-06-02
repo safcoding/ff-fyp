@@ -106,10 +106,14 @@ function BookingPage() {
   }
 
   return (
-    <>
-      <Card>
+    <div className="space-y-6">
+      <div className="border-b border-[#445412]/10 pb-6">
+        <h1 className="font-fraunces font-black text-4xl text-[#445412]">Bookings</h1>
+        <p className="text-sm text-stone-500 mt-1">Review, approve, and manage group tour booking requests.</p>
+      </div>
+      <Card className="border-[#445412]/10 shadow-sm">
         <CardHeader>
-          <CardTitle>Bookings list</CardTitle>
+          <CardTitle className="text-[#445412]">All Bookings</CardTitle>
         </CardHeader>
         <CardContent>
           {bookingQuery.isPending ? <p>Loading bookings...</p> : null}
@@ -497,6 +501,6 @@ function BookingPage() {
           {quotationMutation.error.message}
         </p>
       ) : null}
-    </>
+    </div>
   )
 }
