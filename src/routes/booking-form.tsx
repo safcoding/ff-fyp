@@ -11,7 +11,7 @@ function BookingFormEntryPage() {
   }, [navigate])
 
   return (
-  <div className="bg-[#445412]">
+  <div className="bg-[#445412] min-h-screen">
     <Outlet />
   </div>
 

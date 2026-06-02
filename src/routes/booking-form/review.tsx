@@ -17,10 +17,7 @@ import {
   getPackagePricing,
   getPackages,
 } from '@/features/package/server/packageActions'
-import {
-  createBooking,
-  getBookings,
-} from '@/features/booking/server/bookingActions'
+import {createBooking} from '@/features/booking/server/bookingActions'
 import { getSlots } from '@/features/slot/server/slotActions'
 import { StepIndicator } from '@/components/booking/StepIndicator'
 
@@ -41,11 +38,6 @@ function BookingReviewPage() {
   const navigate = Route.useNavigate()
   const queryClient = useQueryClient()
   const { values, clearDraft, isHydrated } = useBookingDraft()
-
-  const bookingsQuery = useQuery({
-    queryKey: ['bookings'],
-    queryFn: () => getBookings(),
-  })
 
   const packagesQuery = useQuery({
     queryKey: ['packages'],
@@ -142,10 +134,12 @@ function BookingReviewPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 5 of 5: Review and submit.</CardDescription>
+      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
+        <CardHeader className="pb-4 items-center text-center">
+          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+            PRE-BOOKING SLOT
+          </CardTitle>
+          <CardDescription className="font-sans text-black font-bold">Step 5 of 5:Review Details and submit.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={5} />
@@ -179,9 +173,9 @@ function BookingReviewPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Schedule</CardTitle>
+                  <CardTitle className="text-2xl font-fraunces text-amber-500 font-black">Schedule</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-sm">
+                <CardContent className="space-y-1 text-xl font-sans font-bold ">
                   <p>Date: {values.booking_date || '-'}</p>
                   <p>Slot: {selectedSlot?.slot_name ?? '-'}</p>
                   <p>Slot Type: {selectedSlot?.slot_type ?? '-'}</p>
@@ -190,16 +184,16 @@ function BookingReviewPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Package</CardTitle>
+                  <CardTitle className="text-2xl font-fraunces text-amber-500 font-black">Package</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-sm">
+                <CardContent className="space-y-1">
                   {values.packages.length === 0 ? (
                     <p className="text-slate-600">No package selected.</p>
                   ) : (
                     values.packages.map((pkg) => {
                       const info = packageById.get(pkg.package_id)
                       return (
-                        <div key={pkg.package_id} className="space-y-1">
+                        <div key={pkg.package_id} className="space-y-1 text-xl font-sans font-bold">
                           <p>{info?.package_name ?? pkg.package_id}</p>
                           {info?.package_note ? (
                             <p className="text-slate-600">
@@ -215,15 +209,15 @@ function BookingReviewPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Visitors</CardTitle>
+                  <CardTitle className="text-2xl font-fraunces text-amber-500 font-black">Visitors</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-sm">
+                <CardContent className="space-y-1 text-xl font-sans font-bold">
                   {paxFieldMeta.map((meta) => (
                     <p key={meta.name}>
                       {meta.label}: {Number(paxTotals[meta.name])}
                     </p>
                   ))}
-                  <p className="pt-2 font-medium">
+                  <p className="pt-2 font-black text-amber-500 text-xl ">
                     Total Visitors: {totalVisitors}
                   </p>
                 </CardContent>
@@ -231,9 +225,9 @@ function BookingReviewPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Tour Guides</CardTitle>
+                  <CardTitle className="text-2xl font-fraunces text-amber-500 font-black">Tour Guides</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-sm">
+                <CardContent className="space-y-1 text-xl font-sans font-bold">
                   {selectedSlot?.slot_type === 'GUIDED' ? (
                     guideAssignment.error ? (
                       <p className="text-red-600">{guideAssignment.error}</p>
@@ -256,9 +250,9 @@ function BookingReviewPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Add-ons and Foods</CardTitle>
+                  <CardTitle className="text-2xl font-fraunces text-amber-500 font-black">Add-ons and Foods</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2 text-sm">
+                <CardContent className="space-y-2 text-xl font-sans font-bold">
                   {values.addons.length === 0 && values.foods.length === 0 ? (
                     <p className="text-slate-600">
                       No add-ons or foods selected.
@@ -267,8 +261,8 @@ function BookingReviewPage() {
                     <>
                       {values.addons.length > 0 ? (
                         <div>
-                          <p className="font-medium">Add-ons</p>
-                          <div className="mt-1 space-y-1">
+                          <p className="text-2xl font-fraunces text-amber-500 font-black">Add-ons</p>
+                          <div className="mt-1 space-y-1 text-xl font-sans font-bold">
                             {values.addons.map((item) => {
                               const addon = addonById.get(item.addon_id)
                               if (!addon) {
@@ -286,7 +280,7 @@ function BookingReviewPage() {
 
                       {values.foods.length > 0 ? (
                         <div>
-                          <p className="font-medium">Foods</p>
+                          <p className="text-xl font-sans font-bold text-amber-500">Foods</p>
                           <div className="mt-1 space-y-1">
                             {values.foods.map((item) => {
                               const food = foodById.get(item.food_id)
@@ -294,7 +288,7 @@ function BookingReviewPage() {
                                 return null
                               }
                               return (
-                                <p key={`food-${item.food_id}`}>
+                                <p key={`food-${item.food_id}`} className='text-xl font-sans font-bold'>
                                   {food.food_name} x {item.quantity}
                                 </p>
                               )
@@ -309,15 +303,15 @@ function BookingReviewPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
+                  <CardTitle className="text-2xl font-fraunces text-amber-500 font-black">
                     PIC and Organization
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-sm">
-                  <p>PIC: {values.pic_name}</p>
+                <CardContent className="space-y-1 text-xl font-sans font-bold">
+                  <p>Person In Charge: {values.pic_name}</p>
                   <p>Email: {values.pic_email}</p>
                   <p>Phone: {values.pic_hp}</p>
-                  <p>Organization: {values.org_name}</p>
+                  <p>Organization Name: {values.org_name}</p>
                   <p>State: {values.org_state}</p>
                   <p>Type: {values.org_type}</p>
                   <p>Address: {values.org_address}</p>
@@ -327,16 +321,16 @@ function BookingReviewPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">
+                <CardTitle className="text-3xl font-fraunces text-amber-500 font-black">
                   Estimated Total Amount
                 </CardTitle>
                 <CardDescription>
                   Computed from selected package pricing, pax counts, add-ons,
-                  foods, and guided tour guide fees.
+                  foods, and guided tour guide fees if applicable.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-semibold">
+                <p className="text-2xl font-black text-amber-500 ">
                   {formatCurrency(estimatedTotal)}
                 </p>
               </CardContent>
@@ -365,42 +359,6 @@ function BookingReviewPage() {
               </p>
             ) : null}
           </form>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Bookings</CardTitle>
-          <CardDescription>
-            Recent bookings fetched via TanStack Query and server function.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {bookingsQuery.isPending ? <p>Loading bookings...</p> : null}
-          {bookingsQuery.isError ? (
-            <p className="text-red-600">{bookingsQuery.error.message}</p>
-          ) : null}
-          {bookingsQuery.data ? (
-            <div className="space-y-3">
-              {bookingsQuery.data.map((booking) => (
-                <div
-                  key={booking.booking_id}
-                  className="rounded-md border p-3 text-sm"
-                >
-                  <p className="font-medium">{booking.org_name}</p>
-                  <p>Package ID: {booking.package_id}</p>
-                  <p>Slot ID: {booking.slot_id}</p>
-                  <p>
-                    Tour Guides:{' '}
-                    {booking.slot_type === 'GUIDED'
-                      ? (booking.assigned_guide_count ?? '-')
-                      : 'Not required'}
-                  </p>
-                  <p>Total Price: {booking.booking_price}</p>
-                </div>
-              ))}
-            </div>
-          ) : null}
         </CardContent>
       </Card>
     </div>

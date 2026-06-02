@@ -11,7 +11,7 @@ export function StepIndicator({ step }: StepIndicatorProps) {
         <div
           key={item}
           className={`rounded-md border px-3 py-2 text-sm ${
-            step === item ? "border-black bg-slate-100 font-medium" : "text-slate-500"
+            step === item ? "border-black bg-white/40 font-sans font-medium" : "text-slate-500 font-sans font-medium"
           }`}
         >
           Step {item}

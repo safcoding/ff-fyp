@@ -69,12 +69,12 @@ function BookingDateSlotPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-6 ">
-      <Card className="bg-[#fbf0d8] shadow-xl">
+      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
         <CardHeader className="pb-4 items-center text-center">
           <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
             PRE-BOOKING SLOT
           </CardTitle>
-          <CardDescription>Step 1 of 5: Select date and slot.</CardDescription>
+          <CardDescription className="font-sans text-black font-bold">Step 1 of 5: Select date and slot.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={1} />
@@ -170,7 +170,7 @@ function BookingDateSlotPage() {
                                 isFull || isBlocked
                                   ? "cursor-not-allowed border-muted bg-muted/50 opacity-60"
                                   : isSelected
-                                    ? "border-[#445412] bg-amber-500 shadow-md"
+                                    ? "border-[#445412] bg-amber-100 shadow-md"
                                     : "cursor-pointer border-border hover:border-[#445412] hover:bg-[#445412]-50/50",
                               )}
                               onClick={() => {
@@ -236,13 +236,13 @@ function BookingDateSlotPage() {
                     ) : null}
 
                     {values.slot_id ? (
-                      <div className="mt-6 rounded-xl border border-amber-500 p-4">
+                      <div className="mt-6 rounded-xl border border-amber-500 bg-amber-300 p-4">
                         <h4 className="mb-2 font-medium text-black">Your Selection</h4>
-                        <p className="text-sm text-black">
+                        <p className="text-xl font-sans font-bold text-black">
                           {format(selectedDate, "MMMM d, yyyy")} at{" "}
                           {slotsForSelectedDate.find((slot) => slot.slot_id === values.slot_id)?.slot_start ?? "Selected time"}
                         </p>
-                        <p className="p-3 text-olive-950">Guided Slots will automatically assign a fixed number of tour guides as stated in the packages page </p>
+                        <p className="p-3 text-black font-sans text-sm">Guided Slots will automatically assign tour guides based on the number of pax </p>
                       </div>
                     ) : null}
                   </>

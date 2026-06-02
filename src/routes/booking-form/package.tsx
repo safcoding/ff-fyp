@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 
 export const Route = createFileRoute("/booking-form/package")({ component: BookingPackagePage })
 
@@ -38,10 +39,12 @@ function BookingPackagePage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 2 of 5: Select packages and pax.</CardDescription>
+      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
+        <CardHeader className="pb-4 items-center text-center">
+          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+            PRE-BOOKING SLOT
+          </CardTitle>
+          <CardDescription className="font-sans text-black font-bold">Step 2 of 5: Select Packages and Pax.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={2} />
@@ -66,9 +69,9 @@ function BookingPackagePage() {
             }}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-slate-600">Pick one or more packages, then set pax for each.</p>
+              <p className="text-sm text-slate-600">Pick one or more packages and set pax for each. Please refer to the Package details page for pricing</p>
               <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/date-slot" })}>
-                Back to slots
+                Back to step 1
               </Button>
             </div>
 
@@ -76,7 +79,7 @@ function BookingPackagePage() {
             {packagesQuery.isError ? <p className="text-sm text-red-600">{packagesQuery.error.message}</p> : null}
 
             {packagesQuery.data ? (
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 grid-row-auto">
                 {packagesQuery.data.map((pkg) => {
                   const pricing = getPackagePricing(pkg as unknown as Record<string, unknown>)
                   const isSelected = selectedPackageIds.has(pkg.package_id)
@@ -88,19 +91,43 @@ function BookingPackagePage() {
                   return (
                     <div
                       key={pkg.package_id}
-                      className={`rounded-md border p-4 text-left transition ${
-                        isSelected ? "border-black bg-slate-100" : "hover:bg-slate-50"
+                      className={`rounded-md border p-4 text-left transition border-[#445412] bg-white/40 ${
+                        isSelected ? "border-black bg-white/40" : "hover:bg-bg-white/40"
                       }`}
                     >
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <p className="font-medium">{pkg.package_name}</p>
-                          {pkg.package_note ? (
-                            <p className="mt-1 text-sm text-slate-600">{pkg.package_note}</p>
-                          ) : null}
-                        </div>
+                      <div className="grid grid-rows-2 justify-between gap-3 w-max">
+
+                        <Accordion
+                        type="single"
+                        collapsible
+                        defaultValue=""
+                        className="max-w-lg"
+                        >
+                          <AccordionItem value="desc">
+                            <AccordionTrigger>
+                              <p className="font-black font-fraunces text-2xl text-amber-500">{pkg.package_name}</p>
+                            </AccordionTrigger>
+                            <AccordionContent className="grid grid-row-2 md:w-full">
+                              {pkg.package_note ? (
+                                <p className="mt-1 text-sm text-black font-sans mx-auto">{pkg.package_note}</p>
+                              ) : null}
+                              <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-sm text-black">
+                                <p>MY Adult: {formatCurrency(pricing.price_my_adult)}</p>
+                                <p>MY Kid: {formatCurrency(pricing.price_my_kid)}</p>
+                                <p>MY Senior: {formatCurrency(pricing.price_my_senior)}</p>
+                                <p>MY OKU: {formatCurrency(pricing.price_my_oku)}</p>
+                                <p>Non-MY Adult: {formatCurrency(pricing.price_non_my_adult)}</p>
+                                <p>Non-MY Kid: {formatCurrency(pricing.price_non_my_kid)}</p>
+                                <p>Non-MY Senior: {formatCurrency(pricing.price_non_my_senior)}</p>
+                                <p>Non-MY OKU: {formatCurrency(pricing.price_non_my_oku)}</p>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+
                         <Button
                           type="button"
+                          className="mr-auto text-left justify-start bg-[#445412] text-white font-bold font-sans uppercase text-lg p-4"
                           size="sm"
                           variant={isSelected ? "destructive" : "outline"}
                           onClick={() => {
@@ -114,23 +141,12 @@ function BookingPackagePage() {
                             updateField("packages", [...values.packages, createEmptyPackageSelection(pkg.package_id)])
                           }}
                         >
-                          {isSelected ? "Remove" : "Add"}
+                          {isSelected ? "remove" : "add"}
                         </Button>
                       </div>
 
-                      <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-slate-600">
-                        <p>MY Adult: {formatCurrency(pricing.price_my_adult)}</p>
-                        <p>MY Kid: {formatCurrency(pricing.price_my_kid)}</p>
-                        <p>MY Senior: {formatCurrency(pricing.price_my_senior)}</p>
-                        <p>MY OKU: {formatCurrency(pricing.price_my_oku)}</p>
-                        <p>Non-MY Adult: {formatCurrency(pricing.price_non_my_adult)}</p>
-                        <p>Non-MY Kid: {formatCurrency(pricing.price_non_my_kid)}</p>
-                        <p>Non-MY Senior: {formatCurrency(pricing.price_non_my_senior)}</p>
-                        <p>Non-MY OKU: {formatCurrency(pricing.price_non_my_oku)}</p>
-                      </div>
-
                       {isSelected && selectedPackage ? (
-                        <div className="mt-4 space-y-4">
+                        <div className="mt-2 space-y-4">
                           {activities.length > 0 ? (
                             <div className="space-y-2">
                               <Label className="text-xs text-slate-600" htmlFor={`${pkg.package_id}-activity`}>

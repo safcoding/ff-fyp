@@ -92,10 +92,12 @@ function BookingAddonsFoodsPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 4 of 5: Add optional add-ons and foods.</CardDescription>
+      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
+        <CardHeader className="pb-4 items-center text-center">
+          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+            PRE-BOOKING SLOT
+          </CardTitle>
+          <CardDescription className="font-sans text-black font-bold">Step 4 of 5:Select optional add-ons and food.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={4} />
@@ -116,10 +118,10 @@ function BookingAddonsFoodsPage() {
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
+              <Card className="bg-white/40">
                 <CardHeader>
-                  <CardTitle className="text-base">Add-ons</CardTitle>
-                  <CardDescription>Optional add-ons available for your booking.</CardDescription>
+                  <CardTitle className="text-xl font-fraunces text-amber-500 font-black">Add-ons</CardTitle>
+                  <CardDescription className="font-bold text-black">Optional add-ons available for your booking.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {addonsQuery.isPending ? <p>Loading add-ons...</p> : null}
@@ -165,10 +167,10 @@ function BookingAddonsFoodsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-white/40">
                 <CardHeader>
-                  <CardTitle className="text-base">Foods</CardTitle>
-                  <CardDescription>Optional foods to include with your booking.</CardDescription>
+                  <CardTitle className="text-xl font-fraunces text-amber-500 font-black">Foods</CardTitle>
+                  <CardDescription className="text-black font-bold">Optional foods to include with your booking.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {foodsQuery.isPending ? <p>Loading foods...</p> : null}
@@ -209,16 +211,6 @@ function BookingAddonsFoodsPage() {
                 </CardContent>
               </Card>
             </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Estimated Total Amount</CardTitle>
-                <CardDescription>Includes package pricing, add-ons, and foods.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-semibold">{formatCurrency(estimatedTotal)}</p>
-              </CardContent>
-            </Card>
 
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
             <Button type="submit">Next: Review summary</Button>

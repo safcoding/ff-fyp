@@ -43,10 +43,12 @@ function BookingDetailsPage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Booking Wizard</CardTitle>
-          <CardDescription>Step 3 of 5: Enter contact details.</CardDescription>
+      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
+        <CardHeader className="pb-4 items-center text-center">
+          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+            PRE-BOOKING SLOT
+          </CardTitle>
+          <CardDescription className="font-sans text-black font-bold">Step 3 of 5:Enter Organisation and contact details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StepIndicator step={3} />
@@ -71,7 +73,7 @@ function BookingDetailsPage() {
             }}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-slate-600">Enter visitors and contact details.</p>
+              <p className="text-sm text-slate-600">Enter organisation and contact details.</p>
               <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/package" })}>
                 Back to packages
               </Button>
@@ -80,13 +82,14 @@ function BookingDetailsPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="pic_name">Person in Charge Name</Label>
-                <Input id="pic_name" value={values.pic_name} onChange={(e) => updateField("pic_name", e.target.value)} />
+                <Input className="bg-white/40" id="pic_name" value={values.pic_name} onChange={(e) => updateField("pic_name", e.target.value)} />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="pic_email">Person in Charge Email</Label>
                 <Input
                   id="pic_email"
+                  className="bg-white/40"
                   type="email"
                   required
                   value={values.pic_email}
@@ -98,6 +101,7 @@ function BookingDetailsPage() {
                 <Label htmlFor="pic_hp">Phone (E.164 format)</Label>
                 <Input
                   id="pic_hp"
+                  className="bg-white/40"
                   placeholder="+60123456789"
                   pattern="\+?[1-9][0-9]{7,14}"
                   title="Use E.164 format, for example +60123456789"
@@ -109,18 +113,19 @@ function BookingDetailsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="org_name">Organization Name</Label>
-                <Input id="org_name" value={values.org_name} onChange={(e) => updateField("org_name", e.target.value)} />
+                <Input id="org_name" className="bg-white/40" value={values.org_name} onChange={(e) => updateField("org_name", e.target.value)} />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="event_name">Event Name</Label>
-                <Input id="event_name" value={values.event_name} onChange={(e) => updateField("event_name", e.target.value)} />
+                <Input id="event_name" className="bg-white/40" value={values.event_name} onChange={(e) => updateField("event_name", e.target.value)} />
               </div>
 
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="org_address">Organization Address</Label>
                 <Input
                   id="org_address"
+                  className="bg-white/40"
                   value={values.org_address}
                   onChange={(e) => updateField("org_address", e.target.value)}
                 />
@@ -129,10 +134,10 @@ function BookingDetailsPage() {
               <div className="space-y-2">
                 <Label htmlFor="org_state">Organization State</Label>
                 <Select value={values.org_state} onValueChange={(value) => updateField("org_state", value)}>
-                  <SelectTrigger className="w-full" id="org_state">
+                  <SelectTrigger className="w-full" id="org_state bg-[#fbf0d8]">
                     <SelectValue placeholder="Select a state" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#fbf0d8]">
                     {stateOptions.map((state) => (
                       <SelectItem key={state} value={state}>
                         {formatEnumLabel(state)}
@@ -145,10 +150,10 @@ function BookingDetailsPage() {
               <div className="space-y-2">
                 <Label htmlFor="org_type">Organization Type</Label>
                 <Select value={values.org_type} onValueChange={(value) => updateField("org_type", value)}>
-                  <SelectTrigger className="w-full" id="org_type">
+                  <SelectTrigger className="w-full bg-[#fbf0d8]" id="org_type">
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-[#fbf0d8]">
                     {orgTypeOptions.map((orgType) => (
                       <SelectItem key={orgType} value={orgType}>
                         {formatEnumLabel(orgType)}
