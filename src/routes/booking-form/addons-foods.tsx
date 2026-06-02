@@ -143,7 +143,7 @@ function BookingAddonsFoodsPage() {
                                 ) : null}
                                 <p className="text-sm text-slate-600">{formatCurrency(addon.addon_price)}</p>
                               </div>
-                              <div className="min-w-[120px] space-y-1">
+                              <div className="min-w-30 space-y-1">
                                 <Label htmlFor={`addon-${addon.addon_id}`}>Quantity</Label>
                                 <Input
                                   id={`addon-${addon.addon_id}`}

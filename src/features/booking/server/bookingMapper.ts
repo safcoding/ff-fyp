@@ -7,14 +7,14 @@ export const bookingsInclude = {
     select: {
       addon_id: true,
       addon_quantity: true,
-      addons: { select: { addon_name: true } },
+      addons: { select: { addon_name: true, addon_price: true } },
     },
   },
   booking_foods: {
     select: {
       food_id: true,
       food_quantity: true,
-      foods: { select: { food_name: true } },
+      foods: { select: { food_name: true, food_price: true } },
       subtotal: true,
     },
   },
@@ -41,6 +41,14 @@ export const bookingsInclude = {
         select: {
           package_name: true,
           package_features: true,
+          price_my_adult: true,
+          price_my_kid: true,
+          price_my_senior: true,
+          price_my_oku: true,
+          price_non_my_adult: true,
+          price_non_my_kid: true,
+          price_non_my_senior: true,
+          price_non_my_oku: true,
         },
       },
     },
@@ -80,6 +88,14 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
     subtotal: p.subtotal === null ? null : Number(p.subtotal),
     package_name: p.packages?.package_name ?? null,
     package_features: p.packages?.package_features ?? [],
+    price_my_adult: Number(p.packages?.price_my_adult ?? 0),
+    price_my_kid: Number(p.packages?.price_my_kid ?? 0),
+    price_my_senior: Number(p.packages?.price_my_senior ?? 0),
+    price_my_oku: Number(p.packages?.price_my_oku ?? 0),
+    price_non_my_adult: Number(p.packages?.price_non_my_adult ?? 0),
+    price_non_my_kid: Number(p.packages?.price_non_my_kid ?? 0),
+    price_non_my_senior: Number(p.packages?.price_non_my_senior ?? 0),
+    price_non_my_oku: Number(p.packages?.price_non_my_oku ?? 0),
   }))
 
   const paxTotals = calculatePaxBreakdown(packages)
@@ -120,11 +136,13 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
       addon_id: a.addon_id,
       addon_name: a.addons.addon_name,
       addon_quantity: a.addon_quantity,
+      price: Number(a.addons.addon_price),
     })),
     booking_foods: b.booking_foods.map((f) => ({
       food_id: f.food_id,
       food_name: f.foods.food_name,
       food_quantity: f.food_quantity,
+      price: Number(f.foods.food_price),
       subtotal: f.subtotal === null ? null : Number(f.subtotal),
     })),
   }

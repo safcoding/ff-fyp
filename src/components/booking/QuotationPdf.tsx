@@ -7,6 +7,15 @@ import {
   pdf,
 } from '@react-pdf/renderer'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { GUIDE_PRICE } from '@/features/booking/utils/guide-assignment'
+
+type QuotationLineItem = {
+  desc: string
+  qty: number
+  uom: string
+  price: number
+  total: number
+}
 
 export type QuotationBookingData = {
   booking_id: string
@@ -32,6 +41,27 @@ export type QuotationBookingData = {
   pax_non_my_kid: number
   pax_non_my_senior: number
   pax_non_my_oku: number
+  packages: Array<{
+    package_id: string
+    package_name: string | null
+    pax_my_adult: number
+    pax_my_kid: number
+    pax_my_senior: number
+    pax_my_oku: number
+    pax_non_my_adult: number
+    pax_non_my_kid: number
+    pax_non_my_senior: number
+    pax_non_my_oku: number
+    price_my_adult: number
+    price_my_kid: number
+    price_my_senior: number
+    price_my_oku: number
+    price_non_my_adult: number
+    price_non_my_kid: number
+    price_non_my_senior: number
+    price_non_my_oku: number
+    subtotal: number | null
+  }>
   booking_addons: Array<{
     addon_id: number
     addon_name: string
@@ -94,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
-  
+
   // Client info section
   billingContainer: {
     flexDirection: 'row',
@@ -182,74 +212,133 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: '#777',
   },
-});
+})
 
-export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) => {
+export const QuotationDocument = ({
+  booking,
+}: {
+  booking: QuotationBookingData
+}) => {
   const companyName = booking.company_name
-  const companyAddress = booking.company_address 
-  const companyPhone = booking.company_phone 
-  const companyEmail = booking.company_email 
+  const companyAddress = booking.company_address
+  const companyPhone = booking.company_phone
+  const companyEmail = booking.company_email
   const sstRegistration = booking.sst_registration
-  const contactName = booking.event_name?.trim() || booking.org_name 
+  const contactName = booking.event_name?.trim() || booking.org_name
   const generatedDate = formatDate(new Date())
 
   const getLineItems = () => {
-    const items = [];
+    const items: QuotationLineItem[] = []
 
-    // 1. Add Visitor Package breakdowns if greater than zero
-    if (booking.pax_my_adult > 0) {
-      items.push({
-        desc: `ADULTS (MALAYSIAN) - ${booking.package_id || 'EDEN PACKAGE'}`,
-        qty: booking.pax_my_adult,
-        uom: 'PAX',
-        price: 12.75, // Replace with programmatic dynamic prices if available
-        total: booking.pax_my_adult * 12.75,
-      });
-    }
-    if (booking.pax_my_kid > 0) {
-      items.push({
-        desc: `CHILD 4-12 YO (MALAYSIAN) - ${booking.package_id || 'EDEN PACKAGE'}`,
-        qty: booking.pax_my_kid,
-        uom: 'PAX',
-        price: 8.50, // Replace with programmatic dynamic prices if available
-        total: booking.pax_my_kid * 8.50,
-      });
-    }
-    // ... Repeat checks for other categories like seniors/non-my if applicable
+    const paxLineMeta = [
+      {
+        label: 'ADULTS (MALAYSIAN)',
+        paxKey: 'pax_my_adult',
+        priceKey: 'price_my_adult',
+      },
+      {
+        label: 'CHILD 4-12 YO (MALAYSIAN)',
+        paxKey: 'pax_my_kid',
+        priceKey: 'price_my_kid',
+      },
+      {
+        label: 'SENIOR (MALAYSIAN)',
+        paxKey: 'pax_my_senior',
+        priceKey: 'price_my_senior',
+      },
+      {
+        label: 'OKU (MALAYSIAN)',
+        paxKey: 'pax_my_oku',
+        priceKey: 'price_my_oku',
+      },
+      {
+        label: 'ADULTS (NON-MALAYSIAN)',
+        paxKey: 'pax_non_my_adult',
+        priceKey: 'price_non_my_adult',
+      },
+      {
+        label: 'CHILD 4-12 YO (NON-MALAYSIAN)',
+        paxKey: 'pax_non_my_kid',
+        priceKey: 'price_non_my_kid',
+      },
+      {
+        label: 'SENIOR (NON-MALAYSIAN)',
+        paxKey: 'pax_non_my_senior',
+        priceKey: 'price_non_my_senior',
+      },
+      {
+        label: 'OKU (NON-MALAYSIAN)',
+        paxKey: 'pax_non_my_oku',
+        priceKey: 'price_non_my_oku',
+      },
+    ] as const
 
-    // 2. Map Addons
+    booking.packages.forEach((pkg) => {
+      const packageName = pkg.package_name ?? pkg.package_id
+
+      paxLineMeta.forEach((meta) => {
+        const qty = Number(pkg[meta.paxKey] ?? 0)
+        const price = Number(pkg[meta.priceKey] ?? 0)
+
+        if (qty <= 0) {
+          return
+        }
+
+        items.push({
+          desc: `${meta.label} - ${packageName}`,
+          qty,
+          uom: 'PAX',
+          price,
+          total: qty * price,
+        })
+      })
+    })
+
     if (booking.booking_addons && booking.booking_addons.length) {
-      booking.booking_addons.forEach(addon => {
+      booking.booking_addons.forEach((addon) => {
         items.push({
           desc: addon.addon_name,
           qty: addon.addon_quantity,
           uom: 'UNIT',
-          price: addon.price || 0, 
-          total: (addon.addon_quantity * (addon.price || 0)),
-        });
-      });
+          price: addon.price || 0,
+          total: addon.addon_quantity * (addon.price || 0),
+        })
+      })
     }
 
-    // 3. Map Foods
     if (booking.booking_foods && booking.booking_foods.length) {
-      booking.booking_foods.forEach(food => {
+      booking.booking_foods.forEach((food) => {
         items.push({
           desc: food.food_name,
           qty: food.food_quantity,
           uom: 'SET',
           price: food.price || 0,
-          total: (food.food_quantity * (food.price || 0)),
-        });
-      });
+          total: food.food_quantity * (food.price || 0),
+        })
+      })
     }
 
-    return items;
-  };
+    if ((booking.assigned_guide_count ?? 0) > 0) {
+      const guideCount = booking.assigned_guide_count ?? 0
 
-  const lineItems = getLineItems();
-  const subtotal = lineItems.reduce((sum, item) => sum + Number(item.total || 0), 0)
-  const total = booking.booking_price
-  const totalAfterDiscount = total
+      items.push({
+        desc: 'TOUR GUIDE',
+        qty: guideCount,
+        uom: 'GUIDE',
+        price: GUIDE_PRICE,
+        total: guideCount * GUIDE_PRICE,
+      })
+    }
+
+    return items
+  }
+
+  const lineItems = getLineItems()
+  const subtotal = lineItems.reduce(
+    (sum, item) => sum + Number(item.total || 0),
+    0,
+  )
+  const total = Number(booking.booking_price || 0)
   const grandTotal = total
 
   return (
@@ -267,9 +356,7 @@ export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) 
         <View style={styles.quotationRow}>
           <Text style={{ width: '30%' }} />
           <Text style={styles.quotationTitle}>Quotation</Text>
-          <Text style={styles.quotationNumber}>
-            No. {booking.booking_id || 'QT-XXXX'}
-          </Text>
+          <Text style={styles.quotationNumber}>No. {booking.booking_id}</Text>
         </View>
 
         {/* 2. BILLING / CLIENT SECTION */}
@@ -280,7 +367,7 @@ export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) 
             {booking.org_address && <Text>{booking.org_address}</Text>}
             {booking.org_state && <Text>{booking.org_state}</Text>}
           </View>
-          
+
           <View style={styles.clientBox}>
             <Text style={styles.sectionTitle}>Person in charge</Text>
             <Text>{booking.pic_name}</Text>
@@ -299,7 +386,9 @@ export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) 
             <Text style={[styles.colDesc, styles.headerText]}>Description</Text>
             <Text style={[styles.colQty, styles.headerText]}>Quantity</Text>
             <Text style={[styles.colUom, styles.headerText]}>UOM</Text>
-            <Text style={[styles.colPrice, styles.headerText]}>Unit per price</Text>
+            <Text style={[styles.colPrice, styles.headerText]}>
+              Unit per price
+            </Text>
             <Text style={[styles.colTotal, styles.headerText]}>Total</Text>
           </View>
 
@@ -310,8 +399,12 @@ export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) 
               <Text style={styles.colDesc}>{item.desc}</Text>
               <Text style={styles.colQty}>{item.qty}</Text>
               <Text style={styles.colUom}>{item.uom}</Text>
-              <Text style={styles.colPrice}>{Number(item.price).toFixed(2)}</Text>
-              <Text style={styles.colTotal}>{Number(item.total).toFixed(2)}</Text>
+              <Text style={styles.colPrice}>
+                {Number(item.price).toFixed(2)}
+              </Text>
+              <Text style={styles.colTotal}>
+                {Number(item.total).toFixed(2)}
+              </Text>
             </View>
           ))}
         </View>
@@ -325,11 +418,14 @@ export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) 
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Total after discount:</Text>
-              <Text>{formatCurrency(totalAfterDiscount)}</Text>
             </View>
             <View style={[styles.summaryRow, styles.totalRow]}>
-              <Text style={[styles.summaryLabel, { fontSize: 10 }]}>Grand Total:</Text>
-              <Text style={{ fontSize: 10, fontWeight: 'bold' }}>{formatCurrency(grandTotal)}</Text>
+              <Text style={[styles.summaryLabel, { fontSize: 10 }]}>
+                Grand Total:
+              </Text>
+              <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
+                {formatCurrency(grandTotal)}
+              </Text>
             </View>
           </View>
         </View>
@@ -338,14 +434,12 @@ export const QuotationDocument = ({ booking }: {booking: QuotationBookingData}) 
         <Text style={styles.footerNote}>
           This quotation is computer generated and does not require a signature.
         </Text>
-
       </Page>
     </Document>
-  );
-};
+  )
+}
 
 export async function buildQuotationPdfBlob(booking: QuotationBookingData) {
-  const total = Number(booking.booking_price)
-  const instance = pdf(<QuotationDocument booking={booking, total} />)
+  const instance = pdf(<QuotationDocument booking={booking} />)
   return instance.toBlob()
 }

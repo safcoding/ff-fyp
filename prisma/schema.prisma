@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,15 +9,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  createdAt     DateTime  @default(now())
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  image         String?
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  id              String    @id
+  createdAt       DateTime  @default(now())
+  name            String
+  email           String    @unique
+  emailVerified   Boolean   @default(false)
+  image           String?
+  updatedAt       DateTime  @updatedAt
+  role            String?
+  banned          Boolean?  @default(false)
+  banReason       String?
+  banExpires      DateTime?
+  accounts        Account[]
+  sessions        Session[]
 
   @@map("user")
 }
@@ -188,6 +193,8 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  impersonatedBy String?
+
   @@index([userId])
   @@map("session")
 }
@@ -257,13 +264,13 @@ enum discount_types {
 enum org_categories {
   CORPORATE
   GOVERNMENT
-  UNIVERSITY_COLLEGE   @map("UNIVERSITY/COLLEGE")
+  UNIVERSITY_COLLEGE @map("UNIVERSITY/COLLEGE")
   INTERNATIONAL_SCHOOL @map("INTERNATIONAL SCHOOL")
-  SECONDARY_SCHOOL     @map("SECONDARY SCHOOL")
-  PRIMARY_SCHOOL       @map("PRIMARY SCHOOL")
+  SECONDARY_SCHOOL @map("SECONDARY SCHOOL")
+  PRIMARY_SCHOOL @map("PRIMARY SCHOOL")
   KINDERGARTEN
-  TRAVEL_AGENCY        @map("TRAVEL AGENCY")
-  PERSONAL_GROUP       @map("PERSONAL GROUP")
+  TRAVEL_AGENCY @map("TRAVEL AGENCY")
+  PERSONAL_GROUP @map("PERSONAL GROUP")
 }
 
 enum states {
@@ -271,12 +278,12 @@ enum states {
   MELAKA
   NEGERI_SEMBILAN @map("NEGERI SEMBILAN")
   SELANGOR
-  KUALA_LUMPUR    @map("KUALA LUMPUR")
+  KUALA_LUMPUR @map("KUALA LUMPUR")
   PUTRAJAYA
   PERAK
   KEDAH
   PERLIS
-  PULAU_PINANG    @map("PULAU PINANG")
+  PULAU_PINANG @map("PULAU PINANG")
   TERENGGANU
   PAHANG
   SABAH
