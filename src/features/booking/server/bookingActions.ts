@@ -7,7 +7,9 @@ import {
 import {
   loadBookingID,
   loadAllBookings,
+  loadBookingsForMonth,
   replaceBookingWithItems,
+  updateBookingStatusById,
 } from './bookingRepo'
 import { prepareBookingWriteData } from './utils/prepData'
 import * as schema from '@/schemas/bookingSchemas'
@@ -38,6 +40,27 @@ export const getBookingById = createServerFn({ method: 'POST' })
 
     return {
       ...mapBookingToUi(booking),
+      company_name: settings?.company_name ?? null,
+      company_address: settings?.company_address ?? null,
+      company_phone: settings?.company_phone ?? null,
+      company_email: settings?.company_email ?? null,
+      sst_registration: settings?.sst_registration ?? null,
+    }
+  })
+
+export const getMonthlyBookingReport = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(schema.monthlyReportSchema)
+  .handler(async ({ data }) => {
+    const [bookings, settings] = await Promise.all([
+      loadBookingsForMonth(data.month),
+      prisma.global_settings.findFirst({ orderBy: { id: 'asc' } }),
+    ])
+
+    return {
+      month: data.month,
+      generated_at: new Date(),
+      bookings: bookings.map(mapBookingToUi),
       company_name: settings?.company_name ?? null,
       company_address: settings?.company_address ?? null,
       company_phone: settings?.company_phone ?? null,
@@ -131,6 +154,18 @@ export const deleteBooking = createServerFn({ method: 'POST' })
     })
 
     return `Deleted booking ${deleted.booking_id}`
+  })
+
+export const changeBookingStatus = createServerFn({ method: 'POST' })
+  .middleware([authMiddleware])
+  .inputValidator(schema.bookingStatusSchema)
+  .handler(async ({ data }) => {
+    const updated = await updateBookingStatusById(
+      data.booking_id,
+      data.booking_status,
+    )
+
+    return `Updated booking ${updated.booking_id} status to ${updated.booking_status}`
   })
 
 export const approveBooking = createServerFn({ method: 'POST' })

@@ -2,6 +2,7 @@ import { prisma } from '@/db'
 import { bookingsInclude } from './bookingMapper'
 import type { BookingInput } from '@/schemas/bookingSchemas'
 import type { prepareBookingWriteData } from './utils/prepData'
+import type { booking_status as BookingStatus } from '@/generated/prisma/enums'
 
 type BookingWriteData = Awaited<ReturnType<typeof prepareBookingWriteData>>
 
@@ -14,10 +15,37 @@ export const loadAllBookings = async () => {
   return prisma.bookings.findMany({ include: bookingsInclude })
 }
 
+export const loadBookingsForMonth = async (month: string) => {
+  const start = new Date(`${month}-01T00:00:00.000Z`)
+  const end = new Date(start)
+  end.setUTCMonth(end.getUTCMonth() + 1)
+
+  return prisma.bookings.findMany({
+    where: {
+      booking_date: {
+        gte: start,
+        lt: end,
+      },
+    },
+    include: bookingsInclude,
+    orderBy: [{ booking_date: 'asc' }, { created_at: 'asc' }],
+  })
+}
+
 export const loadBookingID = async (data: { booking_id: string }) => {
   return prisma.bookings.findUnique({
     where: { booking_id: data.booking_id },
     include: bookingsInclude,
+  })
+}
+
+export const updateBookingStatusById = async (
+  booking_id: string,
+  booking_status: BookingStatus,
+) => {
+  return prisma.bookings.update({
+    where: { booking_id },
+    data: { booking_status },
   })
 }
 

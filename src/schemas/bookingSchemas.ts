@@ -63,6 +63,10 @@ export const bookingIdSchema = bookingSchema.pick({
 
 export const deleteBookingSchema = bookingIdSchema
 
+export const bookingStatusSchema = bookingIdSchema.extend({
+  booking_status: z.enum(booking_status),
+})
+
 export const testBookingEmailSchema = z.object({
   booking_id: z.string().trim().min(1),
   staff_comment: z.string().trim().max(1000).optional(),
@@ -71,6 +75,10 @@ export const testBookingEmailSchema = z.object({
 export const availabilitySchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+})
+
+export const monthlyReportSchema = z.object({
+  month: z.string().regex(/^\d{4}-\d{2}$/),
 })
 
 export type BookingPackageInput = z.infer<typeof bookingPackagesSchema>

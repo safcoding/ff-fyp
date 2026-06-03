@@ -123,6 +123,7 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
     org_name: b.org_name,
     org_state: b.org_state,
     org_type: b.org_type,
+    event_name: b.event_name,
     pax_my_adult: paxTotals.pax_my_adult,
     pax_my_kid: paxTotals.pax_my_kid,
     pax_my_senior: paxTotals.pax_my_senior,

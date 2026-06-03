@@ -22,6 +22,9 @@ export type QuotationBookingData = {
   booking_price: string
   assigned_guide_count?: number | null
   booking_date: string | Date | null
+  discount_id?: string | null
+  discount_type?: string | null
+  discount_amount?: number | null
   slot_id: string
   slot_type?: string | null
   package_id: string
@@ -339,6 +342,8 @@ export const QuotationDocument = ({
     0,
   )
   const total = Number(booking.booking_price || 0)
+  const discountValue = Math.max(subtotal - total, 0)
+  const hasDiscount = Boolean(booking.discount_id) || discountValue > 0
   const grandTotal = total
 
   return (
@@ -413,11 +418,20 @@ export const QuotationDocument = ({
         <View style={styles.summaryContainer}>
           <View style={styles.summaryBox}>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Sub Total:</Text>
+              <Text style={styles.summaryLabel}>Price before discount:</Text>
               <Text>{formatCurrency(subtotal)}</Text>
             </View>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Total after discount:</Text>
+              <Text style={styles.summaryLabel}>
+                Discount{booking.discount_id ? ` (${booking.discount_id})` : ''}:
+              </Text>
+              <Text>
+                {hasDiscount ? `- ${formatCurrency(discountValue)}` : '-'}
+              </Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Price after discount:</Text>
+              <Text>{formatCurrency(total)}</Text>
             </View>
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={[styles.summaryLabel, { fontSize: 10 }]}>

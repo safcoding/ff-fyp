@@ -15,6 +15,29 @@ const TERMS_AND_CONDITIONS = [
   '5) Payments are non-refundable once the booking is approved.',
 ].join('\n')
 
+function renderStaffCommentHtml(staffComment: string | null) {
+  const comment = staffComment?.trim()
+
+  if (!comment) {
+    return 'No staff comment provided.'
+  }
+
+  const urlPattern = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/g
+  const fullUrlPattern = /^(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)$/
+
+  return comment
+    .split(urlPattern)
+    .map((part) => {
+      if (!fullUrlPattern.test(part)) {
+        return escapeHtml(part).replace(/\n/g, '<br>')
+      }
+
+      const href = part.startsWith('http') ? part : `https://${part}`
+      return `<a href="${escapeHtml(href)}" style="color:#2563eb; text-decoration:underline;" target="_blank" rel="noopener noreferrer">${escapeHtml(part)}</a>`
+    })
+    .join('')
+}
+
 function buildBookingLines(booking: BookingWithRelations) {
   const lines: string[] = []
 
@@ -107,10 +130,7 @@ export function buildBookingApprovalHtml(
   staffComment: string | null,
 ) {
   const packageRows = buildPackageRows(booking)
-  const safeComment =
-    staffComment && staffComment.trim()
-      ? escapeHtml(staffComment.trim())
-      : 'No staff comment provided.'
+  const safeComment = renderStaffCommentHtml(staffComment)
   const safeTerms = escapeHtml(TERMS_AND_CONDITIONS).replace(/\n/g, '<br>')
 
   return `
