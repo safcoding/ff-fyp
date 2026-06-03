@@ -11,6 +11,7 @@ function PackagesPage(){
   const [emblaApi, setEmblaApi] = useState<ReturnType<typeof EmblaCarousel> | null>(null)
 
   const guideSrc = '/guide.png'
+  const foodSrc = '/foods.jpeg'
   const carouselImages = [
     { src: '/pack-car/12.png', alt: 'Crafty' },
     { src: '/pack-car/13.png', alt: 'Farmtastic' },
@@ -30,7 +31,7 @@ function PackagesPage(){
 
   return (
     <div className="w-screen min-h-screen bg-[#fbf0d8] text-gray-800 font-sans pb-24 ">
-      <section className="relative overflow-hidden min-h-[60vh]">
+      <section className="relative overflow-hidden min-h-screen">
         <div className="absolute inset-0">
           <img src={header} alt="Nature park view" className="h-full w-full object-cover" />
         </div>
@@ -85,14 +86,20 @@ function PackagesPage(){
       </section>
       <section>
         <div className="overflow-hidden -mx-6 w-screen content-center" ref={emblaRef}>
-          <div className="flex p-6">
+          <div className="flex p-6 gap-4">
             {carouselImages.map((image) => (
-              <div key={image.src} className="min-w-0 flex-[0_0_100%] min-h-max">
-                <img src={image.src} alt={image.alt} className="h-auto w-full object-contain max-h-[80vh]" />
+              <div key={image.src} className="min-w-0 flex-[0_0_80%] md:flex[0_0_90%] min-h-max ">
+                <img src={image.src} alt={image.alt} className="h-auto w-full object-contain max-h-[80vh] border-4 border-[#445412]" />
               </div>
             ))}
-          </div>
-          <img src={guideSrc} className="h-auto w-full object-contain max-h-[80vh]"/>
+            </div>
+            <div className="max-w-4xl mx-auto">
+              <h1 className=" mt-10 font-fraunces font-black text-4xl md:text-5xl tracking-wide uppercase border-b-4 border-[#fbf0d8]/30 pb-4 inline-block">
+                Optional add-ons!
+              </h1>
+            </div>
+          <img src={guideSrc} className="h-auto min-w-0 flex-[0_0_80%] mx-auto object-contain max-h-[80vh] border-4 border-[#445412]"/>
+          <img src={foodSrc} className="h-auto min-w-0 flex-[0_0_80%] mx-auto object-contain max-h-[80vh] border-4 border-[#445412]"/>
         </div>
       </section>
     </div>
