@@ -104,6 +104,7 @@ function buildPackageRows(booking: BookingWithRelations) {
 export function buildBookingApprovalText(
   booking: BookingWithRelations,
   staffComment: string | null,
+  paymentUrl?: string,
 ) {
   const bookingLines = buildBookingLines(booking)
   const total = formatCurrency(Number(booking.booking_price))
@@ -120,6 +121,9 @@ export function buildBookingApprovalText(
       ? staffComment.trim()
       : 'No staff comment provided.',
     '',
+    'Payment Link:',
+    paymentUrl ?? 'Payment link unavailable.',
+    '',
     'Terms and Conditions:',
     TERMS_AND_CONDITIONS,
   ].join('\n')
@@ -128,9 +132,11 @@ export function buildBookingApprovalText(
 export function buildBookingApprovalHtml(
   booking: BookingWithRelations,
   staffComment: string | null,
+  paymentUrl?: string,
 ) {
   const packageRows = buildPackageRows(booking)
   const safeComment = renderStaffCommentHtml(staffComment)
+  const safePaymentUrl = paymentUrl ? escapeHtml(paymentUrl) : null
   const safeTerms = escapeHtml(TERMS_AND_CONDITIONS).replace(/\n/g, '<br>')
 
   return `
@@ -188,6 +194,17 @@ export function buildBookingApprovalHtml(
 
         <h3 style="margin:24px 0 8px; font-size:16px; color:#111827;">Staff Comments</h3>
         <div style="padding:12px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; color:#374151; font-size:14px;">${safeComment}</div>
+
+        <h3 style="margin:24px 0 8px; font-size:16px; color:#111827;">Payment</h3>
+        <div style="padding:14px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; color:#065f46; font-size:14px;">
+          ${
+            safePaymentUrl
+              ? `<p style="margin:0 0 12px;">Please proceed with payment using the link below.</p>
+                 <a href="${safePaymentUrl}" style="display:inline-block; padding:10px 14px; background:#047857; color:#ffffff; border-radius:6px; text-decoration:none; font-weight:600;">Pay booking now</a>
+                 <p style="margin:12px 0 0; word-break:break-all; color:#047857;">${safePaymentUrl}</p>`
+              : 'Payment link unavailable.'
+          }
+        </div>
 
         <h3 style="margin:24px 0 8px; font-size:16px; color:#111827;">Terms and Conditions</h3>
         <div style="padding:12px; background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; color:#9a3412; font-size:13px; line-height:1.5;">${safeTerms}</div>

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TncRouteImport } from './routes/tnc'
+import { Route as PaymentRouteImport } from './routes/payment'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as BookingFormRouteImport } from './routes/booking-form'
@@ -38,6 +39,11 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 const TncRoute = TncRouteImport.update({
   id: '/tnc',
   path: '/tnc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentRoute = PaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PackagesRoute = PackagesRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/booking-form': typeof BookingFormRouteWithChildren
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/payment': typeof PaymentRoute
   '/tnc': typeof TncRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/booking-form': typeof BookingFormRouteWithChildren
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/payment': typeof PaymentRoute
   '/tnc': typeof TncRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/booking-form': typeof BookingFormRouteWithChildren
   '/login': typeof LoginRoute
   '/packages': typeof PackagesRoute
+  '/payment': typeof PaymentRoute
   '/tnc': typeof TncRoute
   '/admin/activities': typeof AdminActivitiesRoute
   '/admin/addons': typeof AdminAddonsRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/booking-form'
     | '/login'
     | '/packages'
+    | '/payment'
     | '/tnc'
     | '/admin/activities'
     | '/admin/addons'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/booking-form'
     | '/login'
     | '/packages'
+    | '/payment'
     | '/tnc'
     | '/admin/activities'
     | '/admin/addons'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/booking-form'
     | '/login'
     | '/packages'
+    | '/payment'
     | '/tnc'
     | '/admin/activities'
     | '/admin/addons'
@@ -332,6 +344,7 @@ export interface RootRouteChildren {
   BookingFormRoute: typeof BookingFormRouteWithChildren
   LoginRoute: typeof LoginRoute
   PackagesRoute: typeof PackagesRoute
+  PaymentRoute: typeof PaymentRoute
   TncRoute: typeof TncRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -343,6 +356,13 @@ declare module '@tanstack/react-router' {
       path: '/tnc'
       fullPath: '/tnc'
       preLoaderRoute: typeof TncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment': {
+      id: '/payment'
+      path: '/payment'
+      fullPath: '/payment'
+      preLoaderRoute: typeof PaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/packages': {
@@ -575,6 +595,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookingFormRoute: BookingFormRouteWithChildren,
   LoginRoute: LoginRoute,
   PackagesRoute: PackagesRoute,
+  PaymentRoute: PaymentRoute,
   TncRoute: TncRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

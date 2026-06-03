@@ -2,6 +2,16 @@ import type { BookingWithRelations } from "@/features/booking/server/bookingMapp
 import { buildBookingApprovalHtml, buildBookingApprovalText } from "./bookingApprovalTemplate"
 import { getEmailTransport } from "./emailTransport"
 
+function getPaymentUrl(bookingId: string) {
+  const baseUrl =
+    process.env.PUBLIC_APP_URL ??
+    process.env.VITE_PUBLIC_APP_URL ??
+    process.env.APP_URL ??
+    "http://localhost:3000"
+
+  return `${baseUrl.replace(/\/$/, "")}/payment?booking_id=${encodeURIComponent(bookingId)}`
+}
+
 export async function sendBookingApprovedEmail(
   booking: BookingWithRelations,
   staffComment: string | null,
@@ -15,8 +25,9 @@ export async function sendBookingApprovedEmail(
 
   const { transporter, from } = getEmailTransport()
   const subject = `Booking Approved - ${booking.booking_id}`
-  const text = buildBookingApprovalText(booking, staffComment)
-  const html = buildBookingApprovalHtml(booking, staffComment)
+  const paymentUrl = getPaymentUrl(booking.booking_id)
+  const text = buildBookingApprovalText(booking, staffComment, paymentUrl)
+  const html = buildBookingApprovalHtml(booking, staffComment, paymentUrl)
 
   await transporter.sendMail({
     from,
