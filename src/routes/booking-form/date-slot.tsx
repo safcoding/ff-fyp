@@ -68,15 +68,15 @@ function BookingDateSlotPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-6 ">
-      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
-        <CardHeader className="pb-4 items-center text-center">
-          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 lg:py-10">
+      <Card className="mt-2 border-[#445412]/10 bg-[#fbf0d8] shadow-xl sm:mt-6">
+        <CardHeader className="items-center px-4 pb-4 text-center sm:px-6">
+          <CardTitle className="font-fraunces text-3xl font-black leading-tight text-amber-500 sm:text-5xl lg:text-6xl">
             PRE-BOOKING SLOT
           </CardTitle>
-          <CardDescription className="font-sans text-black font-bold">Step 1 of 5: Select date and slot.</CardDescription>
+          <CardDescription className="font-sans font-bold text-black">Step 1 of 5: Select date and slot.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-4 sm:px-6">
           <StepIndicator step={1} />
 
           <form
@@ -104,10 +104,10 @@ function BookingDateSlotPage() {
               void navigate({ to: "/booking-form/package" })
             }}
           >
-            <div className="grid md:grid-cols-2">
-              <div className="flex flex-col">
+            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="flex min-w-0 flex-col rounded-md border border-[#445412]/10 bg-white/35 p-3 sm:p-4">
                 <Calendar
-                className="bg-white/40 font-bold"
+                className="mx-auto max-w-full bg-white/40 font-bold"
                   mode="single"
                   selected={selectedDate ?? date}
                   onSelect={handleDateSelect}
@@ -122,7 +122,7 @@ function BookingDateSlotPage() {
                     Bookings must be made at least {leadDays} days in advance.
                   </p>
                 ) : null}
-                <div className="mt-4 flex flex-wrap gap-4 text-sm">
+                <div className="mt-4 grid gap-2 text-sm sm:grid-cols-3">
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full border border-emerald-300 bg-emerald-100" />
                     <span className="text-muted-foreground">Available</span>
@@ -138,7 +138,7 @@ function BookingDateSlotPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col">
+              <div className="flex min-w-0 flex-col">
                 {selectedDate ? (
                   <>
                     <div className="mb-4">
@@ -166,7 +166,7 @@ function BookingDateSlotPage() {
                               type="button"
                               disabled={isFull || isBlocked}
                               className={cn(
-                                "bg-white group relative flex items-center justify-between rounded-xl border-2 p-4 text-left transition-all duration-200",
+                                "group relative flex flex-col gap-3 rounded-md border-2 bg-white p-4 text-left transition-all duration-200 sm:flex-row sm:items-center sm:justify-between",
                                 isFull || isBlocked
                                   ? "cursor-not-allowed border-muted bg-muted/50 opacity-60"
                                   : isSelected
@@ -208,7 +208,7 @@ function BookingDateSlotPage() {
                                 </div>
                               </div>
 
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 sm:justify-end">
                                 {isBlocked ? (
                                   <span className="rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                                     Blocked
@@ -260,8 +260,8 @@ function BookingDateSlotPage() {
               </div>
             </div>
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <div className="items-center">
-            <Button className="text-xl p-6 " type="submit">Next</Button>
+            <div className="flex">
+            <Button className="h-12 w-full text-base font-bold sm:w-auto sm:px-8" type="submit">Next</Button>
             </div>
 
           </form>

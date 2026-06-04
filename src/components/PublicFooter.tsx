@@ -7,8 +7,11 @@ export function PublicFooter() {
                 
                 {/* Left Side: Copyright or Branding */}
                 <div className="text-center sm:text-left">
-                <p className="text-sm font-medium">
+                <p className="text-sm font-medium font-sans">
                     &copy; {new Date().getFullYear()} Farm Fresh @ UPM. All rights reserved.
+                </p>
+                <p className="text-sm font-extralight font-sans text-[#566b18]">
+                    Website built by Safuan Hakim.
                 </p>
                 </div>
 

@@ -42,15 +42,15 @@ function BookingDetailsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
-        <CardHeader className="pb-4 items-center text-center">
-          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 lg:py-10">
+      <Card className="mt-2 border-[#445412]/10 bg-[#fbf0d8] shadow-xl sm:mt-6">
+        <CardHeader className="items-center px-4 pb-4 text-center sm:px-6">
+          <CardTitle className="font-fraunces text-3xl font-black leading-tight text-amber-500 sm:text-5xl lg:text-6xl">
             PRE-BOOKING SLOT
           </CardTitle>
           <CardDescription className="font-sans text-black font-bold">Step 3 of 5:Enter Organisation and contact details.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-4 sm:px-6">
           <StepIndicator step={3} />
 
           <form
@@ -72,9 +72,9 @@ function BookingDetailsPage() {
               void navigate({ to: "/booking-form/addons-foods" })
             }}
           >
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-600">Enter organisation and contact details.</p>
-              <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/package" })}>
+              <Button className="w-full sm:w-auto" type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/package" })}>
                 Back to packages
               </Button>
             </div>
@@ -165,7 +165,7 @@ function BookingDetailsPage() {
             </div>
 
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <Button type="submit">Next: Add-ons and foods</Button>
+            <Button className="h-12 w-full font-bold sm:w-auto sm:px-8" type="submit">Next: Add-ons and foods</Button>
           </form>
         </CardContent>
       </Card>

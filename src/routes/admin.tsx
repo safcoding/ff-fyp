@@ -135,7 +135,7 @@ function AdminLayout() {
         </nav>
 
         {/* Page content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 px-4 py-5 sm:px-6">
           <Outlet />
         </main>
       </div>

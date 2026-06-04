@@ -1,5 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Link } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 interface SuccessSearch {
   bookingId: string 
@@ -17,8 +16,8 @@ export const Route = createFileRoute('/booking-form/success')({
 function RouteComponent() {
     const { bookingId } = Route.useSearch()
 return (
-    <div className="min-h-screen bg-[#445412] flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full bg-white border border-stone-200 rounded-2xl p-8 text-center shadow-sm">
+    <div className="flex min-h-screen items-center justify-center bg-[#445412] px-4 py-10 sm:py-12">
+      <div className="w-full max-w-md rounded-md border border-stone-200 bg-white p-5 text-center shadow-sm sm:p-8">
         
         <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-200">
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,27 +25,27 @@ return (
           </svg>
         </div>
 
-        <h2 className="font-fraunces text-3xl font-black text-stone-800">Pre-Booking Confirmed!</h2>
+        <h2 className="font-fraunces text-2xl font-black text-stone-800 sm:text-3xl">Pre-Booking Confirmed!</h2>
         <p className="text-stone-500 text-sm mt-2">
           Your slot has been pre-booked! Our staff will review your booking and get to you as soon as possible!
         </p>
 
-        <div className="my-6 p-4 bg-stone-50 rounded-xl border border-stone-150 text-left text-sm">
-          <div className="flex justify-between border-b pb-2 mb-2 font-mono text-xs text-stone-400">
+        <div className="my-6 rounded-md border border-stone-200 bg-stone-50 p-4 text-left text-sm">
+          <div className="flex flex-col gap-1 border-b pb-2 mb-2 font-mono text-xs text-stone-400 sm:flex-row sm:justify-between">
             <span>REFERENCE ID</span>
-            <span className="font-bold text-stone-700">
+            <span className="break-all font-bold text-stone-700">
                 {bookingId}
                 </span>
           </div>
           <p className="text-stone-600 font-medium">
-            📧 A digital quotation can be provided by contacting us.
+            A digital quotation can be provided by contacting us.
           </p>
         </div>
 
         {/* Primary Action Button to escape back home */}
         <Link 
           to="/" 
-          className="inline-flex items-center justify-center w-full h-11 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-sm transition-colors"
+          className="inline-flex h-11 w-full items-center justify-center rounded-md bg-emerald-800 text-sm font-bold text-white transition-colors hover:bg-emerald-900"
         >
           Return to Homepage
         </Link>

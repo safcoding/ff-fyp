@@ -8,6 +8,7 @@ export const Route = createFileRoute('/login')({
 })
 
 function LoginPage() {
+  const logo = `/ff-logo.png`
   const navigate = Route.useNavigate()
   const { data: session, isPending } = useSession()
   const [email, setEmail] = useState('')
@@ -38,10 +39,9 @@ function LoginPage() {
         {/* Green header strip */}
         <div className="bg-[#445412] px-8 py-7 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <Leaf className="w-5 h-5 text-[#a8c15a]" />
-            <span className="font-fraunces font-black text-xl text-[#fbf0d8] tracking-tight">Farm Fresh</span>
+            <img src={logo} className=" w-[20vh]" />
           </div>
-          <p className="text-[#fbf0d8]/60 text-xs uppercase tracking-widest">Admin Portal</p>
+          <p className="text-[#fbf0d8]/60 text-xs uppercase tracking-widest"> Farm Fresh @ UPM Admin Portal</p>
         </div>
 
         <div className="px-8 py-7">

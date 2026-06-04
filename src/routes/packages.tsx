@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import EmblaCarousel from 'embla-carousel'
 import { useRef, useState, useEffect } from "react"
+
 export const Route = createFileRoute("/packages")({ component: PackagesPage })
 
 const header = '/tour-packages.png'
@@ -30,26 +31,29 @@ function PackagesPage(){
   }, [])
 
   return (
-    <div className="w-screen min-h-screen bg-[#fbf0d8] text-gray-800 font-sans pb-24 ">
-      <section className="relative overflow-hidden min-h-screen">
+    <div className="min-h-screen overflow-x-hidden bg-[#fbf0d8] pb-16 font-sans text-gray-800">
+      <section className="relative min-h-[min(720px,78vh)] overflow-hidden">
         <div className="absolute inset-0">
-          <img src={header} alt="Nature park view" className="h-full w-full object-cover" />
+          <img src={header} alt="Tour Package Banner" className="h-full w-full object-cover" />
         </div>
       </section>
-      <section>
-          <p className="font-sans text-xl md:text-xl text-[#445412] p-5 text-center">
+      <section className="px-4 py-10 sm:px-6">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-base leading-7 text-[#445412]">
             Choose from among our fantastic tour packages to immerse yourself at Farm Fresh @ UPM. Crafted to combine
             education with outdoor fun where you get to experience the vibrant nature, authentic dairy processing and all kinds of animals.
-          </p>  
-          <h3 className="font-sans font-bold text-2xl md:text-2xl text-[#445412] pt-10 text-center">
-            All packages include tickets that provide access to the following activities and facilities.</h3>
+          </p>
+          <h3 className="pt-8 text-2xl font-bold leading-tight text-[#445412]">
+            All packages include tickets that provide access to the following activities and facilities.
+          </h3>
+        </div>
           
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto justify-items-center p-6">            
-              <Card className="w-full max-w-sm bg-white/40 p-6 border-b-4 border-[#445412]">
-              <CardHeader className="font-fraunces font-bold text-center text-2xl text-[#445412]">
+            <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+              <Card className="w-full border-b-4 border-[#445412] bg-white/55 p-4 sm:p-6">
+              <CardHeader className="px-0 pt-0 text-center font-fraunces text-2xl font-bold text-[#445412]">
                 Main Farm <br/> (Accessible by walking)
                 </CardHeader>
-                <ul className="list-disc list-outside pl-5 space-y-3 font-sans text-black">
+                <ul className="list-outside list-disc space-y-3 pl-5 text-sm leading-6 text-black sm:text-base">
                 <li>Barrel Ride for Kids (suitable for kids 4-6 y/o)</li>
                 <li>Petting animals (ducks, geese, goats)</li>
                 <li>Cow Barn Visit</li>
@@ -63,43 +67,45 @@ function PackagesPage(){
               </ul>
             </Card>
 
-            <Card className="w-full max-w-sm bg-white/40 p-6 border-b-4 border-[#445412]">
-              <CardHeader className="font-fraunces  text-center  text-[#445412]">
+            <Card className="w-full border-b-4 border-[#445412] bg-white/55 p-4 sm:p-6">
+              <CardHeader className="px-0 pt-0 text-center font-fraunces text-[#445412]">
                 <CardTitle className="font-bold text-2xl">Second Farm <br/> (Accessible by tractor ride)<br/></CardTitle>
-                <p className="text-xl">*One tractor can accommodate up to 40 adults.</p>
+                <p className="text-base font-semibold sm:text-lg">*One tractor can accommodate up to 40 adults.</p>
                 </CardHeader>
 
-                <ul className="list-disc list-outside pl-5 space-y-3 font-sans text-black border-b-2 border-[#445412] py-4">
+                <ul className="list-outside list-disc space-y-3 border-b-2 border-[#445412] py-4 pl-5 text-black">
                 <li>Vegetable Farm</li>
               </ul>
-              <p className="text-center font-bold">Tractor Operation Hours <br/>(Rides depart every 20 minutes)</p>
-              <div className="grid grid-cols-2 gap-4 text-center border-[#445412] border-2 p-2 rounded-2xl ">
+              <p className="my-4 text-center font-bold">Tractor Operation Hours <br/>(Rides depart every 20 minutes)</p>
+              <div className="grid grid-cols-1 gap-2 rounded-md border-2 border-[#445412] p-3 text-center sm:grid-cols-2">
                 <div className="font-bold">Weekdays <br/>(Monday - Friday)</div>
-                <div className="text-2xl mt-2">10AM - 6PM</div>
+                <div className="text-xl font-black sm:text-2xl">10AM - 6PM</div>
               </div>
-              <div className="grid grid-cols-2 gap-4 text-center border-[#445412] border-2 p-2 rounded-2xl ">
-                <div className="font-bold whitespace-nowrap">Weekends<br/>(Saturday & Sunday)</div>
-                <div className="text-2xl mt-2">9AM - 7PM</div>
+              <div className="mt-3 grid grid-cols-1 gap-2 rounded-md border-2 border-[#445412] p-3 text-center sm:grid-cols-2">
+                <div className="font-bold">Weekends<br/>(Saturday & Sunday)</div>
+                <div className="text-xl font-black sm:text-2xl">9AM - 7PM</div>
               </div>
           </Card>
           </div>
       </section>
-      <section>
-        <div className="overflow-hidden -mx-6 w-screen content-center" ref={emblaRef}>
-          <div className="flex p-6 gap-4">
+      <section className="px-4 sm:px-6">
+        <div className="mx-auto max-w-6xl overflow-hidden" ref={emblaRef}>
+          <div className="flex gap-4">
             {carouselImages.map((image) => (
-              <div key={image.src} className="min-w-0 flex-[0_0_80%] md:flex[0_0_90%] min-h-max ">
-                <img src={image.src} alt={image.alt} className="h-auto w-full object-contain max-h-[80vh] border-4 border-[#445412]" />
+              <div key={image.src} className="min-w-0 flex-[0_0_88%] sm:flex-[0_0_70%] lg:flex-[0_0_48%]">
+                <img src={image.src} alt={image.alt} className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain" />
               </div>
             ))}
             </div>
-            <div className="max-w-4xl mx-auto">
-              <h1 className=" mt-10 font-fraunces font-black text-4xl md:text-5xl tracking-wide uppercase border-b-4 border-[#fbf0d8]/30 pb-4 inline-block">
+            <div className="mx-auto grid max-w-4xl justify-items-center gap-6">
+              <h1 className="mt-10 inline-block border-b-4 border-[#445412]/20 pb-4 font-fraunces text-3xl font-black uppercase tracking-wide text-[#445412] sm:text-5xl">
                 Optional add-ons!
               </h1>
             </div>
-          <img src={guideSrc} className="h-auto min-w-0 flex-[0_0_80%] mx-auto object-contain max-h-[80vh] border-4 border-[#445412]"/>
-          <img src={foodSrc} className="h-auto min-w-0 flex-[0_0_80%] mx-auto object-contain max-h-[80vh] border-4 border-[#445412]"/>
+          <div className="mx-auto mt-8 grid max-w-5xl gap-6 md:grid-cols-2">
+            <img src={guideSrc} alt="Guide add-on details" className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"/>
+            <img src={foodSrc} alt="Food add-on details" className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"/>
+          </div>
         </div>
       </section>
     </div>

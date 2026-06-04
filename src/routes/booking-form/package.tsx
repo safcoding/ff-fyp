@@ -38,15 +38,15 @@ function BookingPackagePage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
-        <CardHeader className="pb-4 items-center text-center">
-          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 lg:py-10">
+      <Card className="mt-2 border-[#445412]/10 bg-[#fbf0d8] shadow-xl sm:mt-6">
+        <CardHeader className="items-center px-4 pb-4 text-center sm:px-6">
+          <CardTitle className="font-fraunces text-3xl font-black leading-tight text-amber-500 sm:text-5xl lg:text-6xl">
             PRE-BOOKING SLOT
           </CardTitle>
           <CardDescription className="font-sans text-black font-bold">Step 2 of 5: Select Packages and Pax.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-4 sm:px-6">
           <StepIndicator step={2} />
 
           <form
@@ -68,9 +68,9 @@ function BookingPackagePage() {
               void navigate({ to: "/booking-form/details" })
             }}
           >
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-600">Pick one or more packages and set pax for each. Please refer to the Package details page for pricing</p>
-              <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/date-slot" })}>
+              <Button className="w-full sm:w-auto" type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/date-slot" })}>
                 Back to step 1
               </Button>
             </div>
@@ -79,7 +79,7 @@ function BookingPackagePage() {
             {packagesQuery.isError ? <p className="text-sm text-red-600">{packagesQuery.error.message}</p> : null}
 
             {packagesQuery.data ? (
-              <div className="grid gap-4 grid-row-auto">
+              <div className="grid gap-4">
                 {packagesQuery.data.map((pkg) => {
                   const pricing = getPackagePricing(pkg as unknown as Record<string, unknown>)
                   const isSelected = selectedPackageIds.has(pkg.package_id)
@@ -91,27 +91,27 @@ function BookingPackagePage() {
                   return (
                     <div
                       key={pkg.package_id}
-                      className={`rounded-md border p-4 text-left transition border-[#445412] bg-white/40 ${
+                      className={`rounded-md border p-4 text-left transition border-[#445412] bg-white/55 ${
                         isSelected ? "border-black bg-white/40" : "hover:bg-bg-white/40"
                       }`}
                     >
-                      <div className="grid grid-rows-2 justify-between gap-3 w-max">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 
                         <Accordion
                         type="single"
                         collapsible
                         defaultValue=""
-                        className="max-w-lg"
+                        className="min-w-0 flex-1"
                         >
                           <AccordionItem value="desc">
-                            <AccordionTrigger>
-                              <p className="font-black font-fraunces text-2xl text-amber-500">{pkg.package_name}</p>
+                            <AccordionTrigger className="text-left">
+                              <p className="font-fraunces text-xl font-black text-amber-500 sm:text-2xl">{pkg.package_name}</p>
                             </AccordionTrigger>
                             <AccordionContent className="grid grid-row-2 md:w-full">
                               {pkg.package_note ? (
                                 <p className="mt-1 text-sm text-black font-sans mx-auto">{pkg.package_note}</p>
                               ) : null}
-                              <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-sm text-black">
+                              <div className="mt-3 grid gap-x-3 gap-y-1 text-sm text-black sm:grid-cols-2">
                                 <p>MY Adult: {formatCurrency(pricing.price_my_adult)}</p>
                                 <p>MY Kid: {formatCurrency(pricing.price_my_kid)}</p>
                                 <p>MY Senior: {formatCurrency(pricing.price_my_senior)}</p>
@@ -127,7 +127,7 @@ function BookingPackagePage() {
 
                         <Button
                           type="button"
-                          className="mr-auto text-left justify-start bg-[#445412] text-white font-bold font-sans uppercase text-lg p-4"
+                          className="h-11 w-full justify-center bg-[#445412] font-sans font-bold uppercase text-white sm:w-28"
                           size="sm"
                           variant={isSelected ? "destructive" : "outline"}
                           onClick={() => {
@@ -214,7 +214,7 @@ function BookingPackagePage() {
             ) : null}
 
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <Button type="submit">Next: Enter details</Button>
+            <Button className="h-12 w-full font-bold sm:w-auto sm:px-8" type="submit">Next: Enter details</Button>
           </form>
         </CardContent>
       </Card>

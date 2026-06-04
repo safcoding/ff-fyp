@@ -337,8 +337,8 @@ function BookingPage() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#445412]/10 pb-6">
-        <h1 className="font-fraunces font-black text-4xl text-[#445412]">Bookings</h1>
+      <div className="border-b border-[#445412]/10 pb-5">
+        <h1 className="font-fraunces text-3xl font-black text-[#445412] sm:text-4xl">Bookings</h1>
         <p className="text-sm text-stone-500 mt-1">Review, approve, and manage group tour booking requests.</p>
       </div>
       <Card className="border-[#445412]/10 shadow-sm">
@@ -481,20 +481,21 @@ function BookingPage() {
                         </div>
                       </div>
                       <div
-                        className="flex flex-wrap items-center gap-2 xl:justify-end"
+                        className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center xl:justify-end"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
+                          className="w-full sm:w-auto"
                           onClick={() => openEditModal(booking)}
                         >
                           Edit
                         </Button>
                         <select
                           className={cn(
-                            'h-9 rounded-md border px-2 text-xs font-medium',
+                            'h-9 w-full rounded-md border px-2 text-xs font-medium sm:w-auto',
                             styles.select,
                           )}
                           value={booking.booking_status ?? 'PENDING'}
@@ -518,6 +519,7 @@ function BookingPage() {
                           type="button"
                           variant="destructive"
                           size="sm"
+                          className="w-full sm:w-auto"
                           onClick={() =>
                             setDeletingBooking({
                               booking_id: booking.booking_id,
@@ -678,11 +680,12 @@ function BookingPage() {
                           </DetailPanel>
                         </div>
 
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid gap-2 sm:flex sm:flex-wrap">
                           <Button
                             type="button"
                             size="sm"
                             variant="outline"
+                            className="w-full sm:w-auto"
                             disabled={quotationMutation.isPending}
                             onClick={(e) => {
                               e.stopPropagation()
@@ -699,6 +702,7 @@ function BookingPage() {
                             type="button"
                             size="sm"
                             variant="outline"
+                            className="w-full sm:w-auto"
                             disabled={testEmailMutation.isPending}
                             onClick={(e) => {
                               e.stopPropagation()
@@ -727,7 +731,7 @@ function BookingPage() {
                         ) : null}
 
                         {isPending ? (
-                          <div className="flex items-center justify-between rounded-md border bg-amber-50 p-3 text-sm">
+                          <div className="flex flex-col gap-3 rounded-md border bg-amber-50 p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
                             <p className="text-amber-900">
                               Review completed? Confirm this booking to move
                               status from PENDING to APPROVED.
@@ -735,6 +739,7 @@ function BookingPage() {
                             <Button
                               type="button"
                               size="sm"
+                              className="w-full sm:w-auto"
                               onClick={(e) => {
                                 e.stopPropagation()
                                 setApprovingBooking({

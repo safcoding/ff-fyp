@@ -91,15 +91,15 @@ function BookingAddonsFoodsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-6">
-      <Card className="bg-[#fbf0d8] shadow-xl mt-10">
-        <CardHeader className="pb-4 items-center text-center">
-          <CardTitle className="gap-2 text-6xl font-fraunces text-amber-500 font-black">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 lg:py-10">
+      <Card className="mt-2 border-[#445412]/10 bg-[#fbf0d8] shadow-xl sm:mt-6">
+        <CardHeader className="items-center px-4 pb-4 text-center sm:px-6">
+          <CardTitle className="font-fraunces text-3xl font-black leading-tight text-amber-500 sm:text-5xl lg:text-6xl">
             PRE-BOOKING SLOT
           </CardTitle>
           <CardDescription className="font-sans text-black font-bold">Step 4 of 5:Select optional add-ons and food.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-4 sm:px-6">
           <StepIndicator step={4} />
 
           <form
@@ -110,15 +110,15 @@ function BookingAddonsFoodsPage() {
               void navigate({ to: "/booking-form/review" })
             }}
           >
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-600">Select add-ons and foods, then set quantities.</p>
-              <Button type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/details" })}>
+              <Button className="w-full sm:w-auto" type="button" variant="outline" onClick={() => void navigate({ to: "/booking-form/details" })}>
                 Back to details
               </Button>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card className="bg-white/40">
+              <Card className="bg-white/55">
                 <CardHeader>
                   <CardTitle className="text-xl font-fraunces text-amber-500 font-black">Add-ons</CardTitle>
                   <CardDescription className="font-bold text-black">Optional add-ons available for your booking.</CardDescription>
@@ -143,7 +143,7 @@ function BookingAddonsFoodsPage() {
                                 ) : null}
                                 <p className="text-sm text-slate-600">{formatCurrency(addon.addon_price)}</p>
                               </div>
-                              <div className="min-w-30 space-y-1">
+                              <div className="w-full space-y-1 sm:w-32">
                                 <Label htmlFor={`addon-${addon.addon_id}`}>Quantity</Label>
                                 <Input
                                   id={`addon-${addon.addon_id}`}
@@ -167,7 +167,7 @@ function BookingAddonsFoodsPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white/40">
+              <Card className="bg-white/55">
                 <CardHeader>
                   <CardTitle className="text-xl font-fraunces text-amber-500 font-black">Foods</CardTitle>
                   <CardDescription className="text-black font-bold">Optional foods to include with your booking.</CardDescription>
@@ -188,7 +188,7 @@ function BookingAddonsFoodsPage() {
                                 <p className="font-medium">{food.food_name}</p>
                                 <p className="text-sm text-slate-600">{formatCurrency(food.food_price)}</p>
                               </div>
-                              <div className="min-w-[120px] space-y-1">
+                              <div className="w-full space-y-1 sm:w-32">
                                 <Label htmlFor={`food-${food.food_id}`}>Quantity</Label>
                                 <Input
                                   id={`food-${food.food_id}`}
@@ -213,7 +213,7 @@ function BookingAddonsFoodsPage() {
             </div>
 
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <Button type="submit">Next: Review summary</Button>
+            <Button className="h-12 w-full font-bold sm:w-auto sm:px-8" type="submit">Next: Review summary</Button>
           </form>
         </CardContent>
       </Card>

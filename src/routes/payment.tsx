@@ -84,9 +84,9 @@ function PaymentPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-10">
+    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-10">
       <div className="mb-6 border-b border-[#445412]/10 pb-6">
-        <h1 className="font-fraunces text-4xl font-black text-[#445412]">
+        <h1 className="font-fraunces text-3xl font-black text-[#445412] sm:text-4xl">
           Booking Payment
         </h1>
         <p className="mt-1 text-sm text-stone-500">
@@ -165,7 +165,7 @@ function PaymentPage() {
                   </p>
                   <p className="font-medium text-stone-900">
                     {booking.packages
-                      .map((pkg) => pkg.package_name ?? pkg.package_id)
+                      .map((pkg) => pkg.package_name)
                       .join(', ') || '-'}
                   </p>
                 </div>
@@ -183,7 +183,7 @@ function PaymentPage() {
                 <p className="text-xs font-semibold uppercase text-emerald-700">
                   Amount Due
                 </p>
-                <p className="mt-1 text-3xl font-bold text-emerald-950">
+                <p className="mt-1 text-2xl font-bold text-emerald-950 sm:text-3xl">
                   {formatCurrency(Number(booking.booking_price))}
                 </p>
                 {booking.discount_id ? (
@@ -217,23 +217,23 @@ function PaymentPage() {
                   </div>
 
                   <div className="space-y-2 rounded-md border p-4 text-sm">
-                    <div className="flex justify-between gap-3">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-3">
                       <span className="text-stone-500">Receipt No.</span>
                       <span className="font-medium">{receipt.receiptNo}</span>
                     </div>
-                    <div className="flex justify-between gap-3">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-3">
                       <span className="text-stone-500">Paid At</span>
                       <span className="font-medium">
                         {receipt.paidAt.toLocaleString('en-MY')}
                       </span>
                     </div>
-                    <div className="flex justify-between gap-3">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-3">
                       <span className="text-stone-500">Card</span>
                       <span className="font-medium">
                         Ending {receipt.cardLast4}
                       </span>
                     </div>
-                    <div className="flex justify-between gap-3">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-3">
                       <span className="text-stone-500">Amount</span>
                       <span className="font-medium">
                         {formatCurrency(Number(booking.booking_price))}
@@ -241,7 +241,7 @@ function PaymentPage() {
                     </div>
                   </div>
 
-                  <Button type="button" variant="outline" onClick={() => window.print()}>
+                  <Button className="w-full sm:w-auto" type="button" variant="outline" onClick={() => window.print()}>
                     <Download className="mr-2 size-4" />
                     Print receipt
                   </Button>

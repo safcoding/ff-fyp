@@ -31,52 +31,53 @@ function App() {
   }, [])
 
   return (
-    <main>
-      <section className="relative overflow-hidden min-h-[80vh]">
+    <main className="overflow-x-hidden bg-[#fbf0d8]">
+      <section className="relative min-h-[min(760px,88vh)] overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImageSrc} alt="Nature park view" className="h-full w-full object-cover" />
+          <img src={heroImageSrc} alt="Farm Fresh @ UPM Banner" className="h-full w-full object-cover" />
         </div>
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-[#fbf0d8] p-4">            
-          <h1 className="text-6xl md:text-6xl mb-4 justify-center max-w-4xl font-fraunces font-black drop-shadow-lg">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center text-[#fbf0d8] sm:px-6">
+          <h1 className="mb-5 max-w-4xl font-fraunces text-4xl font-black leading-tight drop-shadow-lg sm:text-5xl lg:text-6xl">
             Bringing You Closer to Nature, Dairy & Farm Life
-            </h1>
-            <Link
-              to="/booking-form" 
-              className="bg-amber-500 hover:bg-amber-600 text-[#fbf0d8] px-6 h-12 flex items-center justify-center transition-colors min-w-25 text-xs sm:text-sm md:text-base uppercase tracking-wider font-sans font-bold"
-            >
-              Book a Group Tour
-            </Link>
-          </div>
+          </h1>
+          <Link
+            to="/booking-form"
+            className="flex h-12 w-full max-w-xs items-center justify-center rounded-md bg-amber-500 px-6 text-sm font-bold uppercase tracking-wide text-[#fbf0d8] transition-colors hover:bg-amber-600 sm:w-auto md:text-base"
+          >
+            Book a Group Tour
+          </Link>
+        </div>
       </section>
 
-        <section className="relative w-full pb-6 px-6 bg-[#fbf0d8] min-h-screen">
-          <div className="mb-4 justify-center max-w-full text-center p-10">
-            <h2 className="text-4xl font-fraunces font-black text-[#445412]">Enhance your day at Farm Fresh @ UPM</h2>
-            <h3 className="text-xl font-sans font-black text-black">View the adventures available below:</h3>
+        <section className="relative w-full bg-[#fbf0d8] px-4 py-10 sm:px-6 lg:py-14">
+          <div className="mx-auto mb-6 max-w-3xl text-center">
+            <h2 className="font-fraunces text-3xl font-black leading-tight text-[#445412] sm:text-4xl">Enhance your day at Farm Fresh @ UPM</h2>
+            <p className="mt-2 text-base font-semibold text-stone-800 sm:text-lg">View the adventures available below.</p>
           </div>
 
-          <div className="overflow-hidden -mx-6 w-screen" ref={emblaRef}>
+          <div className="mx-auto max-w-6xl overflow-hidden rounded-md border-4 border-[#445412]/20 bg-white/40" ref={emblaRef}>
             <div className="flex">
               {carouselImages.map((image) => (
-                <div key={image.src} className="min-w-0 flex-[0_0_100%] min-h-max">
-                  <img src={image.src} alt={image.alt} className="h-auto w-full object-cover max-h-screen" />
+                <div key={image.src} className="min-w-0 flex-[0_0_100%]">
+                  <img src={image.src} alt={image.alt} className="aspect-[4/3] w-full object-cover sm:aspect-[16/9]" />
                 </div>
               ))}
             </div>
           </div>
-          <div className="mx-auto mt-4 flex max-w-6xl items-center justify-between px-6 text-black md:px-8">
-            <p className="text-xl font-sans font-black text-black">Swipe or drag to explore the gallery.</p>
+          <div className="mx-auto mt-4 flex max-w-6xl flex-col gap-3 font-sans sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm font-bold text-stone-800 sm:text-base">Swipe or drag to explore the gallery.</p>
             <div className="flex gap-2">
               <button
                 type="button"
-                className="rounded-full border border-[#445412] px-3 py-1 text-xs hover:bg-[#445412] hover:text-[#fbf0d8]"
+                className="h-10 rounded-md border border-[#445412] px-4 text-sm font-semibold hover:bg-[#445412] hover:text-[#fbf0d8]"
                 onClick={() => emblaApi?.scrollPrev()}
               >
                 Prev
               </button>
               <button
                 type="button"
-                className="rounded-full border border-[#445412] px-3 py-1 text-xs hover:bg-[#445412] hover:text-[#fbf0d8]"
+                className="h-10 rounded-md border border-[#445412] px-4 text-sm font-semibold hover:bg-[#445412] hover:text-[#fbf0d8]"
                 onClick={() => emblaApi?.scrollNext()}
               >
                 Next
@@ -85,11 +86,11 @@ function App() {
           </div>
         </section>
 
-        <section className="relative mx-auto gap-8 bg-[#445412] w-screen">
-          <div className="justify-center max-w-full text-center p-10">
-            <h2 className="text-4xl font-fraunces font-black text-[#fbf0d8]">Find Your Way Around</h2>
+        <section className="relative bg-[#445412] px-4 py-10 sm:px-6 lg:py-14">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-fraunces text-3xl font-black text-[#fbf0d8] sm:text-4xl">Find Your Way Around</h2>
           </div>
-          <div className="rounded-2xl max-w-6xl mx-auto px-6 pb-10">
+          <div className="mx-auto mt-6 max-w-6xl overflow-hidden rounded-md bg-[#fbf0d8]/10 p-2 sm:p-4">
             <img
               src={mapImageSrc}
               alt="Map of the attraction"
