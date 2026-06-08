@@ -2,14 +2,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 
+import { requireAdminRoute } from '@/lib/admin-route-guard'
+import { AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { getSettings, updateSettings } from '@/features/settings/server/settingsActions'
 
-export const Route = createFileRoute('/admin/settings')({ component: SettingsPage })
+export const Route = createFileRoute('/admin/settings')({
+  beforeLoad: requireAdminRoute,
+  component: SettingsPage,
+})
 
 type SettingsForm = {
   min_lead_days: number
@@ -60,15 +64,13 @@ function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#445412]/10 pb-6">
-        <h1 className="font-fraunces font-black text-4xl text-[#445412]">Settings</h1>
-        <p className="text-sm text-stone-500 mt-1">Manage company information and global booking settings.</p>
-      </div>
-      <Card className="border-[#445412]/10 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-[#445412]">Company & Booking Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminPageHeader
+        title="Settings"
+        description="Manage company information and global booking settings."
+        meta={<AdminStatPill label="Lead time" value={`${settingsQuery.data?.min_lead_days ?? 14} days`} />}
+      />
+      <div className="max-w-5xl">
+      <AdminSectionCard title="Company & Booking Settings" description="Keep quotation details and booking rules aligned with the business.">
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -177,8 +179,8 @@ function SettingsPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
+      </div>
     </div>
   )
 }

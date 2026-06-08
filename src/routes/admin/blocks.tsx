@@ -3,8 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
 
+import { requireAdminRoute } from '@/lib/admin-route-guard'
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DeleteDialog } from '@/components/deleteDialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,7 +14,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { createBlock, deleteBlock, getBlocks } from '@/features/blocks/server/blockActions'
 import { getSlotsAdmin } from '@/features/slot/server/slotActions'
 
-export const Route = createFileRoute('/admin/blocks')({ component: BlocksPage })
+export const Route = createFileRoute('/admin/blocks')({
+  beforeLoad: requireAdminRoute,
+  component: BlocksPage,
+})
 
 type BlockForm = {
   block_date: string
@@ -71,12 +75,14 @@ function BlocksPage() {
   })
 
   return (
-    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Date Blocks</h1><p className="text-sm text-stone-500 mt-1">Block out dates when the farm is unavailable for bookings.</p></div><div className="mx-auto max-w-5xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Block</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Date Blocks"
+        description="Block out dates when the farm is unavailable for bookings."
+        meta={<AdminStatPill label="Blocks" value={blocksQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
+      <AdminSectionCard title="Create Block" description="Reserve a whole day or a specific slot from public booking.">
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -159,31 +165,24 @@ function BlocksPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Blocks</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Blocks" description="Upcoming blocked dates and slot-specific closures.">
           {blocksQuery.isPending ? <p>Loading blocks...</p> : null}
           {blocksQuery.isError ? (
             <p className="text-sm text-red-600">{blocksQuery.error.message}</p>
           ) : null}
           {blocksQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {blocksQuery.data.map((block) => (
-                <div key={block.id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
+                <AdminItemRow key={block.id} className="border-rose-100 bg-rose-50/50">
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                     <div className="space-y-1">
-                      <p className="font-medium">{block.block_date}</p>
-                      <p>
-                        Slot: {block.slot_name ?? 'Whole day'}
-                      </p>
-                      <p>Reason: {block.reason ?? '-'}</p>
+                      <p className="font-semibold text-stone-900">{block.block_date}</p>
+                      <p className="text-stone-600">Slot: {block.slot_name ?? 'Whole day'}</p>
+                      <p className="leading-6 text-stone-500">Reason: {block.reason ?? '-'}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid gap-2 sm:flex">
                       <Button
                         type="button"
                         variant="destructive"
@@ -199,12 +198,11 @@ function BlocksPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <DeleteDialog
         open={Boolean(deletingBlock)}
@@ -231,6 +229,7 @@ function BlocksPage() {
       {deleteBlockMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteBlockMutation.data}</p>
       ) : null}
-      </div></div>
+      </div>
+    </div>
   )
 }

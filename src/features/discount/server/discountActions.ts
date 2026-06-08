@@ -5,22 +5,24 @@ import {
   deleteDiscountSchema,
   updateDiscountSchema,
 } from "@/schemas/discountSchemas"
-import authMiddleware from "@/lib/auth-middleware"
+import { adminOnlyMiddleware } from "@/lib/auth-middleware"
 
-export const getDiscounts = createServerFn({ method: "GET" }).handler(async () => {
-  const discounts = await prisma.discounts.findMany({
-    orderBy: { discount_id: "asc" },
+export const getDiscounts = createServerFn({ method: "GET" })
+  .middleware([adminOnlyMiddleware])
+  .handler(async () => {
+    const discounts = await prisma.discounts.findMany({
+      orderBy: { discount_id: "asc" },
+    })
+
+    return discounts.map((discount) => ({
+      discount_id: discount.discount_id,
+      discount_type: discount.discount_type,
+      discount_amount: Number(discount.discount_amount),
+    }))
   })
 
-  return discounts.map((discount) => ({
-    discount_id: discount.discount_id,
-    discount_type: discount.discount_type,
-    discount_amount: Number(discount.discount_amount),
-  }))
-})
-
 export const createDiscount = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .inputValidator(createDiscountSchema)
   .handler(async ({ data }) => {
     const created = await prisma.discounts.create({
@@ -35,7 +37,7 @@ export const createDiscount = createServerFn({ method: "POST" })
   })
 
 export const updateDiscount = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .inputValidator(updateDiscountSchema)
   .handler(async ({ data }) => {
     const updated = await prisma.discounts.update({
@@ -50,7 +52,7 @@ export const updateDiscount = createServerFn({ method: "POST" })
   })
 
 export const deleteDiscount = createServerFn({ method: "POST" })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .inputValidator(deleteDiscountSchema)
   .handler(async ({ data }) => {
     try {

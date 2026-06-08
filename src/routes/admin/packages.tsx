@@ -3,10 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
 import { getActivities } from "@/features/activities/server/activityActions"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
@@ -156,13 +156,14 @@ function PackagesPage() {
   }
 
   return (
-    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Packages</h1><p className="text-sm text-stone-500 mt-1">Create and manage tour packages and pricing tiers.</p></div><div className="mx-auto max-w-6xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Package</CardTitle>
-          <CardDescription>Add package details and per-category pricing.</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Packages"
+        description="Create and manage tour packages and pricing tiers."
+        meta={<AdminStatPill label="Packages" value={packagesQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 2xl:grid-cols-[minmax(0,1.1fr)_minmax(380px,0.8fr)]">
+      <AdminSectionCard title="Create Package" description="Add package details, linked activities, and per-category pricing.">
           <form
             className="space-y-6"
             onSubmit={(e) => {
@@ -308,26 +309,39 @@ function PackagesPage() {
               <p className="text-sm text-green-700">{createPackageMutation.data}</p>
             ) : null}
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Packages</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Packages" description="Check availability and edit package content.">
           {packagesQuery.isPending ? <p>Loading packages...</p> : null}
           {packagesQuery.isError ? <p className="text-sm text-red-600">{packagesQuery.error.message}</p> : null}
           {packagesQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {packagesQuery.data.map((pkg) => (
-                <div key={pkg.package_id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <p className="font-medium">{pkg.package_name}</p>
-                      <p>Available: {pkg.package_availability ? "Yes" : "No"}</p>
+                <AdminItemRow key={pkg.package_id}>
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-semibold text-stone-900">{pkg.package_name}</p>
+                        <AdminStatusBadge active={pkg.package_availability} activeLabel="Available" inactiveLabel="Unavailable" />
+                      </div>
+                      <p className="text-stone-600">From RM {Number(pkg.price_my_adult).toFixed(2)} / MY adult</p>
+                      {pkg.package_note ? <p className="leading-6 text-stone-500">{pkg.package_note}</p> : null}
+                      {pkg.package_features.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5">
+                          {pkg.package_features.slice(0, 3).map((feature) => (
+                            <span key={feature} className="rounded-full bg-white px-2 py-1 text-xs text-stone-600">
+                              {feature}
+                            </span>
+                          ))}
+                          {pkg.package_features.length > 3 ? (
+                            <span className="rounded-full bg-white px-2 py-1 text-xs text-stone-500">
+                              +{pkg.package_features.length - 3} more
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : null}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
                       <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(pkg)}>
                         Edit
                       </Button>
@@ -343,12 +357,11 @@ function PackagesPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <Modal
         open={Boolean(editingPackage)}
@@ -512,6 +525,7 @@ function PackagesPage() {
       {deletePackageMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deletePackageMutation.data}</p>
       ) : null}
-      </div></div>
+      </div>
+    </div>
   )
 }

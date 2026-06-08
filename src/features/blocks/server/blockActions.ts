@@ -1,12 +1,12 @@
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { createBlockSchema, deleteBlockSchema } from '@/schemas/blockSchemas'
-import authMiddleware from '@/lib/auth-middleware'
+import { adminOnlyMiddleware } from '@/lib/auth-middleware'
 
 const toDateKey = (value: Date) => value.toISOString().slice(0, 10)
 
 export const getBlocks = createServerFn({ method: 'GET' })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .handler(async () => {
     const blocks = await prisma.booking_blocks.findMany({
       orderBy: [{ block_date: 'desc' }, { slot_id: 'asc' }],
@@ -25,7 +25,7 @@ export const getBlocks = createServerFn({ method: 'GET' })
   })
 
 export const createBlock = createServerFn({ method: 'POST' })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .inputValidator(createBlockSchema)
   .handler(async ({ data }) => {
     const blockDate = new Date(`${data.block_date}T00:00:00Z`)
@@ -43,7 +43,7 @@ export const createBlock = createServerFn({ method: 'POST' })
   })
 
 export const deleteBlock = createServerFn({ method: 'POST' })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .inputValidator(deleteBlockSchema)
   .handler(async ({ data }) => {
     await prisma.booking_blocks.delete({

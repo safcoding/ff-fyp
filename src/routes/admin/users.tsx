@@ -2,9 +2,13 @@ import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { authClient } from '@/lib/auth-client' // Your Better Auth configuration hook
+import { requireAdminRoute } from '@/lib/admin-route-guard'
 import { Plus, Edit2, Trash2, Shield, User as UserIcon, X } from 'lucide-react'
 
-export const Route = createFileRoute('/admin/users')({ component: UsersPage })
+export const Route = createFileRoute('/admin/users')({
+  beforeLoad: requireAdminRoute,
+  component: UsersPage,
+})
 
 type Role = 'user' | 'admin'
 

@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
@@ -14,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { createAddon, deleteAddon, getAddons, updateAddon } from "@/features/addon/server/addonActions"
 
 export const Route = createFileRoute("/admin/addons")({ component: AddonsPage })
-  const queryClient = new QueryClient()
 
 type AddonForm = {
   addon_name: string
@@ -31,6 +30,7 @@ const defaultValues: AddonForm = {
 }
 
 function AddonsPage() {
+  const queryClient = useQueryClient()
   const [editingAddon, setEditingAddon] = useState<(AddonForm & { addon_id: number }) | null>(null)
   const [editValues, setEditValues] = useState<AddonForm>(defaultValues)
   const [deletingAddon, setDeletingAddon] = useState<{ addon_id: number; addon_name: string } | null>(null)
@@ -82,12 +82,14 @@ function AddonsPage() {
   }
 
   return (
-    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Add-ons</h1><p className="text-sm text-stone-500 mt-1">Manage optional add-ons available with tour packages.</p></div><div className="mx-auto max-w-5xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Addon</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Add-ons"
+        description="Manage optional add-ons available with tour packages."
+        meta={<AdminStatPill label="Total" value={addonsQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
+      <AdminSectionCard title="Create Add-on" description="Add optional upgrades guests can choose during booking.">
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -174,7 +176,7 @@ function AddonsPage() {
 
             <div className="space-y-2 md:col-span-2">
               <Button type="submit" disabled={createAddonMutation.isPending}>
-                {createAddonMutation.isPending ? "Creating addon..." : "Create addon"}
+                {createAddonMutation.isPending ? "Creating add-on..." : "Create add-on"}
               </Button>
               {createAddonMutation.isError ? (
                 <p className="text-sm text-red-600">{createAddonMutation.error.message}</p>
@@ -184,27 +186,25 @@ function AddonsPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Addons</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Add-ons" description="Review pricing, availability, and edit details quickly.">
           {addonsQuery.isPending ? <p>Loading addons...</p> : null}
           {addonsQuery.isError ? <p className="text-sm text-red-600">{addonsQuery.error.message}</p> : null}
           {addonsQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {addonsQuery.data.map((addon) => (
-                <div key={addon.addon_id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
+                <AdminItemRow key={addon.addon_id}>
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                     <div className="space-y-1">
-                      <p className="font-medium">{addon.addon_name}</p>
-                      <p>Price: {addon.addon_price}</p>
-                      <p>Available: {addon.addon_avail ? "Yes" : "No"}</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-semibold text-stone-900">{addon.addon_name}</p>
+                        <AdminStatusBadge active={addon.addon_avail} activeLabel="Available" inactiveLabel="Unavailable" />
+                      </div>
+                      <p className="text-stone-600">RM {Number(addon.addon_price).toFixed(2)}</p>
+                      {addon.addon_desc ? <p className="leading-6 text-stone-500">{addon.addon_desc}</p> : null}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
                       <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(addon)}>
                         Edit
                       </Button>
@@ -218,12 +218,11 @@ function AddonsPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <Modal
         open={Boolean(editingAddon)}
@@ -332,6 +331,7 @@ function AddonsPage() {
       {deleteAddonMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteAddonMutation.data}</p>
       ) : null}
-      </div></div>
+      </div>
+    </div>
   )
 }

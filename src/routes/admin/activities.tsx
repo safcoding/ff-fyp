@@ -3,10 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Switch } from "@/components/ui/switch"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
@@ -78,12 +78,14 @@ function ActivityPage() {
   }
 
   return (
-    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Activities</h1><p className="text-sm text-stone-500 mt-1">Manage on-farm activities offered in tour packages.</p></div><div className="mx-auto max-w-4xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Activities"
+        description="Manage on-farm activities offered in tour packages."
+        meta={<AdminStatPill label="Total" value={activitiesQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
+      <AdminSectionCard title="Create Activity" description="Add experiences that can be linked to packages.">
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -161,27 +163,24 @@ function ActivityPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Activities</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Activities" description="Check current activity descriptions and visibility.">
           {activitiesQuery.isPending ? <p>Loading activities...</p> : null}
           {activitiesQuery.isError ? <p className="text-sm text-red-600">{activitiesQuery.error.message}</p> : null}
           {activitiesQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {activitiesQuery.data.map((activity) => (
-                <div key={activity.activity_id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
+                <AdminItemRow key={activity.activity_id}>
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                     <div className="space-y-1">
-                      <p className="font-medium">{activity.activity_name}</p>
-                      <p>Description: {activity.activity_desc}</p>
-                      <p>Available: {activity.is_active ? "Yes": "No"}</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-semibold text-stone-900">{activity.activity_name}</p>
+                        <AdminStatusBadge active={activity.is_active} activeLabel="Active" inactiveLabel="Hidden" />
+                      </div>
+                      <p className="leading-6 text-stone-600">{activity.activity_desc}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
                       <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(activity)}>
                         Edit
                       </Button>
@@ -195,12 +194,11 @@ function ActivityPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <Modal
         open={Boolean(editingActivity)}
@@ -295,6 +293,7 @@ function ActivityPage() {
       {deleteActivityMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteActivityMutation.data}</p>
       ) : null}
-      </div></div>
+      </div>
+    </div>
   )
 }

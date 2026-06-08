@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
@@ -75,16 +75,13 @@ function FoodsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#445412]/10 pb-6">
-        <h1 className="font-fraunces font-black text-4xl text-[#445412]">Foods</h1>
-        <p className="text-sm text-stone-500 mt-1">Manage food items available for group bookings.</p>
-      </div>
-      <div className="space-y-8 mx-auto max-w-4xl">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Food</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminPageHeader
+        title="Foods"
+        description="Manage food items available for group bookings."
+        meta={<AdminStatPill label="Total" value={foodsQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.25fr)]">
+      <AdminSectionCard title="Create Food" description="Add menu items with clear per-item pricing.">
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -154,26 +151,21 @@ function FoodsPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Foods</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Foods" description="Scan current menu items and update prices.">
           {foodsQuery.isPending ? <p>Loading foods...</p> : null}
           {foodsQuery.isError ? <p className="text-sm text-red-600">{foodsQuery.error.message}</p> : null}
           {foodsQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {foodsQuery.data.map((food) => (
-                <div key={food.food_id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
+                <AdminItemRow key={food.food_id}>
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                     <div className="space-y-1">
-                      <p className="font-medium">{food.food_name}</p>
-                      <p>Price: {food.food_price}</p>
+                      <p className="font-semibold text-stone-900">{food.food_name}</p>
+                      <p className="text-stone-600">RM {Number(food.food_price).toFixed(2)}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
                       <Button type="button" variant="outline" size="sm" onClick={() => openEditModal(food)}>
                         Edit
                       </Button>
@@ -187,12 +179,11 @@ function FoodsPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <Modal
         open={Boolean(editingFood)}

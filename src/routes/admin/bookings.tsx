@@ -13,6 +13,8 @@ import {
   updateBooking as updateBookingAction,
 } from '@/features/booking/server/bookingActions'
 import { getDiscounts } from '@/features/discount/server/discountActions'
+import { useSession } from '@/lib/auth-client'
+import { isAdminUser } from '@/lib/authz'
 import { buildQuotationPdfBlob } from '@/components/booking/QuotationPdf'
 import { buildMonthlyReportPdfBlob } from '@/components/booking/MonthlyReportPdf'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -152,6 +154,8 @@ function DetailPanel({
 
 function BookingPage() {
   const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const isAdmin = isAdminUser(session?.user)
   const [expandedBookingId, setExpandedBookingId] = useState<string | null>(
     null,
   )
@@ -179,6 +183,7 @@ function BookingPage() {
   const discountsQuery = useQuery({
     queryKey: ['admin-discounts'],
     queryFn: () => getDiscounts(),
+    enabled: isAdmin,
   })
 
   const deleteBookingMutation = useMutation({
@@ -794,35 +799,37 @@ function BookingPage() {
         description={`Please confirm all details are correct for ${approvingBooking?.pic_name ?? 'this booking'}. This will update status to APPROVED.`}
         confirmLabel="Confirm approval"
       >
-        <div className="space-y-2">
-          <label htmlFor="approval-discount" className="text-sm font-medium">
-            Discount Code
-          </label>
-          <select
-            id="approval-discount"
-            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-            value={approvalDiscountId}
-            disabled={
-              approveBookingMutation.isPending || discountsQuery.isPending
-            }
-            onChange={(e) => setApprovalDiscountId(e.target.value)}
-          >
-            <option value="">No discount</option>
-            {discountsQuery.data?.map((discount) => (
-              <option key={discount.discount_id} value={discount.discount_id}>
-                {discount.discount_id} -{' '}
-                {discount.discount_type === 'PERCENTAGE'
-                  ? `${discount.discount_amount}%`
-                  : `RM ${discount.discount_amount.toFixed(2)}`}
-              </option>
-            ))}
-          </select>
-          {discountsQuery.isError ? (
-            <p className="text-sm text-red-600">
-              {discountsQuery.error.message}
-            </p>
-          ) : null}
-        </div>
+        {isAdmin ? (
+          <div className="space-y-2">
+            <label htmlFor="approval-discount" className="text-sm font-medium">
+              Discount Code
+            </label>
+            <select
+              id="approval-discount"
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              value={approvalDiscountId}
+              disabled={
+                approveBookingMutation.isPending || discountsQuery.isPending
+              }
+              onChange={(e) => setApprovalDiscountId(e.target.value)}
+            >
+              <option value="">No discount</option>
+              {discountsQuery.data?.map((discount) => (
+                <option key={discount.discount_id} value={discount.discount_id}>
+                  {discount.discount_id} -{' '}
+                  {discount.discount_type === 'PERCENTAGE'
+                    ? `${discount.discount_amount}%`
+                    : `RM ${discount.discount_amount.toFixed(2)}`}
+                </option>
+              ))}
+            </select>
+            {discountsQuery.isError ? (
+              <p className="text-sm text-red-600">
+                {discountsQuery.error.message}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
         <div className="mt-4 space-y-2">
           <Label htmlFor="approval-staff-comment">Staff Comment</Label>
           <Textarea

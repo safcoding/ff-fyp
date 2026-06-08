@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
 
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
 import { Button } from '@/components/ui/button'
 import { DeleteDialog } from '@/components/deleteDialog'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Modal } from '@/components/ui/modal'
@@ -151,12 +151,14 @@ function SlotsPage() {
   }
 
   return (
-    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Slots</h1><p className="text-sm text-stone-500 mt-1">Configure available time slots and tour schedules.</p></div><div className="mx-auto max-w-5xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Slot</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Slots"
+        description="Configure available time slots and tour schedules."
+        meta={<AdminStatPill label="Slots" value={slotsQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 2xl:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.85fr)]">
+      <AdminSectionCard title="Create Slot" description="Set guided or unguided visit windows with capacity.">
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -436,46 +438,42 @@ function SlotsPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Slots</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Slots" description="Review tour timing, slot type, and capacity.">
           {slotsQuery.isPending ? <p>Loading slots...</p> : null}
           {slotsQuery.isError ? (
             <p className="text-sm text-red-600">{slotsQuery.error.message}</p>
           ) : null}
           {slotsQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {slotsQuery.data.map((slot) => (
-                <div
-                  key={slot.slot_id}
-                  className="rounded-md border p-3 text-sm"
-                >
-                  <div className="flex items-start justify-between gap-3">
+                <AdminItemRow key={slot.slot_id}>
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                     <div className="space-y-1">
-                      <p className="font-medium">{slot.slot_name}</p>
-                      <p>ID: {slot.slot_id}</p>
-                      <p>Type: {slot.slot_type}</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-semibold text-stone-900">{slot.slot_name}</p>
+                        <span className="rounded-full border border-[#445412]/10 bg-white px-2.5 py-1 text-xs font-semibold text-[#445412]">
+                          {slot.slot_type}
+                        </span>
+                      </div>
+                      <p className="font-mono text-xs text-stone-500">ID: {slot.slot_id}</p>
                       {slot.slot_type === 'UNGUIDED' ? (
-                        <p>
+                        <p className="leading-6 text-stone-600">
                           Weekday: {slot.weekday_start} - {slot.weekday_end} |
                           Weekend: {slot.weekend_start} - {slot.weekend_end}
                         </p>
                       ) : (
-                        <p>
+                        <p className="leading-6 text-stone-600">
                           {slot.slot_start} - {slot.slot_end} | Capacity:{' '}
                           {slot.slot_capacity}
                         </p>
                       )}
                       {slot.slot_type === 'UNGUIDED' ? (
-                        <p>Capacity: {slot.slot_capacity}</p>
+                        <p className="text-stone-600">Capacity: {slot.slot_capacity}</p>
                       ) : null}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
                       <Button
                         type="button"
                         variant="outline"
@@ -499,12 +497,11 @@ function SlotsPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <Modal
         open={Boolean(editingSlot)}
@@ -745,6 +742,7 @@ function SlotsPage() {
       {deleteSlotMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteSlotMutation.data}</p>
       ) : null}
-      </div></div>
+      </div>
+    </div>
   )
 }

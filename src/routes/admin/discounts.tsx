@@ -3,8 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
+import { requireAdminRoute } from "@/lib/admin-route-guard"
+import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -17,7 +18,10 @@ import {
 } from "@/features/discount/server/discountActions"
 import type { discount_types as DiscountType } from "@/generated/prisma/enums"
 
-export const Route = createFileRoute("/admin/discounts")({ component: DiscountsPage })
+export const Route = createFileRoute("/admin/discounts")({
+  beforeLoad: requireAdminRoute,
+  component: DiscountsPage,
+})
 
 type DiscountForm = {
   discount_id: string
@@ -79,12 +83,14 @@ function DiscountsPage() {
   })
 
   return (
-    <div className="space-y-6"><div className="border-b border-[#445412]/10 pb-6"><h1 className="font-fraunces font-black text-4xl text-[#445412]">Discounts</h1><p className="text-sm text-stone-500 mt-1">Set up discount codes and rates for bookings.</p></div><div className="mx-auto max-w-5xl space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Discount</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Discounts"
+        description="Set up discount codes and rates for bookings."
+        meta={<AdminStatPill label="Codes" value={discountsQuery.data?.length ?? 0} />}
+      />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
+      <AdminSectionCard title="Create Discount" description="Create reusable promo codes for quotations and bookings.">
           <form
             className="grid gap-4 md:grid-cols-3"
             onSubmit={(e) => {
@@ -155,27 +161,22 @@ function DiscountsPage() {
               ) : null}
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Discounts</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <AdminSectionCard title="Existing Discounts" description="Compare discount type, value, and edit codes.">
           {discountsQuery.isPending ? <p>Loading discounts...</p> : null}
           {discountsQuery.isError ? <p className="text-sm text-red-600">{discountsQuery.error.message}</p> : null}
           {discountsQuery.data ? (
-            <div className="space-y-3">
+            <div className="grid gap-3">
               {discountsQuery.data.map((discount) => (
-                <div key={discount.discount_id} className="rounded-md border p-3 text-sm">
-                  <div className="flex items-start justify-between gap-3">
+                <AdminItemRow key={discount.discount_id} className="border-amber-100 bg-amber-50/50">
+                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                     <div className="space-y-1">
-                      <p className="font-medium">{discount.discount_id}</p>
-                      <p>Type: {discount.discount_type}</p>
-                      <p>Amount: {formatDiscount(discount)}</p>
+                      <p className="font-mono text-base font-semibold text-stone-900">{discount.discount_id}</p>
+                      <p className="text-stone-600">{discount.discount_type === "PERCENTAGE" ? "Percentage" : "Flat rate"}</p>
+                      <p className="text-lg font-bold text-[#445412]">{formatDiscount(discount)}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 gap-2 sm:flex">
                       <Button type="button" variant="outline" size="sm" onClick={() => setEditingDiscount(discount)}>
                         Edit
                       </Button>
@@ -189,12 +190,11 @@ function DiscountsPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
+                </AdminItemRow>
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+      </AdminSectionCard>
 
       <Modal
         open={Boolean(editingDiscount)}
@@ -290,6 +290,7 @@ function DiscountsPage() {
       {deleteDiscountMutation.isSuccess ? (
         <p className="text-sm text-green-700">{deleteDiscountMutation.data}</p>
       ) : null}
-      </div></div>
+      </div>
+    </div>
   )
 }

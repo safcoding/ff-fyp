@@ -1,9 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { updateSettingsSchema } from '@/schemas/settingsSchemas'
-import authMiddleware from '@/lib/auth-middleware'
+import { adminOnlyMiddleware } from '@/lib/auth-middleware'
 
-export const getSettings = createServerFn({ method: 'GET' }).handler(
+export const getSettings = createServerFn({ method: 'GET' })
+  .middleware([adminOnlyMiddleware])
+  .handler(
   async () => {
     const settings = await prisma.global_settings.findFirst({
       orderBy: { id: 'asc' },
@@ -21,7 +23,7 @@ export const getSettings = createServerFn({ method: 'GET' }).handler(
 )
 
 export const updateSettings = createServerFn({ method: 'POST' })
-  .middleware([authMiddleware])
+  .middleware([adminOnlyMiddleware])
   .inputValidator(updateSettingsSchema)
   .handler(async ({ data }) => {
     const existing = await prisma.global_settings.findFirst({

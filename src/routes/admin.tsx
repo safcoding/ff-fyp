@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router'
 import { signOut } from '@/lib/auth-client'
 import { getSessionFn } from '@/lib/auth-serverFn'
+import { isAdminUser } from '@/lib/authz'
 import {
   LayoutDashboard,
   CalendarDays,
@@ -23,6 +24,7 @@ export const Route = createFileRoute('/admin')({
     if (!session?.user) {
       throw redirect({ to: '/login' })
     }
+    return { session }
   },
   component: AdminLayout,
 })
@@ -34,15 +36,17 @@ const navItems = [
   { href: '/admin/slots', label: 'Slots', icon: Ticket },
   { href: '/admin/addons', label: 'Add-ons', icon: Ticket },
   { href: '/admin/foods', label: 'Foods', icon: UtensilsCrossed },
-  { href: '/admin/discounts', label: 'Discounts', icon: Percent },
+  { href: '/admin/discounts', label: 'Discounts', icon: Percent, adminOnly: true },
   { href: '/admin/activities', label: 'Activities', icon: Activity },
-  { href: '/admin/blocks', label: 'Blocks', icon: CalendarOff },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
-  { href: '/admin/users', label: 'Users', icon: Users },
+  { href: '/admin/blocks', label: 'Blocks', icon: CalendarOff, adminOnly: true },
+  { href: '/admin/settings', label: 'Settings', icon: Settings, adminOnly: true },
+  { href: '/admin/users', label: 'Users', icon: Users, adminOnly: true },
 ]
 
 function AdminLayout() {
   const location = useLocation()
+  const { session } = Route.useRouteContext()
+  const visibleNavItems = navItems.filter((item) => !item.adminOnly || isAdminUser(session.user))
 
   return (
     <div className="flex min-h-screen bg-[#fbf0d8]">
@@ -59,7 +63,7 @@ function AdminLayout() {
 
         {/* Nav */}
         <nav className="flex-1 py-4 overflow-y-auto">
-          {navItems.map(({ href, label, icon: Icon, exact }) => {
+          {visibleNavItems.map(({ href, label, icon: Icon, exact }) => {
             const active = exact
               ? location.pathname === href
               : location.pathname.startsWith(href) && href !== '/admin'
@@ -117,7 +121,7 @@ function AdminLayout() {
 
         {/* Mobile nav strip */}
         <nav className="md:hidden flex overflow-x-auto bg-[#445412]/90 px-2 py-1 gap-1 border-t border-[#fbf0d8]/10">
-          {navItems.map(({ href, label, icon: Icon, exact }) => {
+          {visibleNavItems.map(({ href, label, icon: Icon, exact }) => {
             const active = exact ? location.pathname === href : location.pathname.startsWith(href) && href !== '/admin' ? true : location.pathname === href
             return (
               <Link
