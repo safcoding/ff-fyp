@@ -12,7 +12,10 @@ type ReplaceBookingWithItemsInput = BookingWriteData & {
 }
 
 export const loadAllBookings = async () => {
-  return prisma.bookings.findMany({ include: bookingsInclude })
+  return prisma.bookings.findMany({
+    include: bookingsInclude,
+    orderBy: [{ created_at: 'desc' }],
+  })
 }
 
 export const loadBookingsForMonth = async (month: string) => {

@@ -89,7 +89,7 @@ function PackagesPage(){
           </div>
       </section>
       <section className="px-4 sm:px-6">
-        <div className="mx-auto max-w-6xl overflow-hidden" ref={emblaRef}>
+        <div className="mx-auto overflow-hidden" ref={emblaRef}>
           <div className="flex gap-4">
             {carouselImages.map((image) => (
               <div key={image.src} className="min-w-0 flex-[0_0_88%] sm:flex-[0_0_70%] lg:flex-[0_0_48%]">

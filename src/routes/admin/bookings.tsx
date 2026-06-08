@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import {
   approveBooking as approveBookingAction,
@@ -47,8 +47,16 @@ export const Route = createFileRoute('/admin/bookings')({
 const bookingStatusOptions = Object.values(booking_status)
 const orgCategoryOptions = Object.values(org_categories)
 const stateOptions = Object.values(states)
+const bookingsPerPage = 8
+const bookingTabs = [
+  { id: 'pending', label: 'Needs Action', description: 'Pending bookings first' },
+  { id: 'completed', label: 'Completed', description: 'Approved bookings' },
+  { id: 'other', label: 'Other', description: 'Postponed or cancelled' },
+  { id: 'all', label: 'All', description: 'Full booking history' },
+] as const
 
 type BookingStatus = (typeof bookingStatusOptions)[number]
+type BookingTab = (typeof bookingTabs)[number]['id']
 type AdminBooking = Awaited<ReturnType<typeof getBookings>>[number]
 type EditBookingValues = {
   booking_date: string
@@ -118,6 +126,28 @@ function formatReportFileMonth(month: string) {
   return month.replace('-', '')
 }
 
+function getBookingCreatedTime(booking: AdminBooking) {
+  return new Date(booking.created_at ?? booking.booking_date ?? 0).getTime()
+}
+
+function getBookingStatusRank(status: BookingStatus | null | undefined) {
+  if (status === 'PENDING') return 0
+  if (status === 'POSTPONED') return 1
+  if (status === 'CANCELLED') return 2
+  return 3
+}
+
+function sortBookingsForTab(bookings: Array<AdminBooking>, tab: BookingTab) {
+  return [...bookings].sort((a, b) => {
+    if (tab === 'all') {
+      const statusRank = getBookingStatusRank(a.booking_status) - getBookingStatusRank(b.booking_status)
+      if (statusRank !== 0) return statusRank
+    }
+
+    return getBookingCreatedTime(b) - getBookingCreatedTime(a)
+  })
+}
+
 function InfoRow({
   label,
   value,
@@ -174,6 +204,8 @@ function BookingPage() {
   )
   const [editValues, setEditValues] = useState<EditBookingValues | null>(null)
   const [reportMonth, setReportMonth] = useState(getCurrentMonthInputValue)
+  const [activeTab, setActiveTab] = useState<BookingTab>('pending')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const bookingQuery = useQuery({
     queryKey: ['admin-bookings'],
@@ -185,6 +217,46 @@ function BookingPage() {
     queryFn: () => getDiscounts(),
     enabled: isAdmin,
   })
+
+  const bookingGroups = useMemo(() => {
+    const bookings = bookingQuery.data ?? []
+
+    return {
+      pending: sortBookingsForTab(
+        bookings.filter((booking) => booking.booking_status === 'PENDING'),
+        'pending',
+      ),
+      completed: sortBookingsForTab(
+        bookings.filter((booking) => booking.booking_status === 'APPROVED'),
+        'completed',
+      ),
+      other: sortBookingsForTab(
+        bookings.filter((booking) =>
+          booking.booking_status === 'POSTPONED' || booking.booking_status === 'CANCELLED',
+        ),
+        'other',
+      ),
+      all: sortBookingsForTab(bookings, 'all'),
+    }
+  }, [bookingQuery.data])
+
+  const activeBookings = bookingGroups[activeTab]
+  const totalPages = Math.max(1, Math.ceil(activeBookings.length / bookingsPerPage))
+  const safeCurrentPage = Math.min(currentPage, totalPages)
+  const paginatedBookings = activeBookings.slice(
+    (safeCurrentPage - 1) * bookingsPerPage,
+    safeCurrentPage * bookingsPerPage,
+  )
+  const pageStart = activeBookings.length
+    ? (safeCurrentPage - 1) * bookingsPerPage + 1
+    : 0
+  const pageEnd = Math.min(safeCurrentPage * bookingsPerPage, activeBookings.length)
+
+  function switchTab(tab: BookingTab) {
+    setActiveTab(tab)
+    setCurrentPage(1)
+    setExpandedBookingId(null)
+  }
 
   const deleteBookingMutation = useMutation({
     mutationFn: deleteBookingAction,
@@ -384,8 +456,57 @@ function BookingPage() {
         </CardContent>
       </Card>
       <Card className="border-[#445412]/10 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-[#445412]">All Bookings</CardTitle>
+        <CardHeader className="space-y-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <CardTitle className="text-[#445412]">Bookings Queue</CardTitle>
+              <p className="mt-1 text-sm text-stone-500">
+                Pending requests are prioritized. Approved bookings are kept in
+                Completed so the active queue stays focused.
+              </p>
+            </div>
+            <div className="rounded-md border border-[#445412]/10 bg-stone-50 px-3 py-2 text-sm text-stone-600">
+              Showing {pageStart}-{pageEnd} of {activeBookings.length}
+            </div>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            {bookingTabs.map((tab) => {
+              const active = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={cn(
+                    'rounded-md border px-4 py-3 text-left transition-colors',
+                    active
+                      ? 'border-[#445412] bg-[#445412] text-white shadow-sm'
+                      : 'border-stone-200 bg-white text-stone-700 hover:border-[#445412]/30 hover:bg-stone-50',
+                  )}
+                  onClick={() => switchTab(tab.id)}
+                >
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="font-semibold">{tab.label}</span>
+                    <span
+                      className={cn(
+                        'rounded-full px-2 py-0.5 text-xs font-bold',
+                        active ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-600',
+                      )}
+                    >
+                      {bookingGroups[tab.id].length}
+                    </span>
+                  </span>
+                  <span
+                    className={cn(
+                      'mt-1 block text-xs',
+                      active ? 'text-white/75' : 'text-stone-500',
+                    )}
+                  >
+                    {tab.description}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </CardHeader>
         <CardContent>
           {bookingQuery.isPending ? <p>Loading bookings...</p> : null}
@@ -394,7 +515,12 @@ function BookingPage() {
           ) : null}
           {bookingQuery.data ? (
             <div className="space-y-3">
-              {bookingQuery.data.map((booking) => {
+              {paginatedBookings.length === 0 ? (
+                <div className="rounded-md border border-dashed border-stone-300 bg-stone-50 p-6 text-center text-sm text-stone-500">
+                  No bookings in this tab.
+                </div>
+              ) : null}
+              {paginatedBookings.map((booking) => {
                 const isExpanded = expandedBookingId === booking.booking_id
                 const bookingStatus = booking.booking_status ?? 'PENDING'
                 const styles = statusStyles[bookingStatus]
@@ -763,6 +889,39 @@ function BookingPage() {
                   </div>
                 )
               })}
+              {activeBookings.length > bookingsPerPage ? (
+                <div className="flex flex-col gap-3 rounded-md border border-stone-200 bg-white/80 p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-stone-500">
+                    Page {safeCurrentPage} of {totalPages}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 sm:flex">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={safeCurrentPage === 1}
+                      onClick={() => {
+                        setCurrentPage((page) => Math.max(1, page - 1))
+                        setExpandedBookingId(null)
+                      }}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={safeCurrentPage === totalPages}
+                      onClick={() => {
+                        setCurrentPage((page) => Math.min(totalPages, page + 1))
+                        setExpandedBookingId(null)
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </CardContent>

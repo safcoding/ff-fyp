@@ -104,6 +104,7 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
   return {
     booking_id: b.booking_id,
     booking_price: b.booking_price.toString(),
+    created_at: b.created_at,
     assigned_guide_count: b.assigned_guide_count,
     booking_date: b.booking_date,
     booking_status: b.booking_status,
