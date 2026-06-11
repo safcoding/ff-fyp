@@ -829,25 +829,6 @@ function BookingPage() {
                               ? 'Preparing quotation...'
                               : 'Download quotation'}
                           </Button>
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            className="w-full sm:w-auto"
-                            disabled={testEmailMutation.isPending}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              testEmailMutation.mutate({
-                                data: {
-                                  booking_id: booking.booking_id,
-                                },
-                              })
-                            }}
-                          >
-                            {testEmailMutation.isPending
-                              ? 'Sending test email...'
-                              : 'Send test email'}
-                          </Button>
                         </div>
 
                         {testEmailMutation.isError ? (
