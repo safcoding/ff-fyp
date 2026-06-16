@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -9,19 +8,19 @@ datasource db {
 }
 
 model User {
-  id              String    @id
-  createdAt       DateTime  @default(now())
-  name            String
-  email           String    @unique
-  emailVerified   Boolean   @default(false)
-  image           String?
-  updatedAt       DateTime  @updatedAt
-  role            String?
-  banned          Boolean?  @default(false)
-  banReason       String?
-  banExpires      DateTime?
-  accounts        Account[]
-  sessions        Session[]
+  id            String    @id
+  createdAt     DateTime  @default(now())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  updatedAt     DateTime  @updatedAt
+  banExpires    DateTime?
+  banReason     String?
+  banned        Boolean?  @default(false)
+  role          String?
+  accounts      Account[]
+  sessions      Session[]
 
   @@map("user")
 }
@@ -36,31 +35,28 @@ model addons {
 }
 
 model bookings {
-  booking_id                                   String             @id @default(uuid())
-  booking_price                                Decimal            @db.Decimal(10, 2)
-  created_at                                   DateTime           @default(now()) @db.Timestamp(6)
-  pax_total                                    Int
-  pic_name                                     String
-  pic_email                                    String
-  pic_hp                                       String
-  org_address                                  String
-  org_name                                     String
-  quotation_id                                 String?
-  slot_id                                      String
-  booking_date                                 DateTime?          @db.Date
-  booking_status                               booking_status?    @default(PENDING)
-  discount_id                                  String?
-  org_state                                    states
-  org_type                                     org_categories
-  event_name                                   String?
-  assigned_guide_count                         Int?
-  booking_addons                               booking_addons[]
-  booking_foods                                booking_foods[]
-  booking_packages                             booking_packages[]
-  discounts                                    discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: Restrict, map: "discount_id_fkey")
-  quotations_bookings_quotation_idToquotations quotations?        @relation("bookings_quotation_idToquotations", fields: [quotation_id], references: [quotation_id], onDelete: NoAction, onUpdate: NoAction, map: "quotation_id_fkey")
-  slots                                        slots              @relation(fields: [slot_id], references: [slot_id], map: "slot_fkey")
-  quotations                                   quotations[]
+  booking_id           String             @id @default(uuid())
+  booking_price        Decimal            @db.Decimal(10, 2)
+  created_at           DateTime           @default(now()) @db.Timestamp(6)
+  pax_total            Int
+  pic_name             String
+  pic_email            String
+  pic_hp               String
+  org_address          String
+  org_name             String
+  slot_id              String
+  booking_date         DateTime?          @db.Date
+  booking_status       booking_status?    @default(PENDING)
+  discount_id          String?
+  org_state            states
+  org_type             org_categories
+  event_name           String?
+  assigned_guide_count Int?
+  booking_addons       booking_addons[]
+  booking_foods        booking_foods[]
+  booking_packages     booking_packages[]
+  discounts            discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: Restrict, map: "discount_id_fkey")
+  slots                slots              @relation(fields: [slot_id], references: [slot_id], map: "slot_fkey")
 }
 
 model foods {
@@ -121,13 +117,6 @@ model booking_foods {
   foods         foods    @relation(fields: [food_id], references: [food_id], map: "food_id_fkey")
 }
 
-model quotations {
-  quotation_id                               String     @id
-  booking_id                                 String?
-  bookings_bookings_quotation_idToquotations bookings[] @relation("bookings_quotation_idToquotations")
-  bookings                                   bookings?  @relation(fields: [booking_id], references: [booking_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_fkey")
-}
-
 model booking_packages {
   booking_id         String
   package_id         String
@@ -183,17 +172,16 @@ model slot_schedules {
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
   impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("session")
@@ -264,13 +252,13 @@ enum discount_types {
 enum org_categories {
   CORPORATE
   GOVERNMENT
-  UNIVERSITY_COLLEGE @map("UNIVERSITY/COLLEGE")
+  UNIVERSITY_COLLEGE   @map("UNIVERSITY/COLLEGE")
   INTERNATIONAL_SCHOOL @map("INTERNATIONAL SCHOOL")
-  SECONDARY_SCHOOL @map("SECONDARY SCHOOL")
-  PRIMARY_SCHOOL @map("PRIMARY SCHOOL")
+  SECONDARY_SCHOOL     @map("SECONDARY SCHOOL")
+  PRIMARY_SCHOOL       @map("PRIMARY SCHOOL")
   KINDERGARTEN
-  TRAVEL_AGENCY @map("TRAVEL AGENCY")
-  PERSONAL_GROUP @map("PERSONAL GROUP")
+  TRAVEL_AGENCY        @map("TRAVEL AGENCY")
+  PERSONAL_GROUP       @map("PERSONAL GROUP")
 }
 
 enum states {
@@ -278,12 +266,12 @@ enum states {
   MELAKA
   NEGERI_SEMBILAN @map("NEGERI SEMBILAN")
   SELANGOR
-  KUALA_LUMPUR @map("KUALA LUMPUR")
+  KUALA_LUMPUR    @map("KUALA LUMPUR")
   PUTRAJAYA
   PERAK
   KEDAH
   PERLIS
-  PULAU_PINANG @map("PULAU PINANG")
+  PULAU_PINANG    @map("PULAU PINANG")
   TERENGGANU
   PAHANG
   SABAH

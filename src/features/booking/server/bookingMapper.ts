@@ -111,7 +111,6 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
     discount_id: b.discount_id,
     discount_type: b.discounts?.discount_type ?? null,
     discount_amount: b.discounts ? Number(b.discounts.discount_amount) : null,
-    quotation_id: b.quotation_id,
     slot_id: b.slot_id,
     slot_name: b.slots?.slot_name ?? null,
     slot_type: b.slots?.slot_type ?? null,

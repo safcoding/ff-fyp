@@ -392,7 +392,6 @@ export const ModelName = {
   slots: 'slots',
   booking_addons: 'booking_addons',
   booking_foods: 'booking_foods',
-  quotations: 'quotations',
   booking_packages: 'booking_packages',
   discounts: 'discounts',
   package_activities: 'package_activities',
@@ -418,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "quotations" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules" | "session" | "account" | "verification" | "booking_blocks" | "global_settings"
+    modelProps: "user" | "addons" | "bookings" | "foods" | "packages" | "slots" | "booking_addons" | "booking_foods" | "booking_packages" | "discounts" | "package_activities" | "activities" | "slot_schedules" | "session" | "account" | "verification" | "booking_blocks" | "global_settings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1011,80 +1010,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.booking_foodsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.Booking_foodsCountAggregateOutputType> | number
-        }
-      }
-    }
-    quotations: {
-      payload: Prisma.$quotationsPayload<ExtArgs>
-      fields: Prisma.quotationsFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.quotationsFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.quotationsFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
-        }
-        findFirst: {
-          args: Prisma.quotationsFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.quotationsFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
-        }
-        findMany: {
-          args: Prisma.quotationsFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>[]
-        }
-        create: {
-          args: Prisma.quotationsCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
-        }
-        createMany: {
-          args: Prisma.quotationsCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.quotationsCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>[]
-        }
-        delete: {
-          args: Prisma.quotationsDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
-        }
-        update: {
-          args: Prisma.quotationsUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
-        }
-        deleteMany: {
-          args: Prisma.quotationsDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.quotationsUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.quotationsUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>[]
-        }
-        upsert: {
-          args: Prisma.quotationsUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$quotationsPayload>
-        }
-        aggregate: {
-          args: Prisma.QuotationsAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateQuotations>
-        }
-        groupBy: {
-          args: Prisma.quotationsGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.QuotationsGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.quotationsCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.QuotationsCountAggregateOutputType> | number
         }
       }
     }
@@ -1875,10 +1800,10 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   updatedAt: 'updatedAt',
-  role: 'role',
-  banned: 'banned',
+  banExpires: 'banExpires',
   banReason: 'banReason',
-  banExpires: 'banExpires'
+  banned: 'banned',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1905,7 +1830,6 @@ export const BookingsScalarFieldEnum = {
   pic_hp: 'pic_hp',
   org_address: 'org_address',
   org_name: 'org_name',
-  quotation_id: 'quotation_id',
   slot_id: 'slot_id',
   booking_date: 'booking_date',
   booking_status: 'booking_status',
@@ -1980,14 +1904,6 @@ export const Booking_foodsScalarFieldEnum = {
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
-
-
-export const QuotationsScalarFieldEnum = {
-  quotation_id: 'quotation_id',
-  booking_id: 'booking_id'
-} as const
-
-export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof typeof QuotationsScalarFieldEnum]
 
 
 export const Booking_packagesScalarFieldEnum = {
@@ -2410,7 +2326,6 @@ export type GlobalOmitConfig = {
   slots?: Prisma.slotsOmit
   booking_addons?: Prisma.booking_addonsOmit
   booking_foods?: Prisma.booking_foodsOmit
-  quotations?: Prisma.quotationsOmit
   booking_packages?: Prisma.booking_packagesOmit
   discounts?: Prisma.discountsOmit
   package_activities?: Prisma.package_activitiesOmit

@@ -725,10 +725,6 @@ function BookingPage() {
                               }
                             />
                             <InfoRow
-                              label="Quotation"
-                              value={booking.quotation_id ?? '-'}
-                            />
-                            <InfoRow
                               label="Price"
                               value={formatCurrency(
                                 Number(booking.booking_price),

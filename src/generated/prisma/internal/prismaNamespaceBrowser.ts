@@ -59,7 +59,6 @@ export const ModelName = {
   slots: 'slots',
   booking_addons: 'booking_addons',
   booking_foods: 'booking_foods',
-  quotations: 'quotations',
   booking_packages: 'booking_packages',
   discounts: 'discounts',
   package_activities: 'package_activities',
@@ -96,10 +95,10 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   updatedAt: 'updatedAt',
-  role: 'role',
-  banned: 'banned',
+  banExpires: 'banExpires',
   banReason: 'banReason',
-  banExpires: 'banExpires'
+  banned: 'banned',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -126,7 +125,6 @@ export const BookingsScalarFieldEnum = {
   pic_hp: 'pic_hp',
   org_address: 'org_address',
   org_name: 'org_name',
-  quotation_id: 'quotation_id',
   slot_id: 'slot_id',
   booking_date: 'booking_date',
   booking_status: 'booking_status',
@@ -201,14 +199,6 @@ export const Booking_foodsScalarFieldEnum = {
 } as const
 
 export type Booking_foodsScalarFieldEnum = (typeof Booking_foodsScalarFieldEnum)[keyof typeof Booking_foodsScalarFieldEnum]
-
-
-export const QuotationsScalarFieldEnum = {
-  quotation_id: 'quotation_id',
-  booking_id: 'booking_id'
-} as const
-
-export type QuotationsScalarFieldEnum = (typeof QuotationsScalarFieldEnum)[keyof typeof QuotationsScalarFieldEnum]
 
 
 export const Booking_packagesScalarFieldEnum = {
