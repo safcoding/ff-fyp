@@ -1,6 +1,7 @@
 import { prisma } from '@/db'
 import { bookingsInclude } from './bookingMapper'
 import type { BookingInput } from '@/schemas/bookingSchemas'
+import type { BookingStatusGroup } from '@/schemas/bookingSchemas'
 import type { prepareBookingWriteData } from './utils/prepData'
 import type { booking_status as BookingStatus } from '@/generated/prisma/enums'
 
@@ -16,6 +17,69 @@ export const loadAllBookings = async () => {
     include: bookingsInclude,
     orderBy: [{ created_at: 'desc' }],
   })
+}
+
+const bookingStatusWhere = (
+  statusGroup: BookingStatusGroup,
+) => {
+  if (statusGroup === 'pending') {
+    return { booking_status: 'PENDING' as BookingStatus }
+  }
+
+  if (statusGroup === 'completed') {
+    return { booking_status: 'APPROVED' as BookingStatus }
+  }
+
+  if (statusGroup === 'other') {
+    return {
+      booking_status: {
+        in: ['POSTPONED', 'CANCELLED'] as Array<BookingStatus>,
+      },
+    }
+  }
+
+  return {}
+}
+
+export const loadBookingsPage = async ({
+  statusGroup,
+  page,
+  pageSize,
+}: {
+  statusGroup: BookingStatusGroup
+  page: number
+  pageSize: number
+}) => {
+  const where = bookingStatusWhere(statusGroup)
+  const skip = (page - 1) * pageSize
+
+  const [bookings, total, pending, completed, other, all] = await Promise.all([
+    prisma.bookings.findMany({
+      where,
+      include: bookingsInclude,
+      orderBy: [{ created_at: 'desc' }],
+      skip,
+      take: pageSize,
+    }),
+    prisma.bookings.count({ where }),
+    prisma.bookings.count({ where: { booking_status: 'PENDING' } }),
+    prisma.bookings.count({ where: { booking_status: 'APPROVED' } }),
+    prisma.bookings.count({
+      where: { booking_status: { in: ['POSTPONED', 'CANCELLED'] } },
+    }),
+    prisma.bookings.count(),
+  ])
+
+  return {
+    bookings,
+    total,
+    counts: {
+      pending,
+      completed,
+      other,
+      all,
+    },
+  }
 }
 
 export const loadBookingsForMonth = async (month: string) => {

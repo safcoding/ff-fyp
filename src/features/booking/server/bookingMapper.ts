@@ -1,4 +1,3 @@
-import { Prisma } from '@/generated/prisma/client'
 import { calculatePaxBreakdown } from './utils/pax-calculation'
 import type { ExtraBookingData } from './bookingTypes'
 
@@ -66,14 +65,12 @@ export const bookingsInclude = {
       discount_amount: true,
     },
   },
-} satisfies Prisma.bookingsInclude
+}
 
-export type BookingWithRelations = Prisma.bookingsGetPayload<{
-  include: typeof bookingsInclude
-}>
+export type BookingWithRelations = any
 
 export const mapBookingToUi = (b: BookingWithRelations) => {
-  const packages = b.booking_packages.map((p) => ({
+  const packages = b.booking_packages.map((p: any) => ({
     package_id: p.package_id,
     selected_activity: p.selected_activity ?? null,
     selected_activity_name: p.package_activities?.activity_name ?? null,
@@ -133,13 +130,13 @@ export const mapBookingToUi = (b: BookingWithRelations) => {
     pax_non_my_senior: paxTotals.pax_non_my_senior,
     pax_non_my_oku: paxTotals.pax_non_my_oku,
     packages,
-    booking_addons: b.booking_addons.map((a) => ({
+    booking_addons: b.booking_addons.map((a: any) => ({
       addon_id: a.addon_id,
       addon_name: a.addons.addon_name,
       addon_quantity: a.addon_quantity,
       price: Number(a.addons.addon_price),
     })),
-    booking_foods: b.booking_foods.map((f) => ({
+    booking_foods: b.booking_foods.map((f: any) => ({
       food_id: f.food_id,
       food_name: f.foods.food_name,
       food_quantity: f.food_quantity,
