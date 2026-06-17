@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import EmblaCarousel from 'embla-carousel'
-import { useRef, useState, useEffect } from "react"
+import { useRef, useEffect } from "react"
+import { Image } from '@unpic/react'
 
 export const Route = createFileRoute("/packages")({ component: PackagesPage })
 
-const header = '/tour-packages.png'
+const header = '/tour-packages.webp'
 
 function PackagesPage(){
   const emblaRef = useRef<HTMLDivElement | null>(null)
-  const [emblaApi, setEmblaApi] = useState<ReturnType<typeof EmblaCarousel> | null>(null)
 
   const guideSrc = '/guide.png'
   const foodSrc = '/foods.jpeg'
@@ -24,7 +24,6 @@ function PackagesPage(){
       return
     }
     const api = EmblaCarousel(emblaRef.current, { loop: true })
-    setEmblaApi(api)
     return () => {
       api.destroy()
     }
@@ -34,7 +33,16 @@ function PackagesPage(){
     <div className="min-h-screen overflow-x-hidden bg-[#fbf0d8] pb-16 font-sans text-gray-800">
       <section className="relative min-h-[min(720px,78vh)] overflow-hidden">
         <div className="absolute inset-0">
-          <img src={header} alt="Tour Package Banner" className="h-full w-full object-cover" />
+          <Image
+            src={header}
+            alt="Tour Package Banner"
+            width={1920}
+            height={1080}
+            layout="fullWidth"
+            loading="eager"
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+          />
         </div>
       </section>
       <section className="px-4 py-10 sm:px-6">
@@ -93,7 +101,15 @@ function PackagesPage(){
           <div className="flex gap-4">
             {carouselImages.map((image) => (
               <div key={image.src} className="min-w-0 flex-[0_0_88%] sm:flex-[0_0_70%] lg:flex-[0_0_48%]">
-                <img src={image.src} alt={image.alt} className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain" />
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={1600}
+                  height={900}
+                  layout="fullWidth"
+                  loading="lazy"
+                  className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"
+                />
               </div>
             ))}
             </div>
@@ -103,8 +119,24 @@ function PackagesPage(){
               </h1>
             </div>
           <div className="mx-auto mt-8 grid max-w-5xl gap-6 md:grid-cols-2">
-            <img src={guideSrc} alt="Guide add-on details" className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"/>
-            <img src={foodSrc} alt="Food add-on details" className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"/>
+            <Image
+              src={guideSrc}
+              alt="Guide add-on details"
+              width={1600}
+              height={900}
+              layout="fullWidth"
+              loading="lazy"
+              className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"
+            />
+            <Image
+              src={foodSrc}
+              alt="Food add-on details"
+              width={1600}
+              height={900}
+              layout="fullWidth"
+              loading="lazy"
+              className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"
+            />
           </div>
         </div>
       </section>

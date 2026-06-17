@@ -1,12 +1,19 @@
 
+import { Image } from '@unpic/react'
+
 const HeroSection = () => {
 
   return (
     <section className="relative overflow-hidden py-32 sm:py-60">
       <div className="absolute inset-0">
-        <img
+        <Image
           alt="background"
-          src="/banner.jpg"
+          src="/banner.webp"
+          width={1920}
+          height={1080}
+          layout="fullWidth"
+          loading="eager"
+          fetchPriority="high"
           className="w-full h-full object-cover "
         />
       </div>

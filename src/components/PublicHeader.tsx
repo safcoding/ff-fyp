@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router"
+import { Image } from '@unpic/react'
 
 export function PublicHeader() {
   const pathname = useRouterState({
@@ -18,7 +19,15 @@ export function PublicHeader() {
         <div className="flex justify-center sm:justify-start">
             <div className="w-30 h-30 sm:w-28 sm:h-28 -mb-14 rounded-full flex items-center justify-center bg-[#fbf0d8] rounded-b-full">
             <Link to="/">
-              <img src={logo} alt="Farm Fresh @ UPM Logo" />
+              <Image
+                src={logo}
+                alt="Farm Fresh @ UPM Logo"
+                width={170}
+                height={120}
+                layout="constrained"
+                loading="eager"
+                className="h-auto w-full"
+              />
             </Link>
           </div>
       </div>
