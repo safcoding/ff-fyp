@@ -1,7 +1,6 @@
 import { prisma } from '@/db'
 import { bookingsInclude } from './bookingMapper'
-import type { BookingInput } from '@/schemas/bookingSchemas'
-import type { BookingStatusGroup } from '@/schemas/bookingSchemas'
+import type { BookingInput, BookingStatusGroup } from '@/schemas/bookingSchemas'
 import type { prepareBookingWriteData } from './utils/prepData'
 import type { booking_status as BookingStatus } from '@/generated/prisma/enums'
 

@@ -89,7 +89,7 @@ export const createPackage = createServerFn({ method: "POST" })
         minimum_pax: data.minimum_pax,
 
         package_activities: {
-          create: (data.activity_ids ?? []).map((activity_id) => ({
+          create: data.activity_ids.map((activity_id) => ({
             activity_id,
           })),
         }
@@ -127,7 +127,7 @@ export const updatePackage = createServerFn({ method: "POST" })
         where: { package_id: data.package_id },
       })
 
-      if (data.activity_ids?.length) {
+      if (data.activity_ids.length) {
         await tx.package_activities.createMany({
           data: data.activity_ids.map((activity_id) => ({
             package_id: data.package_id,

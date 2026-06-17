@@ -1,5 +1,7 @@
+import type { loadRelated } from './bookingRepo'
+
 export type ExtraBookingData = Awaited<
-  ReturnType<typeof import("./bookingRepo").loadRelated>
+  ReturnType<typeof loadRelated>
 >
 
 export type LoadedPackage = ExtraBookingData["packages"][number]
