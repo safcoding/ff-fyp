@@ -1,22 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   approveBooking as approveBookingAction,
   changeBookingStatus,
   deleteBooking as deleteBookingAction,
   getBookingById,
-  getBookings,
   getMonthlyBookingReport,
   sendTestBookingEmail,
   updateBooking as updateBookingAction,
 } from '@/features/booking/server/bookingActions'
+import { getBookingsPage } from '@/features/booking/server/bookingPageActions'
 import { getDiscounts } from '@/features/discount/server/discountActions'
 import { useSession } from '@/lib/auth-client'
 import { isAdminUser } from '@/lib/authz'
-import { buildQuotationPdfBlob } from '@/components/booking/QuotationPdf'
-import { buildMonthlyReportPdfBlob } from '@/components/booking/MonthlyReportPdf'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DeleteDialog } from '@/components/deleteDialog'
 import { booking_status, org_categories, states } from '@/generated/prisma/enums'
@@ -57,7 +55,18 @@ const bookingTabs = [
 
 type BookingStatus = (typeof bookingStatusOptions)[number]
 type BookingTab = (typeof bookingTabs)[number]['id']
-type AdminBooking = Awaited<ReturnType<typeof getBookings>>[number]
+type BookingsPageResponse = Awaited<ReturnType<typeof getBookingsPage>>
+type AdminBooking = BookingsPageResponse['items'][number]
+type BookingAddonItem = {
+  addon_id: number
+  addon_name: string
+  addon_quantity: number
+}
+type BookingFoodItem = {
+  food_id: number
+  food_name: string
+  food_quantity: number
+}
 type EditBookingValues = {
   booking_date: string
   booking_status: BookingStatus
@@ -126,28 +135,6 @@ function formatReportFileMonth(month: string) {
   return month.replace('-', '')
 }
 
-function getBookingCreatedTime(booking: AdminBooking) {
-  return new Date(booking.created_at ?? booking.booking_date ?? 0).getTime()
-}
-
-function getBookingStatusRank(status: BookingStatus | null | undefined) {
-  if (status === 'PENDING') return 0
-  if (status === 'POSTPONED') return 1
-  if (status === 'CANCELLED') return 2
-  return 3
-}
-
-function sortBookingsForTab(bookings: Array<AdminBooking>, tab: BookingTab) {
-  return [...bookings].sort((a, b) => {
-    if (tab === 'all') {
-      const statusRank = getBookingStatusRank(a.booking_status) - getBookingStatusRank(b.booking_status)
-      if (statusRank !== 0) return statusRank
-    }
-
-    return getBookingCreatedTime(b) - getBookingCreatedTime(a)
-  })
-}
-
 function InfoRow({
   label,
   value,
@@ -208,49 +195,47 @@ function BookingPage() {
   const [currentPage, setCurrentPage] = useState(1)
 
   const bookingQuery = useQuery({
-    queryKey: ['admin-bookings'],
-    queryFn: getBookings,
+    queryKey: ['admin-bookings', activeTab, currentPage, bookingsPerPage],
+    queryFn: () =>
+      getBookingsPage({
+        data: {
+          statusGroup: activeTab,
+          page: currentPage,
+          pageSize: bookingsPerPage,
+        },
+      }),
+    staleTime: 30_000,
   })
 
   const discountsQuery = useQuery({
     queryKey: ['admin-discounts'],
     queryFn: () => getDiscounts(),
     enabled: isAdmin,
+    staleTime: 60_000,
   })
 
-  const bookingGroups = useMemo(() => {
-    const bookings = bookingQuery.data ?? []
-
-    return {
-      pending: sortBookingsForTab(
-        bookings.filter((booking) => booking.booking_status === 'PENDING'),
-        'pending',
-      ),
-      completed: sortBookingsForTab(
-        bookings.filter((booking) => booking.booking_status === 'APPROVED'),
-        'completed',
-      ),
-      other: sortBookingsForTab(
-        bookings.filter((booking) =>
-          booking.booking_status === 'POSTPONED' || booking.booking_status === 'CANCELLED',
-        ),
-        'other',
-      ),
-      all: sortBookingsForTab(bookings, 'all'),
-    }
-  }, [bookingQuery.data])
-
-  const activeBookings = bookingGroups[activeTab]
-  const totalPages = Math.max(1, Math.ceil(activeBookings.length / bookingsPerPage))
+  const activeBookings = bookingQuery.data?.items ?? []
+  const totalBookings = bookingQuery.data?.total ?? 0
+  const bookingCounts = bookingQuery.data?.counts ?? {
+    pending: 0,
+    completed: 0,
+    other: 0,
+    all: 0,
+  }
+  const totalPages = Math.max(1, Math.ceil(totalBookings / bookingsPerPage))
   const safeCurrentPage = Math.min(currentPage, totalPages)
-  const paginatedBookings = activeBookings.slice(
-    (safeCurrentPage - 1) * bookingsPerPage,
-    safeCurrentPage * bookingsPerPage,
-  )
-  const pageStart = activeBookings.length
+  const paginatedBookings = activeBookings
+  const pageStart = totalBookings
     ? (safeCurrentPage - 1) * bookingsPerPage + 1
     : 0
-  const pageEnd = Math.min(safeCurrentPage * bookingsPerPage, activeBookings.length)
+  const pageEnd = Math.min(safeCurrentPage * bookingsPerPage, totalBookings)
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages)
+      setExpandedBookingId(null)
+    }
+  }, [currentPage, totalPages])
 
   function switchTab(tab: BookingTab) {
     setActiveTab(tab)
@@ -299,6 +284,9 @@ function BookingPage() {
   const quotationMutation = useMutation({
     mutationFn: getBookingById,
     onSuccess: async (booking) => {
+      const { buildQuotationPdfBlob } = await import(
+        '@/components/booking/QuotationPdf'
+      )
       const blob = await buildQuotationPdfBlob(booking)
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -312,6 +300,9 @@ function BookingPage() {
   const monthlyReportMutation = useMutation({
     mutationFn: getMonthlyBookingReport,
     onSuccess: async (report) => {
+      const { buildMonthlyReportPdfBlob } = await import(
+        '@/components/booking/MonthlyReportPdf'
+      )
       const blob = await buildMonthlyReportPdfBlob(report)
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -390,12 +381,12 @@ function BookingPage() {
         slot_id: editingBooking.slot_id,
         packages: editingBooking.packages,
         addons:
-          editingBooking.booking_addons?.map((addon) => ({
+          editingBooking.booking_addons?.map((addon: BookingAddonItem) => ({
             addon_id: addon.addon_id,
             quantity: addon.addon_quantity,
           })) ?? [],
         foods:
-          editingBooking.booking_foods?.map((food) => ({
+          editingBooking.booking_foods?.map((food: BookingFoodItem) => ({
             food_id: food.food_id,
             quantity: food.food_quantity,
           })) ?? [],
@@ -466,7 +457,7 @@ function BookingPage() {
               </p>
             </div>
             <div className="rounded-md border border-[#445412]/10 bg-stone-50 px-3 py-2 text-sm text-stone-600">
-              Showing {pageStart}-{pageEnd} of {activeBookings.length}
+              Showing {pageStart}-{pageEnd} of {totalBookings}
             </div>
           </div>
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
@@ -492,7 +483,7 @@ function BookingPage() {
                         active ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-600',
                       )}
                     >
-                      {bookingGroups[tab.id].length}
+                      {bookingCounts[tab.id]}
                     </span>
                   </span>
                   <span
@@ -522,7 +513,8 @@ function BookingPage() {
               ) : null}
               {paginatedBookings.map((booking) => {
                 const isExpanded = expandedBookingId === booking.booking_id
-                const bookingStatus = booking.booking_status ?? 'PENDING'
+                const bookingStatus = (booking.booking_status ??
+                  'PENDING') as BookingStatus
                 const styles = statusStyles[bookingStatus]
                 const isPending =
                   (booking.booking_status ?? '').toUpperCase() === 'PENDING'
@@ -776,7 +768,7 @@ function BookingPage() {
                         <div className="grid gap-3 md:grid-cols-2">
                           <DetailPanel title="Add-ons">
                             {booking.booking_addons?.length ? (
-                              booking.booking_addons.map((addon) => (
+                              booking.booking_addons.map((addon: BookingAddonItem) => (
                                 <InfoRow
                                   key={`${booking.booking_id}-addon-${addon.addon_id}`}
                                   label={addon.addon_name}
@@ -792,7 +784,7 @@ function BookingPage() {
 
                           <DetailPanel title="Foods">
                             {booking.booking_foods?.length ? (
-                              booking.booking_foods.map((food) => (
+                              booking.booking_foods.map((food: BookingFoodItem) => (
                                 <InfoRow
                                   key={`${booking.booking_id}-food-${food.food_id}`}
                                   label={food.food_name}
@@ -866,7 +858,7 @@ function BookingPage() {
                   </div>
                 )
               })}
-              {activeBookings.length > bookingsPerPage ? (
+              {totalBookings > bookingsPerPage ? (
                 <div className="flex flex-col gap-3 rounded-md border border-stone-200 bg-white/80 p-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm text-stone-500">
                     Page {safeCurrentPage} of {totalPages}

@@ -1,22 +1,23 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import EmblaCarousel from 'embla-carousel'
+import { Image } from '@unpic/react'
 
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
   const emblaRef = useRef<HTMLDivElement | null>(null)
-  const [emblaApi, setEmblaApi] = useState<ReturnType<typeof EmblaCarousel> | null>(null)
+  const emblaApiRef = useRef<ReturnType<typeof EmblaCarousel> | null>(null)
 
-  const heroImageSrc = '/banner.jpeg'
+  const heroImageSrc = '/banner.webp'
   const mapImageSrc = '/ff-map.png'
   const carouselImages = [
-    { src: '/carousel/2.png', alt: 'Burst of flora, fauna' },
-    { src: '/carousel/3.png', alt: 'Our ladies...' },
-    { src: '/carousel/4.png', alt: 'Tractor Tour' },
-    { src: '/carousel/5.png', alt: 'Fresh picks' },
-    { src: '/carousel/6.png', alt: 'Enjoy the Barrel ride around the mini zoo' },
-    { src: '/carousel/7.png', alt: 'Indulge in a spectrum of tasttes' },
+    { src: '/carousel/2.webp', alt: 'Burst of flora, fauna' },
+    { src: '/carousel/3.webp', alt: 'Our ladies...' },
+    { src: '/carousel/4.webp', alt: 'Tractor Tour' },
+    { src: '/carousel/5.webp', alt: 'Fresh picks' },
+    { src: '/carousel/6.webp', alt: 'Enjoy the Barrel ride around the mini zoo' },
+    { src: '/carousel/7.webp', alt: 'Indulge in a spectrum of tasttes' },
   ]
 
   useEffect(() => {
@@ -24,8 +25,9 @@ function App() {
       return
     }
     const api = EmblaCarousel(emblaRef.current, { loop: true })
-    setEmblaApi(api)
+    emblaApiRef.current = api
     return () => {
+      emblaApiRef.current = null
       api.destroy()
     }
   }, [])
@@ -34,7 +36,16 @@ function App() {
     <main className="overflow-x-hidden bg-[#fbf0d8]">
       <section className="relative min-h-[min(760px,88vh)] overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImageSrc} alt="Farm Fresh @ UPM Banner" className="h-full w-full object-cover" />
+          <Image
+            src={heroImageSrc}
+            alt="Farm Fresh @ UPM Banner"
+            width={1920}
+            height={1080}
+            layout="fullWidth"
+            loading="eager"
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="absolute inset-0 bg-black/20" />
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center text-[#fbf0d8] sm:px-6">
@@ -60,7 +71,15 @@ function App() {
             <div className="flex">
               {carouselImages.map((image) => (
                 <div key={image.src} className="min-w-0 flex-[0_0_100%]">
-                  <img src={image.src} alt={image.alt} className="aspect-[4/3] w-full object-cover sm:aspect-[16/9]" />
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={1600}
+                    height={900}
+                    layout="fullWidth"
+                    loading="lazy"
+                    className="aspect-[4/3] w-full object-cover sm:aspect-[16/9]"
+                  />
                 </div>
               ))}
             </div>
@@ -71,14 +90,14 @@ function App() {
               <button
                 type="button"
                 className="h-10 rounded-md border border-[#445412] px-4 text-sm font-semibold hover:bg-[#445412] hover:text-[#fbf0d8]"
-                onClick={() => emblaApi?.scrollPrev()}
+                onClick={() => emblaApiRef.current?.scrollPrev()}
               >
                 Prev
               </button>
               <button
                 type="button"
                 className="h-10 rounded-md border border-[#445412] px-4 text-sm font-semibold hover:bg-[#445412] hover:text-[#fbf0d8]"
-                onClick={() => emblaApi?.scrollNext()}
+                onClick={() => emblaApiRef.current?.scrollNext()}
               >
                 Next
               </button>
@@ -91,9 +110,13 @@ function App() {
             <h2 className="font-fraunces text-3xl font-black text-[#fbf0d8] sm:text-4xl">Find Your Way Around</h2>
           </div>
           <div className="mx-auto mt-6 max-w-6xl overflow-hidden rounded-md bg-[#fbf0d8]/10 p-2 sm:p-4">
-            <img
+            <Image
               src={mapImageSrc}
               alt="Map of the attraction"
+              width={1920}
+              height={1080}
+              layout="fullWidth"
+              loading="lazy"
               className="h-full w-full object-contain"
             />
           </div>

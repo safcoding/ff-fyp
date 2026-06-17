@@ -57,6 +57,10 @@ model bookings {
   booking_packages     booking_packages[]
   discounts            discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: Restrict, map: "discount_id_fkey")
   slots                slots              @relation(fields: [slot_id], references: [slot_id], map: "slot_fkey")
+
+  @@index([booking_status])
+  @@index([created_at])
+  @@index([booking_date])
 }
 
 model foods {

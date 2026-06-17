@@ -81,6 +81,19 @@ export const monthlyReportSchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/),
 })
 
+export const bookingStatusGroupSchema = z.enum([
+  'pending',
+  'completed',
+  'other',
+  'all',
+])
+
+export const getBookingsSchema = z.object({
+  statusGroup: bookingStatusGroupSchema.default('pending'),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(50).default(8),
+})
+
 export type BookingPackageInput = z.infer<typeof bookingPackagesSchema>
 export type BookingFoodInput = z.infer<typeof bookingFoodSchema>
 export type BookingAddonInput = z.infer<typeof bookingAddonSchema>
@@ -88,3 +101,4 @@ export type BookingInput = z.infer<typeof bookingSchema>
 export type CreateBookingInput = z.infer<typeof createBookingSchema>
 export type BookingFormInput = CreateBookingInput | BookingInput
 export type BookingIdOnly = Pick<z.infer<typeof bookingSchema>, "booking_id">
+export type BookingStatusGroup = z.infer<typeof bookingStatusGroupSchema>

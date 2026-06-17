@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useSession, signIn } from '@/lib/auth-client'
-import { Leaf, Lock, Mail } from 'lucide-react'
+import { Lock, Mail } from 'lucide-react'
+import { Image } from '@unpic/react'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -39,7 +40,15 @@ function LoginPage() {
         {/* Green header strip */}
         <div className="bg-[#445412] px-8 py-7 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <img src={logo} className=" w-[20vh]" />
+            <Image
+              src={logo}
+              alt="Farm Fresh @ UPM Logo"
+              width={170}
+              height={120}
+              layout="constrained"
+              loading="eager"
+              className="w-[20vh]"
+            />
           </div>
           <p className="text-[#fbf0d8]/60 text-xs uppercase tracking-widest"> Farm Fresh @ UPM Admin Portal</p>
         </div>
