@@ -151,7 +151,7 @@ function PackagesPage() {
       price_non_my_kid: pkg.price_non_my_kid,
       price_non_my_senior: pkg.price_non_my_senior,
       price_non_my_oku: pkg.price_non_my_oku,
-      activity_ids: pkg.activity_ids ?? [],
+      activity_ids: pkg.activity_ids,
     })
   }
 

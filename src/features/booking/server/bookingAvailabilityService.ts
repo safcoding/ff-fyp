@@ -145,7 +145,7 @@ export const getBookingAvailabilityForMonth = async (data: {
     }
 
     const dateKey = booking.booking_date.toISOString().slice(0, 10)
-    const visitors = booking.pax_total ?? 0
+    const visitors = booking.pax_total
     const slotMap =
       bookedByDateAndSlot.get(dateKey) ?? new Map<string, number>()
 

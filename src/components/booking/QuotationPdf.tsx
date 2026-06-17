@@ -280,8 +280,8 @@ export const QuotationDocument = ({
       const packageName = pkg.package_name ?? pkg.package_id
 
       paxLineMeta.forEach((meta) => {
-        const qty = Number(pkg[meta.paxKey] ?? 0)
-        const price = Number(pkg[meta.priceKey] ?? 0)
+        const qty = Number(pkg[meta.paxKey])
+        const price = Number(pkg[meta.priceKey])
 
         if (qty <= 0) {
           return
@@ -297,7 +297,7 @@ export const QuotationDocument = ({
       })
     })
 
-    if (booking.booking_addons && booking.booking_addons.length) {
+    if (booking.booking_addons.length) {
       booking.booking_addons.forEach((addon) => {
         items.push({
           desc: addon.addon_name,
@@ -309,7 +309,7 @@ export const QuotationDocument = ({
       })
     }
 
-    if (booking.booking_foods && booking.booking_foods.length) {
+    if (booking.booking_foods.length) {
       booking.booking_foods.forEach((food) => {
         items.push({
           desc: food.food_name,

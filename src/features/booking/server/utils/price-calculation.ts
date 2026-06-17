@@ -1,12 +1,12 @@
-import z from 'zod'
-import {
+import type z from 'zod'
+import type {
   bookingPackagesSchema,
   bookingFoodSchema,
   bookingAddonSchema,
 } from '@/schemas/bookingSchemas'
-import { packageSchema } from '@/schemas/packageSchemas'
-import { foodSchema } from '@/schemas/foodSchemas'
-import { addonSchema } from '@/schemas/addonSchemas'
+import type { packageSchema } from '@/schemas/packageSchemas'
+import type { foodSchema } from '@/schemas/foodSchemas'
+import type { addonSchema } from '@/schemas/addonSchemas'
 
 type PackageRow = z.infer<typeof bookingPackagesSchema>
 type FoodRow = z.infer<typeof bookingFoodSchema>
@@ -27,8 +27,8 @@ type FoodPrice = Pick<z.infer<typeof foodSchema>, 'food_price'>
 type AddonPrice = Pick<z.infer<typeof addonSchema>, 'addon_price'>
 
 type PackagePriceMap = Record<string, PackagePrice>
-type FoodPriceMap = Record<number, FoodPrice>
-type AddonPriceMap = Record<number, AddonPrice>
+type FoodPriceMap = Partial<Record<number, FoodPrice>>
+type AddonPriceMap = Partial<Record<number, AddonPrice>>
 
 export const calculatePackageSubtotal = (
   pax: PackageRow,

@@ -166,7 +166,7 @@ function UsersPage() {
                 <tr key={user.id} className="hover:bg-[#fbf0d8]/40 transition-colors">
                   <td className="px-5 py-3.5 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-[#445412]/10 flex items-center justify-center text-[#445412] font-bold text-sm flex-shrink-0">
-                      {user.name?.charAt(0).toUpperCase() ?? <UserIcon className="w-4 h-4" />}
+                      {user.name ? user.name.charAt(0).toUpperCase() : <UserIcon className="w-4 h-4" />}
                     </div>
                     <div>
                       <span className="block font-semibold text-stone-800">{user.name}</span>
@@ -193,7 +193,7 @@ function UsersPage() {
                       <button
                         onClick={() => {
                           setEditingUser(user as unknown as UserRecord)
-                          setFormData({ name: user.name ?? '', email: user.email ?? '', password: '', role: user.role as Role })
+                          setFormData({ name: user.name, email: user.email, password: '', role: user.role as Role })
                           setIsModalOpen(true)
                         }}
                         className="p-2 rounded-lg text-stone-400 hover:text-[#445412] hover:bg-[#445412]/10 transition-colors"

@@ -1,5 +1,5 @@
-import z from "zod"
-import { bookingPackagesSchema} from "@/schemas/bookingSchemas"
+import type z from "zod"
+import type { bookingPackagesSchema } from "@/schemas/bookingSchemas"
 
 type PackageRow = z.infer<typeof bookingPackagesSchema>
 type PaxTotals = {
