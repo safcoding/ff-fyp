@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
 
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
 import { Button } from '@/components/ui/button'
 import { DeleteDialog } from '@/components/deleteDialog'
 import { Input } from '@/components/ui/input'
@@ -441,7 +441,7 @@ function SlotsPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Slots" description="Review tour timing, slot type, and capacity.">
-          {slotsQuery.isPending ? <p>Loading slots...</p> : null}
+          {slotsQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {slotsQuery.isError ? (
             <p className="text-sm text-red-600">{slotsQuery.error.message}</p>
           ) : null}

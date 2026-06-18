@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { authClient } from '@/lib/auth-client' // Your Better Auth configuration hook
 import { requireAdminRoute } from '@/lib/admin-route-guard'
 import { Plus, Edit2, Trash2, Shield, User as UserIcon, X } from 'lucide-react'
+import { AdminListSkeleton } from '@/components/admin/AdminPageShell'
 
 export const Route = createFileRoute('/admin/users')({
   beforeLoad: requireAdminRoute,
@@ -150,7 +151,7 @@ function UsersPage() {
 
       {/* Table */}
       {isLoading ? (
-        <p className="text-stone-400 text-sm">Loading users...</p>
+        <AdminListSkeleton rows={5} />
       ) : (
         <div className="bg-white border border-[#445412]/10 rounded-2xl overflow-hidden shadow-sm">
           <table className="w-full text-left text-sm">

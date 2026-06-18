@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from "@/components/admin/AdminPageShell"
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Input } from "@/components/ui/input"
@@ -154,7 +154,7 @@ function FoodsPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Foods" description="Scan current menu items and update prices.">
-          {foodsQuery.isPending ? <p>Loading foods...</p> : null}
+          {foodsQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {foodsQuery.isError ? <p className="text-sm text-red-600">{foodsQuery.error.message}</p> : null}
           {foodsQuery.data ? (
             <div className="grid gap-3">

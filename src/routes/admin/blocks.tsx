@@ -4,7 +4,7 @@ import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
 
 import { requireAdminRoute } from '@/lib/admin-route-guard'
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
 import { Button } from '@/components/ui/button'
 import { DeleteDialog } from '@/components/deleteDialog'
 import { Input } from '@/components/ui/input'
@@ -168,7 +168,7 @@ function BlocksPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Blocks" description="Upcoming blocked dates and slot-specific closures.">
-          {blocksQuery.isPending ? <p>Loading blocks...</p> : null}
+          {blocksQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {blocksQuery.isError ? (
             <p className="text-sm text-red-600">{blocksQuery.error.message}</p>
           ) : null}

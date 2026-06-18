@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Switch } from "@/components/ui/switch"
@@ -166,7 +166,7 @@ function ActivityPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Activities" description="Check current activity descriptions and visibility.">
-          {activitiesQuery.isPending ? <p>Loading activities...</p> : null}
+          {activitiesQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {activitiesQuery.isError ? <p className="text-sm text-red-600">{activitiesQuery.error.message}</p> : null}
           {activitiesQuery.data ? (
             <div className="grid gap-3">

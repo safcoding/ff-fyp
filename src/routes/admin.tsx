@@ -1,4 +1,11 @@
-import { createFileRoute, Link, Outlet, redirect, useLocation } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+  useLocation,
+  useRouterState,
+} from '@tanstack/react-router'
 import { signOut } from '@/lib/auth-client'
 import { getSessionFn } from '@/lib/auth-serverFn'
 import { isAdminUser } from '@/lib/authz'
@@ -45,6 +52,10 @@ const navItems = [
 
 function AdminLayout() {
   const location = useLocation()
+  const isRoutePending = useRouterState({
+    select: (state) =>
+      state.status === 'pending' || state.isLoading || state.isTransitioning,
+  })
   const { session } = Route.useRouteContext()
   const visibleNavItems = navItems.filter((item) => !item.adminOnly || isAdminUser(session.user))
 
@@ -139,7 +150,15 @@ function AdminLayout() {
         </nav>
 
         {/* Page content */}
-        <main className="flex-1 px-4 py-5 sm:px-6">
+        <main className="relative flex-1 px-4 py-5 sm:px-6">
+          <div
+            className={`pointer-events-none absolute inset-x-0 top-0 h-1 overflow-hidden transition-opacity ${
+              isRoutePending ? 'opacity-100' : 'opacity-0'
+            }`}
+            aria-hidden={!isRoutePending}
+          >
+            <div className="h-full w-1/2 animate-[admin-route-pending_1.1s_ease-in-out_infinite] rounded-full bg-amber-500" />
+          </div>
           <Outlet />
         </main>
       </div>

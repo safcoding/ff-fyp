@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
 import { getActivities } from "@/features/activities/server/activityActions"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
@@ -312,7 +312,7 @@ function PackagesPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Packages" description="Check availability and edit package content.">
-          {packagesQuery.isPending ? <p>Loading packages...</p> : null}
+          {packagesQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {packagesQuery.isError ? <p className="text-sm text-red-600">{packagesQuery.error.message}</p> : null}
           {packagesQuery.data ? (
             <div className="grid gap-3">

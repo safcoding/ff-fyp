@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 
 import { requireAdminRoute } from '@/lib/admin-route-guard'
-import { AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
+import { AdminFormSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill } from '@/components/admin/AdminPageShell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -71,6 +71,11 @@ function SettingsPage() {
       />
       <div className="max-w-5xl">
       <AdminSectionCard title="Company & Booking Settings" description="Keep quotation details and booking rules aligned with the business.">
+          {settingsQuery.isPending ? <AdminFormSkeleton fields={6} /> : null}
+          {settingsQuery.isError ? (
+            <p className="text-sm text-red-600">{settingsQuery.error.message}</p>
+          ) : null}
+          {!settingsQuery.isPending && !settingsQuery.isError ? (
           <form
             className="grid gap-4 md:grid-cols-2"
             onSubmit={(e) => {
@@ -179,6 +184,7 @@ function SettingsPage() {
               ) : null}
             </div>
           </form>
+          ) : null}
       </AdminSectionCard>
       </div>
     </div>
