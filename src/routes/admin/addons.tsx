@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill, AdminStatusBadge } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Input } from "@/components/ui/input"
@@ -189,7 +189,7 @@ function AddonsPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Add-ons" description="Review pricing, availability, and edit details quickly.">
-          {addonsQuery.isPending ? <p>Loading addons...</p> : null}
+          {addonsQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {addonsQuery.isError ? <p className="text-sm text-red-600">{addonsQuery.error.message}</p> : null}
           {addonsQuery.data ? (
             <div className="grid gap-3">

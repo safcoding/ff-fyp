@@ -81,3 +81,49 @@ export function AdminItemRow({ children, className }: { children: ReactNode; cla
     </div>
   )
 }
+
+export function AdminSkeletonLine({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "h-3 animate-pulse rounded-full bg-[#445412]/10",
+        className,
+      )}
+    />
+  )
+}
+
+export function AdminListSkeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="grid gap-3" aria-label="Loading content">
+      {Array.from({ length: rows }).map((_, index) => (
+        <AdminItemRow key={index}>
+          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+            <div className="space-y-3">
+              <AdminSkeletonLine className="h-4 w-2/5" />
+              <AdminSkeletonLine className="w-4/5" />
+              <AdminSkeletonLine className="w-3/5" />
+            </div>
+            <div className="flex gap-2">
+              <AdminSkeletonLine className="h-8 w-16 rounded-md" />
+              <AdminSkeletonLine className="h-8 w-16 rounded-md" />
+            </div>
+          </div>
+        </AdminItemRow>
+      ))}
+    </div>
+  )
+}
+
+export function AdminFormSkeleton({ fields = 6 }: { fields?: number }) {
+  return (
+    <div className="grid gap-4 md:grid-cols-2" aria-label="Loading form">
+      {Array.from({ length: fields }).map((_, index) => (
+        <div key={index} className="space-y-2">
+          <AdminSkeletonLine className="w-28" />
+          <AdminSkeletonLine className="h-10 w-full rounded-md" />
+        </div>
+      ))}
+    </div>
+  )
+}

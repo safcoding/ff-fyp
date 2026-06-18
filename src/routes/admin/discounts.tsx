@@ -4,7 +4,7 @@ import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 
 import { requireAdminRoute } from "@/lib/admin-route-guard"
-import { AdminItemRow, AdminPageHeader, AdminSectionCard, AdminStatPill } from "@/components/admin/AdminPageShell"
+import { AdminItemRow, AdminListSkeleton, AdminPageHeader, AdminSectionCard, AdminStatPill } from "@/components/admin/AdminPageShell"
 import { Button } from "@/components/ui/button"
 import { DeleteDialog } from "@/components/deleteDialog"
 import { Input } from "@/components/ui/input"
@@ -164,7 +164,7 @@ function DiscountsPage() {
       </AdminSectionCard>
 
       <AdminSectionCard title="Existing Discounts" description="Compare discount type, value, and edit codes.">
-          {discountsQuery.isPending ? <p>Loading discounts...</p> : null}
+          {discountsQuery.isPending ? <AdminListSkeleton rows={4} /> : null}
           {discountsQuery.isError ? <p className="text-sm text-red-600">{discountsQuery.error.message}</p> : null}
           {discountsQuery.data ? (
             <div className="grid gap-3">

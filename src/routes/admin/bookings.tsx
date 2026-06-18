@@ -17,6 +17,7 @@ import { useSession } from '@/lib/auth-client'
 import { isAdminUser } from '@/lib/authz'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DeleteDialog } from '@/components/deleteDialog'
+import { AdminListSkeleton } from '@/components/admin/AdminPageShell'
 import { booking_status, org_categories, states } from '@/generated/prisma/enums'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -500,7 +501,7 @@ function BookingPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {bookingQuery.isPending ? <p>Loading bookings...</p> : null}
+          {bookingQuery.isPending ? <AdminListSkeleton rows={bookingsPerPage} /> : null}
           {bookingQuery.isError ? (
             <p className="text-sm text-red-600">{bookingQuery.error.message}</p>
           ) : null}
