@@ -14,6 +14,17 @@ const adminUserIds = process.env.BETTER_AUTH_ADMIN_USER_IDS
       .filter(Boolean)
   : undefined
 
+const trustedOrigins = [
+  'http://localhost:3000',
+  'https://ff-fyp.vercel.app',
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+  process.env.PUBLIC_APP_URL,
+  process.env.VITE_PUBLIC_APP_URL,
+  process.env.APP_URL,
+]
+  .filter((origin): origin is string => Boolean(origin))
+  .map((origin) => origin.replace(/\/$/, ''))
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
@@ -22,11 +33,7 @@ export const auth = betterAuth({
     enabled: true,
     disableSignUp: true,
   },
-  trustedOrigins: [
-    'http://localhost:3000',
-    'https://ff-fyp.vercel.app',
-    'https://ff-fyp-git-optimization-safcodings-projects.vercel.app/login',
-  ],
+  trustedOrigins,
   plugins: [
     admin({
       defaultRole: 'user',
