@@ -32,7 +32,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Fam Fresh @ UPM',
+        title: 'Farm Fresh @ UPM',
       },
     ],
     links: [
@@ -40,6 +40,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         rel: 'stylesheet',
         href: appCss,
       },
+  {
+    rel: 'icon',
+    href: '/ff-logo.ico',
+  },
     ],
   }),
   shellComponent: RootDocument,
