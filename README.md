@@ -1,257 +1,218 @@
-Welcome to your new TanStack Start app! 
+# Farm Fresh @ UPM Booking System
 
-# Getting Started
+A TanStack Start web application for Farm Fresh @ UPM tour package discovery, booking submission, booking administration, package management, slot management, and PDF quotation/report generation.
 
-To run this application:
+## Tech Stack
+
+- React 19 with TanStack Start and TanStack Router
+- TanStack Query for client/server data fetching
+- Prisma with PostgreSQL/Neon
+- Better Auth for authentication
+- Tailwind CSS for styling
+- React PDF for quotation and monthly report generation
+- Unpic for optimized image rendering
+- Vercel for deployment
+
+## Getting Started
+
+Install dependencies:
 
 ```bash
 npm install
+```
+
+Create a local environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+If `.env.example` is not available, create `.env.local` manually and provide the variables listed in the environment section below.
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-# Building For Production
+The app runs on:
 
-To build this application for production:
+```txt
+http://localhost:3000
+```
+
+## Environment Variables
+
+Required for database/auth:
+
+```env
+DATABASE_URL="postgresql://..."
+BETTER_AUTH_SECRET="..."
+```
+
+Optional/admin related:
+
+```env
+BETTER_AUTH_ADMIN_USER_IDS="user_id_1,user_id_2"
+PUBLIC_APP_URL="http://localhost:3000"
+VITE_PUBLIC_APP_URL="http://localhost:3000"
+APP_URL="http://localhost:3000"
+```
+
+Required for booking approval emails:
+
+```env
+SMTP_HOST="..."
+SMTP_PORT="587"
+SMTP_USER="..."
+SMTP_PASS="..."
+SMTP_FROM="Farm Fresh @ UPM <noreply@example.com>"
+```
+
+Optional test email target:
+
+```env
+TEST_EMAIL_TO="you@example.com"
+```
+
+Generate a Better Auth secret with:
 
 ```bash
+npx -y @better-auth/cli secret
+```
+
+## Database
+
+Generate the Prisma client:
+
+```bash
+npm run db:generate
+```
+
+Apply schema changes locally with a migration:
+
+```bash
+npm run db:migrate
+```
+
+Push schema changes directly when a migration is not needed:
+
+```bash
+npm run db:push
+```
+
+Open Prisma Studio:
+
+```bash
+npm run db:studio
+```
+
+Seed data:
+
+```bash
+npm run db:seed
+```
+
+Indexes defined in `prisma/schema.prisma` must be applied to the real database with a Prisma migration or `db:push`. Editing the schema alone does not update the deployed database.
+
+## Available Scripts
+
+```bash
+npm run dev       # Start local development server
+npm run build     # Build production output
+npm run preview   # Preview production build
+npm run test      # Run Vitest tests
+npm run lint      # Run ESLint
+npm run format    # Check Prettier formatting
+npm run check     # Write Prettier formatting and auto-fix ESLint
+```
+
+## Project Structure
+
+```txt
+src/routes/                 File-based app routes
+src/routes/admin/           Protected admin pages
+src/components/             Shared UI and feature components
+src/features/*/server/      Server actions and business logic
+src/schemas/                Zod schemas and shared input types
+src/lib/                    Auth, guards, and shared utilities
+src/generated/prisma/       Generated Prisma client files
+prisma/schema.prisma        Database schema
+public/                     Static images, icons, manifest, robots.txt
+```
+
+## Images And Icons
+
+Static assets live in `public/` and are referenced from the site root. For example:
+
+```txt
+public/ff-logo.ico -> /ff-logo.ico
+public/banner.webp -> /banner.webp
+```
+
+The browser favicon and site title are configured in:
+
+```txt
+src/routes/__root.tsx
+```
+
+For large public images:
+
+- Prefer WebP for compatibility and size.
+- Use `1920 x 1080` for full-width hero images.
+- Use smaller responsive versions where possible, such as `1280 x 720` and `768 x 432`.
+- Keep hero images roughly `200 KB - 500 KB` when quality allows.
+- Use `@unpic/react`'s `Image` component for rendered public images.
+
+## Admin Performance Notes
+
+The admin booking page uses server-side filtering and pagination instead of loading all bookings in the browser. PDF generation libraries are dynamically imported only when generating quotation or monthly report downloads, so they do not block the initial admin bookings route.
+
+Admin pages also use:
+
+- Route-level pending feedback
+- Skeleton loading states
+- TanStack Query stale times to reduce repeated fetches
+- Prisma indexes for common booking filters and sorting
+
+## CI/CD
+
+This project is suitable for a GitHub Actions pipeline that runs:
+
+```bash
+npm ci
+npm run lint
 npm run build
+npm run test -- --passWithNoTests
 ```
 
-## Testing
+For Vercel deployment, configure the same required environment variables in the Vercel project settings.
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+Recommended workflow:
 
-```bash
-npm run test
-```
+1. Push changes to GitHub.
+2. GitHub Actions runs lint, build, and tests.
+3. Vercel creates a preview deployment for pull requests.
+4. Merging to the production branch triggers the production deployment.
 
-## Styling
+## Deployment
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+The app is deployed on Vercel. Before deploying, make sure:
 
-### Removing Tailwind CSS
+- `DATABASE_URL` points to the production database.
+- `BETTER_AUTH_SECRET` is set.
+- SMTP variables are set if approval emails are enabled.
+- Prisma schema changes have been applied to the production database.
+- The production build passes locally with `npm run build`.
 
-If you prefer not to use Tailwind CSS:
+## Common Checks
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm install @tailwindcss/vite tailwindcss -D`
-
-## Linting & Formatting
-
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+Run before opening a pull request:
 
 ```bash
 npm run lint
-npm run format
-npm run check
+npm run build
+npm run test -- --passWithNoTests
 ```
 
-
-## Setting up Neon
-
-When running the `dev` command, the `@neondatabase/vite-plugin-postgres` will identify there is not a database setup. It will then create and seed a claimable database.
-
-It is the same process as [Neon Launchpad](https://neon.new).
-
-> [!IMPORTANT]  
-> Claimable databases expire in 72 hours.
-
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpm dlx shadcn@latest add button
-```
-
-
-## Setting up Better Auth
-
-1. Generate and set the `BETTER_AUTH_SECRET` environment variable in your `.env.local`:
-
-   ```bash
-   npx -y @better-auth/cli secret
-   ```
-
-2. Visit the [Better Auth documentation](https://www.better-auth.com) to unlock the full potential of authentication in your app.
-
-### Adding a Database (Optional)
-
-Better Auth can work in stateless mode, but to persist user data, add a database:
-
-```typescript
-// src/lib/auth.ts
-import { betterAuth } from "better-auth";
-import { Pool } from "pg";
-
-export const auth = betterAuth({
-  database: new Pool({
-    connectionString: process.env.DATABASE_URL,
-  }),
-  // ... rest of config
-});
-```
-
-Then run migrations:
-
-```bash
-npx -y @better-auth/cli migrate
-```
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+If CI fails, read the failing step first. Lint failures usually mean code style or TypeScript-aware ESLint rules need fixing. Build failures usually mean a TypeScript, bundling, server/client boundary, or environment issue.
