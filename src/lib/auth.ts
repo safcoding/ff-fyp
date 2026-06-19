@@ -22,6 +22,11 @@ export const auth = betterAuth({
     enabled: true,
     disableSignUp: true,
   },
+  trustedOrigins: [
+    'http://localhost:3000',
+    'https://ff-fyp.vercel.app',
+    'https://ff-fyp-git-optimization-safcodings-projects.vercel.app/login',
+  ],
   plugins: [
     admin({
       defaultRole: 'user',
