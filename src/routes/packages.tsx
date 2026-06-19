@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import EmblaCarousel from 'embla-carousel'
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { Image } from '@unpic/react'
+import { ChevronLeft, ChevronRight, MoveHorizontal, X } from 'lucide-react'
 
 export const Route = createFileRoute("/packages")({ component: PackagesPage })
 
@@ -10,6 +11,7 @@ const header = '/tour-packages.webp'
 
 function PackagesPage(){
   const emblaRef = useRef<HTMLDivElement | null>(null)
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
 
   const guideSrc = '/guide.png'
   const foodSrc = '/foods.jpeg'
@@ -19,6 +21,14 @@ function PackagesPage(){
     { src: '/pack-car/14.png', alt: 'Moo Moo' },
     { src: '/pack-car/15.png', alt: 'Eden' },
   ]
+  const addOnImages = [
+    { src: guideSrc, alt: 'Guide add-on details' },
+    { src: foodSrc, alt: 'Food add-on details' },
+  ]
+  const previewImages = [...carouselImages, ...addOnImages]
+  const selectedImage =
+    selectedImageIndex === null ? null : previewImages[selectedImageIndex]
+
   useEffect(() => {
     if (!emblaRef.current) {
       return
@@ -29,10 +39,58 @@ function PackagesPage(){
     }
   }, [])
 
+  useEffect(() => {
+    if (selectedImageIndex === null) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedImageIndex(null)
+      }
+
+      if (event.key === 'ArrowLeft') {
+        setSelectedImageIndex((current) =>
+          current === null
+            ? current
+            : (current - 1 + previewImages.length) % previewImages.length,
+        )
+      }
+
+      if (event.key === 'ArrowRight') {
+        setSelectedImageIndex((current) =>
+          current === null ? current : (current + 1) % previewImages.length,
+        )
+      }
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedImageIndex, previewImages.length])
+
+  const showPreviousImage = () => {
+    setSelectedImageIndex((current) =>
+      current === null
+        ? current
+        : (current - 1 + previewImages.length) % previewImages.length,
+    )
+  }
+
+  const showNextImage = () => {
+    setSelectedImageIndex((current) =>
+      current === null ? current : (current + 1) % previewImages.length,
+    )
+  }
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#fbf0d8] pb-16 font-sans text-gray-800">
-      <section className="relative min-h-[min(720px,78vh)] overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="overflow-hidden bg-[#fbf0d8]">
+        <div className="w-full">
           <Image
             src={header}
             alt="Tour Package Banner"
@@ -41,7 +99,7 @@ function PackagesPage(){
             layout="fullWidth"
             loading="eager"
             fetchPriority="high"
-            className="h-full w-full object-cover"
+            className="h-auto w-full object-contain"
           />
         </div>
       </section>
@@ -97,10 +155,24 @@ function PackagesPage(){
           </div>
       </section>
       <section className="px-4 sm:px-6">
-        <div className="mx-auto overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-4">
-            {carouselImages.map((image) => (
-              <div key={image.src} className="min-w-0 flex-[0_0_88%] sm:flex-[0_0_70%] lg:flex-[0_0_48%]">
+        <div className="mx-auto">
+          <div className="mx-auto mb-3 flex max-w-5xl items-center justify-between gap-3 text-[#445412]">
+            <p className="text-sm font-semibold sm:text-base">Tour packages</p>
+            <div className="flex items-center gap-2 rounded-md border border-[#445412]/30 bg-white/45 px-3 py-2 text-xs font-semibold sm:text-sm">
+              <MoveHorizontal className="size-4" aria-hidden="true" />
+              <span>Drag to browse</span>
+            </div>
+          </div>
+          <div className="overflow-hidden" ref={emblaRef}>
+          <div className="flex cursor-grab gap-4 active:cursor-grabbing">
+            {carouselImages.map((image, index) => (
+              <button
+                key={image.src}
+                type="button"
+                className="min-w-0 flex-[0_0_88%] cursor-zoom-in text-left sm:flex-[0_0_70%] lg:flex-[0_0_48%]"
+                onClick={() => setSelectedImageIndex(index)}
+                aria-label={`Open ${image.alt} package image`}
+              >
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -110,36 +182,98 @@ function PackagesPage(){
                   loading="lazy"
                   className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"
                 />
-              </div>
+              </button>
             ))}
             </div>
+          </div>
             <div className="mx-auto grid max-w-4xl justify-items-center gap-6">
               <h1 className="mt-10 inline-block border-b-4 border-[#445412]/20 pb-4 font-fraunces text-3xl font-black uppercase tracking-wide text-[#445412] sm:text-5xl">
                 Optional add-ons!
               </h1>
             </div>
           <div className="mx-auto mt-8 grid max-w-5xl gap-6 md:grid-cols-2">
-            <Image
-              src={guideSrc}
-              alt="Guide add-on details"
-              width={1600}
-              height={900}
-              layout="fullWidth"
-              loading="lazy"
-              className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"
-            />
-            <Image
-              src={foodSrc}
-              alt="Food add-on details"
-              width={1600}
-              height={900}
-              layout="fullWidth"
-              loading="lazy"
-              className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain"
-            />
+            {addOnImages.map((image, index) => (
+              <button
+                key={image.src}
+                type="button"
+                className="cursor-zoom-in text-left"
+                onClick={() => setSelectedImageIndex(carouselImages.length + index)}
+                aria-label={`Open ${image.alt}`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={1600}
+                  height={900}
+                  layout="fullWidth"
+                  loading="lazy"
+                  className="max-h-[80vh] w-full rounded-md border-4 border-[#445412] object-contain transition-transform duration-200 hover:scale-[1.01]"
+                />
+              </button>
+            ))}
           </div>
         </div>
       </section>
+      {selectedImage ? (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-3 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedImage.alt} full-size preview`}
+          onClick={() => setSelectedImageIndex(null)}
+        >
+          <button
+            type="button"
+            className="absolute right-3 top-3 z-10 flex size-10 items-center justify-center rounded-md bg-white text-[#445412] shadow-lg transition-colors hover:bg-[#fbf0d8]"
+            onClick={() => setSelectedImageIndex(null)}
+            aria-label="Close image preview"
+          >
+            <X className="size-5" />
+          </button>
+
+          <button
+            type="button"
+            className="absolute left-3 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-md bg-white text-[#445412] shadow-lg transition-colors hover:bg-[#fbf0d8] sm:left-6"
+            onClick={(event) => {
+              event.stopPropagation()
+              showPreviousImage()
+            }}
+            aria-label="Show previous package image"
+          >
+            <ChevronLeft className="size-6" />
+          </button>
+
+          <figure
+            className="flex max-h-[92vh] max-w-[94vw] flex-col items-center gap-3"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Image
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              width={1920}
+              height={1080}
+              layout="constrained"
+              loading="eager"
+              className="max-h-[86vh] max-w-[94vw] rounded-md object-contain shadow-2xl"
+            />
+            <figcaption className="rounded-md bg-black/55 px-3 py-1 text-sm font-semibold text-white">
+              {selectedImage.alt}
+            </figcaption>
+          </figure>
+
+          <button
+            type="button"
+            className="absolute right-3 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-md bg-white text-[#445412] shadow-lg transition-colors hover:bg-[#fbf0d8] sm:right-6"
+            onClick={(event) => {
+              event.stopPropagation()
+              showNextImage()
+            }}
+            aria-label="Show next package image"
+          >
+            <ChevronRight className="size-6" />
+          </button>
+        </div>
+      ) : null}
     </div>
   )
 }
