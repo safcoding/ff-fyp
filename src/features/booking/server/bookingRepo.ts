@@ -1,4 +1,5 @@
 import { prisma } from '@/db'
+import { timeServerTask } from '@/lib/server-timing'
 import { bookingsInclude } from './bookingMapper'
 import type { BookingInput, BookingStatusGroup } from '@/schemas/bookingSchemas'
 import type { prepareBookingWriteData } from './utils/prepData'
@@ -52,22 +53,25 @@ export const loadBookingsPage = async ({
   const where = bookingStatusWhere(statusGroup)
   const skip = (page - 1) * pageSize
 
-  const [bookings, total, pending, completed, other, all] = await Promise.all([
-    prisma.bookings.findMany({
-      where,
-      include: bookingsInclude,
-      orderBy: [{ created_at: 'desc' }],
-      skip,
-      take: pageSize,
-    }),
-    prisma.bookings.count({ where }),
-    prisma.bookings.count({ where: { booking_status: 'PENDING' } }),
-    prisma.bookings.count({ where: { booking_status: 'APPROVED' } }),
-    prisma.bookings.count({
-      where: { booking_status: { in: ['POSTPONED', 'CANCELLED'] } },
-    }),
-    prisma.bookings.count(),
-  ])
+  const [bookings, total, pending, completed, other, all] =
+    await timeServerTask('db.loadBookingsPage', () =>
+      Promise.all([
+        prisma.bookings.findMany({
+          where,
+          include: bookingsInclude,
+          orderBy: [{ created_at: 'desc' }],
+          skip,
+          take: pageSize,
+        }),
+        prisma.bookings.count({ where }),
+        prisma.bookings.count({ where: { booking_status: 'PENDING' } }),
+        prisma.bookings.count({ where: { booking_status: 'APPROVED' } }),
+        prisma.bookings.count({
+          where: { booking_status: { in: ['POSTPONED', 'CANCELLED'] } },
+        }),
+        prisma.bookings.count(),
+      ]),
+    )
 
   return {
     bookings,

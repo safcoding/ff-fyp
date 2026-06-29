@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { prisma } from "@/db"
+import { timeServerTask } from "@/lib/server-timing"
 import {
   createDiscountSchema,
   deleteDiscountSchema,
@@ -10,9 +11,11 @@ import { adminOnlyMiddleware } from "@/lib/auth-middleware"
 export const getDiscounts = createServerFn({ method: "GET" })
   .middleware([adminOnlyMiddleware])
   .handler(async () => {
-    const discounts = await prisma.discounts.findMany({
-      orderBy: { discount_id: "asc" },
-    })
+    const discounts = await timeServerTask('db.getDiscounts', () =>
+      prisma.discounts.findMany({
+        orderBy: { discount_id: "asc" },
+      }),
+    )
 
     return discounts.map((discount) => ({
       discount_id: discount.discount_id,
