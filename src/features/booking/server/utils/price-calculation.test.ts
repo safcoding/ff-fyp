@@ -1,8 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import {
-  calculateAddonSubtotal,
   calculateBookingTotal,
-  calculateFoodSubtotal,
   calculatePackageSubtotal,
 } from './price-calculation'
 
