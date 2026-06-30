@@ -41,7 +41,7 @@ jobs:
           run: npm run test -- --passWithNoTests
 
         - name: E2E Tests
-          run: npm run test:e2e -- --project-chromium
+          run: npm run test:e2e -- --project=chromium
 
         - name: Build
           run: npm run build
