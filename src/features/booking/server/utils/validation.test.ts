@@ -1,15 +1,18 @@
 import { describe, expect, test } from 'vitest'
+import type { BookingFormInput } from '@/schemas/bookingSchemas'
+import { org_categories, states } from '@/generated/prisma/enums'
+import type { ExtraBookingData } from '../bookingTypes'
 import { validateBooking } from './validation'
 
-const validBooking = {
-  booking_date: '2026-07-15',
+const validBooking: BookingFormInput = {
+  booking_date: new Date('2026-07-15'),
   pic_name: 'Safuan Hakim',
   pic_email: 'safuan@example.com',
   pic_hp: '+60123456789',
   org_address: '123 Jalan Example',
   org_name: 'Example University',
-  org_state: 'SELANGOR',
-  org_type: 'UNIVERSITY_COLLEGE',
+  org_state: states.SELANGOR,
+  org_type: org_categories.UNIVERSITY_COLLEGE,
   event_name: 'Farm Visit',
   slot_id: 'MORNING',
   packages: [
@@ -47,7 +50,7 @@ const validRelatedData = {
     },
   ],
   foods: [{ food_id: 1 }],
-}
+} as unknown as ExtraBookingData
 
 describe('validateBooking', () => {
   test('accepts a valid booking and related data', () => {
@@ -140,7 +143,7 @@ describe('validateBooking', () => {
               minimum_pax: 10,
             },
           ],
-        },
+        } as unknown as ExtraBookingData,
       ),
     ).toThrow('Workshop requires at least 10 pax')
   })
