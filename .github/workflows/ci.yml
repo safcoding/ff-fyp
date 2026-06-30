@@ -40,6 +40,9 @@ jobs:
         - name: Unit Tests
           run: npm run test -- --passWithNoTests
 
+        - name: Install Playwright browsers
+          run: npx playwright install --with-deps
+          
         - name: E2E Tests
           run: npm run test:e2e -- --project=chromium
 
