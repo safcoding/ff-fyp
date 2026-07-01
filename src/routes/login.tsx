@@ -120,7 +120,9 @@ function LoginPage() {
             </div>
 
             {error ? (
-              <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>
+              <p 
+              data-testid="login-error"
+              className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>
             ) : null}
 
             <button
